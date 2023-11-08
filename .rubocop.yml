@@ -1,0 +1,105 @@
+
+---
+require:
+  - rubocop-minitest
+
+AllCops:
+  EnabledByDefault: true
+  TargetRubyVersion: 3.2.2
+  Exclude:
+    - "bin/**/*"
+
+Layout/LineLength:
+  Max: 80
+
+Layout/MultilineMethodCallIndentation:
+  Enabled: false
+
+Layout/SpaceInLambdaLiteral:
+  Description: "Checks for spaces in lambda literals."
+  Enabled: false
+  EnforcedStyle: require_no_space
+  SupportedStyles:
+    - require_no_space
+    - require_space
+
+Metrics/BlockLength:
+  Enabled: false
+
+Lint/AmbiguousBlockAssociation:
+  Enabled: false
+
+Lint/ConstantResolution:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/ClassLength:
+  Exclude:
+    - "test/**/*"
+
+Metrics/PerceivedComplexity:
+  Max: 10
+
+Style/Documentation:
+  Enabled: false
+
+Style/TopLevelMethodDefinition:
+  Enabled: false
+
+Style/DocumentationMethod:
+  Enabled: false
+
+Style/DisableCopsWithinSourceCodeDirective:
+  Enabled: false
+
+Style/StringHashKeys:
+  Enabled: false
+
+Style/MethodCallWithArgsParentheses:
+  Enabled: false
+
+Style/NumberedParametersLimit:
+  Max: 3
+
+Style/MissingElse:
+  Enabled: false
+
+Style/MultilineBlockChain:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: true
+  SafeAutoCorrect: true
+
+Style/LambdaCall:
+  Description: "Use lambda.call(...) instead of lambda.(...)."
+  StyleGuide: "#proc-call"
+  Enabled: false
+  VersionAdded: "0.13"
+  VersionChanged: "0.14"
+  EnforcedStyle: call
+  SupportedStyles:
+    - call
+    - braces
+
+Style/Copyright:
+  Description: "Include a copyright notice in each file before any code."
+  Enabled: false
+  VersionAdded: "0.30"
+  Notice: '^Copyright (\(c\) )?2[0-9]{3} .+'
+  AutocorrectNotice: ""
+
+Style/Lambda:
+  Description: "Use the new lambda literal syntax for single-line blocks."
+  StyleGuide: "#lambda-multi-line"
+  Enabled: false
+  EnforcedStyle: line_count_dependent
+  SupportedStyles:
+    - line_count_dependent
+    - lambda
+    - literal
