@@ -39,11 +39,23 @@ Metrics/MethodLength:
   Enabled: false
 
 Metrics/ClassLength:
+  Max: 150
+  Exclude:
+    - "test/**/*"
+
+Metrics/ModuleLength:
+  Max: 150
   Exclude:
     - "test/**/*"
 
 Metrics/PerceivedComplexity:
   Max: 10
+
+Style/AsciiComments:
+  Enabled: false
+
+Style/AccessModifierDeclarations:
+  Enabled: false
 
 Style/Documentation:
   Enabled: false
