@@ -7,13 +7,14 @@ require 'json'
 # External dependencies
 require 'rack'
 
-require_relative 'middleware/app'
-require_relative 'router/builder'
-require_relative 'router/cache'
-require_relative 'router/namespace_stack'
-require_relative 'router/request'
-require_relative 'router/response'
-require_relative 'router/route_matcher'
+# Internal dependencies
+require 'lenna/middleware/app'
+require 'lenna/router/builder'
+require 'lenna/router/cache'
+require 'lenna/router/namespace_stack'
+require 'lenna/router/request'
+require 'lenna/router/response'
+require 'lenna/router/route_matcher'
 
 module Lenna
   # The Node struct is used to represent a node in the tree of routes.
