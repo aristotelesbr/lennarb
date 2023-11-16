@@ -2,22 +2,44 @@ PATH
   remote: .
   specs:
     lennarb (0.1.0)
+      colorize (~> 1.1)
+      puma (~> 6.4)
+      rack (~> 3.0, >= 3.0.8)
+      rake (~> 13.0, >= 13.0.6)
 
 GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.2)
+    colorize (1.1.0)
+    debug (1.8.0)
+      irb (>= 1.5.0)
+      reline (>= 0.3.1)
+    io-console (0.6.0)
+    irb (1.9.0)
+      rdoc
+      reline (>= 0.3.8)
     json (2.6.3)
     language_server-protocol (3.17.0.3)
     minitest (5.20.0)
+    nio4r (2.5.9)
     parallel (1.23.0)
     parser (3.2.2.4)
       ast (~> 2.4.1)
       racc
+    psych (5.1.1.1)
+      stringio
+    puma (6.4.0)
+      nio4r (~> 2.0)
     racc (1.7.3)
+    rack (3.0.8)
     rainbow (3.1.1)
     rake (13.1.0)
+    rdoc (6.6.0)
+      psych (>= 4.0.0)
     regexp_parser (2.8.2)
+    reline (0.4.0)
+      io-console (~> 0.5)
     rexml (3.2.6)
     rubocop (1.57.2)
       json (~> 2.3)
@@ -35,16 +57,20 @@ GEM
     rubocop-minitest (0.33.0)
       rubocop (>= 1.39, < 2.0)
     ruby-progressbar (1.13.0)
+    stringio (3.0.9)
     unicode-display_width (2.5.0)
 
 PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  bundler
+  colorize (~> 1.1)
+  debug
   lennarb!
-  minitest (~> 5.0)
-  rake (~> 13.0)
+  minitest (~> 5.20)
+  puma (~> 6.4)
+  rack (~> 3.0, >= 3.0.8)
+  rake (~> 13.0, >= 13.0.6)
   rubocop (~> 1.57, >= 1.57.2)
   rubocop-minitest (~> 0.33.0)
 
