@@ -12,7 +12,7 @@ module Lenna
       #
       # @return [Hash] the request params
       #
-      # @public
+      # @api public
       def params = super.merge(parse_body_params)
 
       # This method rewinds the body

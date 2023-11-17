@@ -4,9 +4,9 @@
 require 'puma'
 
 # Internal dependencies
-require_relative 'middleware/default/error_handler'
-require_relative 'middleware/default/logging'
-require_relative 'router'
+require 'lenna/middleware/default/error_handler'
+require 'lenna/middleware/default/logging'
+require 'lenna/router'
 
 module Lenna
   # The base class is used to start the server.

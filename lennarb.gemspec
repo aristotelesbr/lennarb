@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative 'lib/lennarb/version'
+version = File.read(File.expand_path('VERSION', __dir__)).strip
 
 Gem::Specification.new do |spec|
   spec.name = 'lennarb'
-  spec.version = Lennarb::VERSION
+  spec.version = version
   spec.license = 'MIT'
   spec.authors = ['Aristóteles Coutinho']
   spec.email = ['aristotelesbr@gmail.com']
@@ -24,10 +24,11 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
+  spec.add_dependency 'colorize', '~> 1.1'
   spec.add_dependency 'puma', '~> 6.4'
   spec.add_dependency 'rack', '~> 3.0', '>= 3.0.8'
   spec.add_dependency 'rake', '~> 13.0', '>= 13.0.6'
-  spec.add_dependency 'colorize', '~> 1.1'
+
   # Uncomment to register a new dependency of your gem
   spec.add_development_dependency 'minitest', '~> 5.20'
   spec.add_development_dependency 'rake', '~> 13.0', '>= 13.0.6'
