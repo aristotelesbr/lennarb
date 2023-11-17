@@ -99,6 +99,13 @@ module Lenna
         headers.each { |key, value| put_header(key, value) }
       end
 
+      # This method will get the content type.
+      #
+      # @return [String] the content type
+      #
+      # @api public
+      def content_type = header('Content-Type')
+
       # This method will delete the header.
       # @param header [String] the header name
       #
