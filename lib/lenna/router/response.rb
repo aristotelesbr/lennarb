@@ -12,7 +12,6 @@ module Lenna
       public  attr_reader :params
       private attr_accessor :_headers, :_body, :_status
 
-      # Initialize the Response
       def initialize(headers = {}, status = 200, body = [])
         self._headers = headers
         self._status  = status
@@ -21,40 +20,54 @@ module Lenna
       end
 
       # @api public
+      #
       # @return [Integer] the response status
       def status = fetch_status
 
       # @api public
+      #
       # @param status [Integer] the response status
+      #
       # @return       [void]
       def put_status(value) = status!(value)
 
       # @api public
+      #
       # @return [Array(String)] the body value
       def body = fetch_body
 
       # @api public
+      #
       # @param value [Array(String)] the body value
+      #
       # @return      [void]
       def put_body(value) = body!(value)
 
+
+      # This method will get the header value.
+      #
       # @api public
+      #
       # @param header [String] the header name
+      #
       # @return       [String] the header value
-      # @note                  This method will get the header value.
       def header(key) = fetch_header(key)
 
       # @api public
+      #
       # @return [Hash] the response headers
       def headers = fetch_headers
 
-      # @api public
+      # This method will set the header value.
+      #
       # @param header [String] the header name
       # @param value  [String] the header value
       # @return       [void]
       # @note                  This method will set the header value.
       #                        If the header already exists, then the value will
       #                        be appended to the header.
+      #
+      # @api public
       #
       # @example
       #   put_header('X-Request-Id', '123')
@@ -68,6 +81,7 @@ module Lenna
       def put_header(key, value) = header!(key, value)
 
       # Add multiple headers.
+      #
       # @param headers [Hash] the headers
       # @return        [void]
       # @note                 This method will add the headers.
@@ -79,23 +93,27 @@ module Lenna
       #     'Content-Type' => 'application/json',
       #     'X-Request-Id' => '123'
       #   }
-      #
       def put_headers(headers)
         headers => ::Hash
 
         headers.each { |key, value| put_header(key, value) }
       end
 
-      # @api public
+      # This method will delete the header.
       # @param header [String] the header name
+      #
       # @return       [void]
-      # @note                 This method will delete the header.
+      #
+      # @api public
       def remove_header(key) = delete_header(key)
 
-      # @api public
+      # This method will get the redirect location.
+      #
       # @param value [String] the key of the cookie
+      #
       # @return      [String] the cookie
-      # @note                 This method will get the cookie.
+      #
+      # @api public
       def cookie(value)
         value => ::String
 
@@ -105,11 +123,14 @@ module Lenna
           .then { |cookie| cookie.split('=').last }
       end
 
-      # @api public
+      # This method will set the cookie.
+      #
       # @param key   [String] the key of the cookie
       # @param value [String] the value of the cookie
+      #
       # @return      [void]
-      # @note                 This method will set the cookie.
+      #
+      # @api public
       def put_cookie(key, value)
         key   => ::String
         value => ::String
@@ -119,8 +140,10 @@ module Lenna
         header!('Set-Cookie', cookie)
       end
 
-      # @api public
+      # This method will get all the cookies.
+      #
       # @return [Hash] the cookies
+      # @api public
       def cookies
         fetch_header('Set-Cookie')
           .then { |cookie| cookie.split('; ') }
@@ -131,12 +154,14 @@ module Lenna
         end
       end
 
-      # @api public
+      # This method will set redirect location. The status will be set to 302.
+      #
       # @param location [String] the redirect location
-      # @param status   [Integer] the redirect status
+      # @param status   [Integer] the redirect status, default is 302.
+      #
       # @return         [void]
-      # @note                   This method will set the redirect location and
-      #                         status and finish the response.
+      #
+      # @api public
       def redirect(location, status: 302)
         location => ::String
 
@@ -148,21 +173,21 @@ module Lenna
         raise ::ArgumentError, 'location must be a string'
       end
 
-      # @api public
+      # This method will finish the response.
+      #
       # @return [void]
-      # @note        This method will finish the response.
+      #
+      # @api public
       def finish = finish!
 
-      # @api public
-      # @return             [String] the response content type
-      # @note                        This method will set
-      #                              the response content type.
-      def content_type = header('Content-Type')
-
-      # @api public
+      # This method will set the response content type.
+      #
       # @param type    [String] the response content type
       # @param charset [Hash]   the response charset
+      #
       # @return        [void]
+      #
+      # @api public
       def put_content_type(type, charset: nil)
         type => ::String
 
@@ -174,11 +199,13 @@ module Lenna
         raise ::ArgumentError, 'type must be a string'
       end
 
-      # @api public
+      # This method will set the response data and finish the response.
+      #
       # @param data [Hash, Array] the response data
+      #
       # @return     [void]
-      # @note                      This method will set the response data and
-      #                            finish the response.
+      #
+      # @api public
       def json(data:, status: 200)
         data => ::Array | ::Hash
 
@@ -190,8 +217,12 @@ module Lenna
       end
 
       # Set the response content type to text/html.
+      #
       # @param str [String] the response body
+      #
       # @return    [void]
+      #
+      # @api public
       def html(str = nil, status: 200)
         status!(status)
         header!('Content-Type', 'text/html')
@@ -200,13 +231,13 @@ module Lenna
         finish!
       end
 
+      # This method will render the template.
+      #
       # @param template_nam [String] the template name
       # @param path         [String] the template path, default is 'views'
       # @param locals       [Hash]   the template locals
+      #
       # @return             [void | Exception]
-      # @note                        This method will render the template.
-      #                              The template engine is determined by the
-      #                              file extension.
       #
       # @example
       #   render('index')
@@ -245,9 +276,13 @@ module Lenna
       end
 
       # Helper methods for the response.
-      # @api public
+      #
       # @return [void]
-      # @note          This method will finish the response with a 404 status.
+      #
+      # @api public
+      #
+      # @see #render
+      # @see #finish!
       def not_found
         body!(['Not Found'])
         status!(404)
@@ -256,14 +291,18 @@ module Lenna
 
       private
 
-      # @api private
+      # This method will get the response status.
+      #
       # @return [Integer] the response status
-      # @note             This method will get the response status.
+      #
+      # @api private
       def fetch_status = _status
 
-      # @api private
+      # This method will get the response status.
+      #
       # @return [Integer] the response status
-      # @note             This method will get the response status.
+      #
+      # @api private
       def status!(value)
         value => ::Integer
 
@@ -272,14 +311,13 @@ module Lenna
         raise ::ArgumentError, 'status must be an integer'
       end
 
-      # @api private
       # @return [Array(String)] the body value
       def fetch_body = _body
 
-      # @api private
+      # This method will set the body.
+      #
       # @param body [Array(String)] the body to be used
       # @return     [void]
-      # @note                       This method will set the body.
       def body!(value)
         body => ::String | ::Array
 
@@ -291,23 +329,18 @@ module Lenna
         raise ::ArgumentError, 'body must be a string or an array'
       end
 
-      # @api private
       # @param header [String] the header name
+      #
       # @return       [String] the header value
-      # @note                  This method will get the header value.
       def fetch_header(header) = _headers[header]
 
-      # @api private
       # @return [Hash] the response headers
       def fetch_headers = _headers
 
-      # @api private
       # @param key   [String] the header name
       # @param value [String] the value to be used
+      #
       # @return      [void]
-      # @note                 This method will set the header value.
-      #                       If the header already exists, then the value will
-      #                       be appended to the header.
       def header!(key, value)
         key   => ::String
         value => ::String | ::Array
@@ -322,14 +355,13 @@ module Lenna
         raise ::ArgumentError, 'header must be a string or an array'
       end
 
-      # @api private
       # @param key [String] the header name
+      #
       # @return    [void]
-      # @note      This method will delete the header.
       def delete_header(key) = _headers.delete(key)
 
-      # @api private
       # @param value [String] the redirect location
+      #
       # @return      [void]
       def location!(value)
         value => ::String
@@ -337,15 +369,14 @@ module Lenna
         header!('Location', value)
       end
 
-      # @api private
       # @param value [String] the content value
+      #
       # @return      [String] the size of the content
-      # @note                 This method will get the size of the content.
       def content_length!(value) = header!('Content-Length', value)
 
-      # @api private
+      # This method will finish the response.
+      #
       # @return [void]
-      # @note   This method will finish the response.
       def finish!
         put_content_type('text/html')        unless header('Content-Type')
         content_length!(body.join.size.to_s) unless header('Content-Length')
