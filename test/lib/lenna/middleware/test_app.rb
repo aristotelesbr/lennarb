@@ -29,12 +29,12 @@ module Lenna
 
         mdw1 =
           lambda do |_req, res, next_middleware|
-            res.put_header('Custom-Header', 'From mdw1')
+            res.assign_header('Custom-Header', 'From mdw1')
             next_middleware.call
           end
         mdw2 =
           lambda do |_req, res, next_middleware|
-            res.put_header('Custom-Header', 'From mdw2')
+            res.assign_header('Custom-Header', 'From mdw2')
             next_middleware.call
           end
 
