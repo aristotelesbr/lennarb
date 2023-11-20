@@ -4,59 +4,38 @@ module Lenna
   class Router
     # The Response class is responsible for managing the response.
     #
-    # @attr _headers [Hash]          the response headers
-    # @attr _body    [Array(String)] the response body
-    # @attr _status  [Integer]       the response status
-    # @attr params   [Hash]          the response params
+    # @attr headers [Hash]          the response headers
+    # @attr body    [Array(String)] the response body
+    # @attr status  [Integer]       the response status
+    # @attr params  [Hash]          the response params
     class Response
-      public  attr_reader :params
-      private attr_accessor :_headers, :_body, :_status
+      private attr_writer :body, :headers, :status, :params
+      public  attr_reader :body, :headers, :status, :params
 
       def initialize(headers = {}, status = 200, body = [])
-        self._headers = headers
-        self._status  = status
-        self._body    = body
-        @params       = {}
+        @params  = {}
+        @body    = body
+        @status  = status
+        @headers = headers
       end
 
-      # @api public
+      # This method will set the response status.
       #
-      # @return [Integer] the response status
-      def status = fetch_status
+      # @param value [Integer] the response status
+      #
+      # @return      [void]
+      #
+      # @api public
+      def assign_status(value) = put_status(value)
 
-      # @api public
-      #
-      # @param status [Integer] the response status
-      #
-      # @return       [void]
-      def put_status(value) = status!(value)
-
-      # @api public
-      #
-      # @return [Array(String)] the body value
-      def body = fetch_body
-
-      # @api public
+      # Thi method set the body value.
       #
       # @param value [Array(String)] the body value
       #
       # @return      [void]
-      def put_body(value) = body!(value)
-
-
-      # This method will get the header value.
       #
       # @api public
-      #
-      # @param header [String] the header name
-      #
-      # @return       [String] the header value
-      def header(key) = fetch_header(key)
-
-      # @api public
-      #
-      # @return [Hash] the response headers
-      def headers = fetch_headers
+      def assign_body(value) = put_body(value)
 
       # This method will set the header value.
       #
@@ -70,15 +49,15 @@ module Lenna
       # @api public
       #
       # @example
-      #   put_header('X-Request-Id', '123')
+      #   assign_header('X-Request-Id', '123')
       #   # => '123'
       #
-      #   put_header('X-Request-Id', '456')
+      #   assign_header('X-Request-Id', '456')
       #   # => ['123', '456']
       #
-      #   put_header('X-Request-Id', ['456', '789'])
+      #   assign_header('X-Request-Id', ['456', '789'])
       #   # => ['123', '456', '789']
-      def put_header(key, value) = header!(key, value)
+      def assign_header(key, value) = put_header(key, value)
 
       # Add multiple headers.
       #
@@ -93,7 +72,8 @@ module Lenna
       #     'Content-Type' => 'application/json',
       #     'X-Request-Id' => '123'
       #   }
-      def put_headers(headers)
+      #
+      def assign_headers(headers)
         headers => ::Hash
 
         headers.each { |key, value| put_header(key, value) }
@@ -104,7 +84,7 @@ module Lenna
       # @return [String] the content type
       #
       # @api public
-      def content_type = header('Content-Type')
+      def content_type = @headers['Content-Type']
 
       # This method will delete the header.
       # @param header [String] the header name
@@ -124,7 +104,7 @@ module Lenna
       def cookie(value)
         value => ::String
 
-        fetch_header('Set-Cookie')
+        @headers['Set-Cookie']
           .then { |cookie| cookie.split('; ') }
           .then { |cookie| cookie.find { |c| c.start_with?("#{value}=") } }
           .then { |cookie| cookie.split('=').last }
@@ -138,13 +118,13 @@ module Lenna
       # @return      [void]
       #
       # @api public
-      def put_cookie(key, value)
+      def assign_cookie(key, value)
         key   => ::String
         value => ::String
 
         cookie = "#{key}=#{value}"
 
-        header!('Set-Cookie', cookie)
+        put_header('Set-Cookie', cookie)
       end
 
       # This method will get all the cookies.
@@ -152,7 +132,7 @@ module Lenna
       # @return [Hash] the cookies
       # @api public
       def cookies
-        fetch_header('Set-Cookie')
+        @headers['Set-Cookie']
           .then { |cookie| cookie.split('; ') }
           .each_with_object({}) do |cookie, acc|
           key, value = cookie.split('=')
@@ -172,8 +152,8 @@ module Lenna
       def redirect(location, status: 302)
         location => ::String
 
-        header!('Location', location)
-        status!(status)
+        put_header('Location', location)
+        put_status(status)
 
         finish!
       rescue ::NoMatchingPatternError
@@ -195,12 +175,15 @@ module Lenna
       # @return        [void]
       #
       # @api public
-      def put_content_type(type, charset: nil)
+      def assign_content_type(type, charset: nil)
         type => ::String
 
         case charset
-        in ::String then header!('Content-Type', "#{type}; charset=#{charset}")
-        else             header!('Content-Type', type)
+        in ::String then put_header(
+          'Content-Type',
+          "#{type}; charset=#{charset}"
+        )
+        else put_header('Content-Type', type)
         end
       rescue ::NoMatchingPatternError
         raise ::ArgumentError, 'type must be a string'
@@ -216,9 +199,9 @@ module Lenna
       def json(data:, status: 200)
         data => ::Array | ::Hash
 
-        status!(status)
-        header!('Content-Type', 'application/json')
-        body!(data.to_json)
+        put_status(status)
+        put_header('Content-Type', 'application/json')
+        put_body(data.to_json)
 
         finish!
       end
@@ -231,9 +214,9 @@ module Lenna
       #
       # @api public
       def html(str = nil, status: 200)
-        status!(status)
-        header!('Content-Type', 'text/html')
-        body!(str)
+        put_status(status)
+        put_header('Content-Type', 'text/html')
+        put_body(str)
 
         finish!
       end
@@ -291,8 +274,9 @@ module Lenna
       # @see #render
       # @see #finish!
       def not_found
-        body!(['Not Found'])
-        status!(404)
+        put_body(['Not Found'])
+        put_status(404)
+
         finish!
       end
 
@@ -303,60 +287,42 @@ module Lenna
       # @return [Integer] the response status
       #
       # @api private
-      def fetch_status = _status
-
-      # This method will get the response status.
-      #
-      # @return [Integer] the response status
-      #
-      # @api private
-      def status!(value)
+      def put_status(value)
         value => ::Integer
 
-        self._status = value
+        self.status = value
       rescue ::NoMatchingPatternError
         raise ::ArgumentError, 'status must be an integer'
       end
-
-      # @return [Array(String)] the body value
-      def fetch_body = _body
 
       # This method will set the body.
       #
       # @param body [Array(String)] the body to be used
       # @return     [void]
-      def body!(value)
-        body => ::String | ::Array
+      def put_body(value)
+        value => ::String | ::Array
 
         case value
-        in ::String then self._body = [value]
-        in ::Array  then self._body = value
+        in ::String then @body = [value]
+        in ::Array  then @body = value
         end
       rescue ::NoMatchingPatternError
         raise ::ArgumentError, 'body must be a string or an array'
       end
 
-      # @param header [String] the header name
-      #
-      # @return       [String] the header value
-      def fetch_header(header) = _headers[header]
-
-      # @return [Hash] the response headers
-      def fetch_headers = _headers
-
       # @param key   [String] the header name
       # @param value [String] the value to be used
       #
       # @return      [void]
-      def header!(key, value)
+      def put_header(key, value)
         key   => ::String
         value => ::String | ::Array
 
-        header_value = fetch_header(key)
+        header_value = @headers[key]
 
         case value
-        in ::String then _headers[key] = [*header_value, value].uniq.join(', ')
-        in ::Array  then _headers[key] = [*header_value, *value].uniq.join(', ')
+        in ::String then @headers[key] = [*header_value, value].uniq.join(', ')
+        in ::Array  then @headers[key] = [*header_value, *value].uniq.join(', ')
         end
       rescue ::NoMatchingPatternError
         raise ::ArgumentError, 'header must be a string or an array'
@@ -365,7 +331,7 @@ module Lenna
       # @param key [String] the header name
       #
       # @return    [void]
-      def delete_header(key) = _headers.delete(key)
+      def delete_header(key) = @headers.delete(key)
 
       # @param value [String] the redirect location
       #
@@ -373,22 +339,39 @@ module Lenna
       def location!(value)
         value => ::String
 
-        header!('Location', value)
+        put_header('Location', value)
       end
-
-      # @param value [String] the content value
-      #
-      # @return      [String] the size of the content
-      def content_length!(value) = header!('Content-Length', value)
 
       # This method will finish the response.
       #
       # @return [void]
       def finish!
-        put_content_type('text/html')        unless header('Content-Type')
-        content_length!(body.join.size.to_s) unless header('Content-Length')
+        default_router_header!
+        default_content_length!    unless @headers['Content-Length']
+        default_html_content_type! unless @headers['Content-Type']
 
-        [_status, _headers, _body]
+        [@status, @headers, @body]
+      end
+      
+      # This method will set the response default html content type.
+      #
+      # @return [void]
+      def default_html_content_type!
+        put_header('Content-Type', 'text/html')
+      end
+
+      # This method will set the response default content length.
+      #
+      # @return [void]
+      def default_content_length!
+        put_header('Content-Length', @body.join.size.to_s)
+      end
+
+      # This method will set the response default router header.
+      #
+      # @return [void]
+      def default_router_header!
+        put_header('Server', "Lennarb VERSION #{::Lennarb::VERSION}")
       end
     end
   end
