@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-version = File.read(File.expand_path('VERSION', __dir__)).strip
+require_relative 'lib/lennarb/version'
+
+version = Lennarb::VERSION
 
 Gem::Specification.new do |spec|
   spec.name = 'lennarb'
