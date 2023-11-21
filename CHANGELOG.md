@@ -4,14 +4,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Released]
+## [0.1.2] - 2023-23-11
+
+### Added
+
+- Implemented a specific error handler for Content-Type related errors, enhancing the system's ability to respond appropriately based on whether the request Content-Type is JSON or HTML.
+
+### Removed
+
+- Removed the debug gem from development dependencies, streamlining the development environment setup.
+
+### Fixed
+
+- Fixed a bug that prevented the correct reading of the Content-Type header in requests, ensuring proper handling of content types.
 
 ## [0.1.1] - 2023-23-11
 
 ### Added
+
 - Introduced `Array.wrap` extension to the `Array` class for more reliable conversion of objects to arrays within the Lennarb router environment. This method ensures consistent array wrapping of single objects and `nil` values.
 
 ### Changed
+
 - Refactored the `put_header` method to use the `Array.wrap` method for more predictable header value handling.
 - Renamed methods to have a consistent `assign_` prefix to standardize the API interface:
   - `put_header` to `assign_header`

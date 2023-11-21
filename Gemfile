@@ -23,7 +23,6 @@ gem 'rack', '~> 3.0', '>= 3.0.8'
 gem 'colorize', '~> 1.1'
 
 group :development, :test do
-  gem 'debug'
   # [https://rubygems.org/gems/rake]
   # Rake is a Make-like program implemented in Ruby. Tasks and dependencies are
   # specified in standard Ruby syntax.

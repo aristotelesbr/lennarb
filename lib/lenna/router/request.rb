@@ -37,8 +37,12 @@ module Lenna
       # Turn this:
       # HTTP_FOO=bar Foo=bar
       def headers
+        content_type = env['CONTENT_TYPE']
         @headers ||= env.select { |k, _| k.start_with?('HTTP_') }
                         .transform_keys { |k| format_header_name(k) }
+      
+        @headers['Content-Type'] = content_type if content_type
+        @headers
       end
 
       # This method returns the request body in a normalized way.
