@@ -24,7 +24,7 @@ module Lenna
           env = req.env
           log_error(env, e)
 
-          render_error_page(e, env, res)
+          render_error_page(e, env, req, res)
         end
 
         private
@@ -37,10 +37,43 @@ module Lenna
         # @return [void]
         #
         # @api private
-        def render_error_page(error, env, res)
-          res.put_status(500)
-          res.put_header('Content-Type', 'text/html')
-          res.put_body(error_page(error, env))
+        def render_error_page(error, env, req, res)
+          case req.headers['Content-Type']
+          in 'application/json' then render_json(error, env, res)
+          else                       render_html(error, env, res)
+          end
+        end
+
+        # This method will render the JSON error page.
+        #
+        # @param error [StandardError] The error object
+        # @param env [Hash] The environment variables
+        # @param res [Rack::Response] The response object
+        # @return [void]
+        #
+        # @api private
+        def render_json(error, env, res)
+          case env['RACK_ENV']
+          in 'development' | 'test' then res.json(
+            data: {
+              error: error.message,
+              status: 500
+            }
+          )
+          else res.json(error: 'Internal Server Error', status: 500)
+          end
+        end
+
+        # This method will render the HTML error page.
+        #
+        # @param error [StandardError] The error object
+        # @param env [Hash] The environment variables
+        # @param res [Rack::Response] The response object
+        # @return [void]
+        #
+        # @api private
+        def render_html(error, env, res)
+          res.html(error_page(error, env), status: 500)
         end
 
         # This method will log the error.
