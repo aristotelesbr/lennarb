@@ -315,17 +315,18 @@ module Lenna
       #
       # @return      [void]
       def put_header(key, value)
-        key   => ::String
-        value => ::String | ::Array
+        raise ::ArgumentError, 'key must be a string' unless key.is_a?(::String)
+
+        unless value.is_a?(::String) || value.is_a?(::Array)
+          raise ::ArgumentError, 'value must be a string or an array'
+        end
 
         header_value = @headers[key]
 
-        case value
-        in ::String then @headers[key] = [*header_value, value].uniq.join(', ')
-        in ::Array  then @headers[key] = [*header_value, *value].uniq.join(', ')
-        end
-      rescue ::NoMatchingPatternError
-        raise ::ArgumentError, 'header must be a string or an array'
+        new_values      = ::Array.wrap(value)
+        existing_values = ::Array.wrap(header_value)
+
+        @headers[key] = (existing_values + new_values).uniq.join(', ')
       end
 
       # @param key [String] the header name
@@ -352,7 +353,7 @@ module Lenna
 
         [@status, @headers, @body]
       end
-      
+
       # This method will set the response default html content type.
       #
       # @return [void]
