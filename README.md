@@ -1,31 +1,229 @@
 # Lennarb
 
-TODO: Delete this and the text below, and describe your gem
+Lennarb is a experimental lightweight, fast, and modular web framework for Ruby based on Rack.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/lennarb`. To experiment with that code, run `bin/console` for an interactive prompt.
+image
+
+## Table of Contents
+
+- [About](#about)
+- [Installation](#installation)
+- [Usage](#usage)
+    - [Routing](#routing)
+        - [Parameters](#parameters)
+        - [Namespaces](#namespaces)
+        - [Middlewares](#middlewares)
+    - [Render HTML templates](#render-html-templates)
+    - [Render JSON](#render-json)
+    - [TODO](#todo)
+- [Development](#development)
+- [Contributing](#contributing)
+
+## About
+
+Lennarb is designed to be simple and easy to use, while still providing the power and flexibility of a full-featured web framework. Also, that's how I affectionately call my wife.
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+Add this line to your application's Gemfile:
 
-Install the gem and add to the application's Gemfile by executing:
+```rb
+gem 'lennarb'
+```
 
-    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
+And then execute:
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+```bash
+$ bundle install
+```
 
-    $ gem install UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
+Or install it yourself as:
+
+```bash
+$ gem install lennarb
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+After installing, you can begin using Lennarb to build your modular web applications with Ruby. Here is an example of how to get started:
+
+```rb
+app = Lenna::Base.new
+
+app.get('/hello/:name') do |req, res|
+    name = req.params[:name]
+
+    res.html("Hello #{name}!")
+end
+
+app.listen(8000)
+```
+
+This example creates a new Lennarb application, defines a route for the `/hello/:name` path, and then starts the application on port 8000. When a request is made to the `/hello/:name` path, the application will respond with `Hello <name>!`, where `<name>` is the value of the `:name` parameter in the request path.
+
+### Routing
+
+Lennarb uses a simple routing system that allows you to define routes for your application. Routes are defined using the `get`, `post`, `put`, `patch`, `delete`. These methods take three arguments: the path to match, an Array of the middlewares that can be apply on the current route and a block to execute when a request is made to the path. The block is passed two arguments: the [`request`](https://github.com/aristotelesbr/lennarb/blob/main/lib/lenna/router/request.rb) object and the [`response`](https://github.com/aristotelesbr/lennarb/blob/main/lib/lenna/router/response.rb) object. The request object contains information about the request, such as the request method, headers, and body. The response object contains methods for setting the response status code, headers, and body. Ex.
+
+```rb
+app.get('/hello') do |_req, res|
+    res.html('Hello World!')
+end
+```
+
+The example above defines a route for the `/hello` path. When a request is made to the `/hello` path, the application will respond with `Hello World!`.
+
+#### Parameters
+
+Lennarb allows you to define parameters in your routes. Parameters are defined using the `:` character, followed by the name of the parameter. Parameters are passed to the route block as a hash in the request object's `params` property.
+
+```rb
+app.get('/hello/:name') do |req, res|
+    name = req.params[:name]
+
+    res.html("Hello #{name}!")
+end
+```
+
+The example above defines a route for the `/hello/:name` path. When a request is made to the `/hello/:name` path, the application will respond with `Hello <name>!`, where `<name>` is the value of the `:name` parameter in the request path.
+
+#### namespaces
+
+Lennarb allows you to define namespaces in your routes. Namespaces are defined using the `namespace` method on the application object. Namespaces are passed to the route block as a hash in the request object's `params` property.
+
+```rb
+app.namespace('/api') do |router|
+    roter.get('/hello') do |_req, res|
+        res.html('Hello World!')
+    end
+end
+```
+
+The example above defines a namespace for the `/api` path. When a request is made to the `/api/hello` path, the application will respond with `Hello World!`.
+
+#### Middlewares
+
+The Lennarb application object has a `use` method that allows you to add middleware to your application. Middleware is defined using the `use` method on the application object. Ex.
+
+```rb
+app.get('/hello') do |_req, res|
+    res.html('Hello World!')
+end
+
+app.use(Lenna::Middleware::Logger)
+```
+
+You can also define middleware for specific route.
+
+```rb
+app.get('/hello', TimeMiddleware) do |_req, res|
+    res.html('Hello World!')
+end
+```
+
+You can create your own middleware by creating a class that implements the `call` method. This methods receive three
+
+```rb
+class TimeMiddleware
+    def call(req, res, next_middleware)
+        puts Time.now
+
+        req.headers['X-Time'] = Time.now
+
+        next_middleware.call
+    end
+end
+```
+
+Or using a lambda functions.
+
+```rb
+TimeMiddleware = ->(req, res, next_middleware) do
+    puts Time.now
+
+    req.headers['X-Time'] = Time.now
+
+    next_middleware.call
+end
+```
+
+So you can use it like this:
+
+```rb
+app.get('/hello', TimeMiddleware) do |_req, res|
+    res.html('Hello World!')
+end
+```
+
+And you can use multiple middlewares on the same route.
+
+```rb
+app.get('/hello', [TimeMiddleware, LoggerMiddleware]) do |_req, res|
+    res.html('Hello World!')
+end
+```
+
+### Render HTML templates
+
+Lennarb allows you to render HTML templates using the `render` method on the response object. The `render` method takes two arguments: the name of the template file, and a hash of variables to pass to the template.
+
+```rb
+app.get('/hello') do |_req, res|
+    res.render('hello', locals: { name: 'World' })
+end
+```
+
+The example above renders the `hello.html.erb` template, passing the `name` variable to the template.
+By default, Lennarb looks for templates in the `views` directory in root path. You can change this specifying the path for `views` in render method. Ex.
+
+```rb
+app.get('/hello') do |_req, res|
+    res.render('hello', path: 'app/web/templates', locals: { name: 'World' })
+end
+```
+
+### Render JSON
+
+Lennarb allows you to render JSON using the `json` method on the response object. The `json` method takes one argument: the object to render as JSON.
+
+```rb
+app.get('/hello') do |_req, res|
+    res.json(data: { message: 'Hello World!' })
+end
+```
+
+The example above renders the `{ message: 'Hello World!' }` object as JSON.
+
+
+
+### TODO
+
+- [ ] Add support for mime types
+- [ ] Add support for sessions
+- [ ] Add support for websockets
+- [ ] Add support for streaming
+- [ ] Add support for CORS
+- [ ] Add support for CSRF
+- [ ] Add support for caching
+- [ ] Add support for gzip compression
+- [ ] Add support for SSL
+- [ ] Add support for HTTP/2
+- [ ] Add support for HTTP/3
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+To set up the development environment after cloning the repo, run:
+    
+```bash
+$ bin/setup
+```
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+To run the tests, run:
+
+```bash
+$ rake test
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/lennarb.
+Bug reports and pull requests are welcome on GitHub at https://github.com/aristotelesbr/lennarb.
