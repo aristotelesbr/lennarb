@@ -8,6 +8,16 @@ module Lenna
     # @attr body    [Hash] the request body
     # @attr params  [Hash] the request params
     class Request < ::Rack::Request
+
+      # This method is used to set the request params.
+      #
+      # @param params [Hash] the request params
+      #
+      # @return [Hash] the request params
+      #
+      # @api public
+      def assign_params(params) = @params = params
+
       # This method is used to parse the body params.
       #
       # @return [Hash] the request params
