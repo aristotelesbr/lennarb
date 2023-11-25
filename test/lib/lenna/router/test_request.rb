@@ -5,6 +5,15 @@ require 'test_helper'
 module Lenna
   class Router
     class TestRequest < Minitest::Test
+      def test_assing_params
+        env     = ::Rack::MockRequest.env_for('/', method: 'POST')
+        request = Request.new(env)
+
+        request.assign_params({ 'foo' => 'bar' })
+
+        assert_equal({ 'foo' => 'bar' }, request.params)
+      end
+
       def test_with_query_string
         env = ::Rack::MockRequest.env_for('/?foo=bar')
 
