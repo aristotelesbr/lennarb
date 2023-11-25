@@ -40,7 +40,7 @@ module Lenna
         content_type = env['CONTENT_TYPE']
         @headers ||= env.select { |k, _| k.start_with?('HTTP_') }
                         .transform_keys { |k| format_header_name(k) }
-      
+
         @headers['Content-Type'] = content_type if content_type
         @headers
       end
@@ -62,6 +62,11 @@ module Lenna
         {}
       end
 
+      # This method parses the body params.
+      #
+      # @return [Hash] the request body params
+      #
+      # @api private
       def parse_body_params
         case media_type
         when 'application/json'
@@ -73,6 +78,27 @@ module Lenna
         end
       end
 
+      # This method parses the post params.
+      #
+      # @return [Hash] the request post params
+      #
+      # @api private
+      def post_params
+        @post_params ||=
+          if body_content.empty?
+            {}
+          else
+            ::Rack::Utils.parse_nested_query(body_content)
+          end
+      end
+
+      # This method formats the header name.
+      #
+      # @param name [String] the header name
+      #
+      # @return [String] the formatted header name
+      #
+      # @api private
       def format_header_name(name)
         name.sub(/^HTTP_/, '').split('_').map(&:capitalize).join('-')
       end
