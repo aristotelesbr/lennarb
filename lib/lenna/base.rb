@@ -39,7 +39,7 @@ module Lenna
     #
     # @since 0.1.0
     def listen(port = DEFAULT_PORT, host: DEFAULT_HOST, **)
-      puts "⚡ Listening on #{host}:#{port}"
+      puts "⚡ Listening on #{host}:#{port}. \n Use Ctrl-C to stop the server."
 
       # Add the logging middleware to the stack
       use(Middleware::Default::Logging, Middleware::Default::ErrorHandler)
