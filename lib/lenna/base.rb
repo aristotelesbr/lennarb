@@ -10,13 +10,21 @@ require 'lenna/router'
 
 module Lenna
   # The base class is used to start the server.
+  #
   class Base < Router
+    # The default port is 3000
+    #
     DEFAULT_PORT = 3000
     private_constant :DEFAULT_PORT
+    
+    # The default host is localhost
+    #
     DEFAULT_HOST = 'localhost'
     private_constant :DEFAULT_HOST
 
-    # This method will start the server.
+    # This method will start the puma server and listen on the specified port
+    # and host. The default port is 3000 and the default host is localhost.
+    # Use only in development.
     #
     # @param port [Integer] The port to listen on (default: 3000)
     # @param host [String]  The host to listen on (default: '
@@ -27,7 +35,7 @@ module Lenna
     #   app.listen(8080)
     # # => ⚡ Listening on localhost:8080
     #
-    # or specify the host and port
+    # # or specify the host and port
     #
     #   app = Lenna::Base.new
     #   app.listen(8000, host: '0.0.0.0')
@@ -38,6 +46,7 @@ module Lenna
     # @todo: Add Lenna::Server to handle the server logic
     #
     # @since 0.1.0
+    #
     def listen(port = DEFAULT_PORT, host: DEFAULT_HOST, **)
       puts "⚡ Listening on #{host}:#{port}. \n Use Ctrl-C to stop the server."
 

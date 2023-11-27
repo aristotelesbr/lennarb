@@ -20,11 +20,15 @@ module Lenna
     class Builder
       def initialize(root_node) = @root_node = root_node
 
+      # This method will add a route to the tree of routes.
+      #
       # @param method [String] the HTTP method
       # @param path   [String] the path to be matched
       # @param action [Proc]   the action to be executed
       # @param cache  [Cache]  the cache to be used
+      #
       # @return       [void]
+      #
       def call(method, path, action, cache)
         path_key = cache.cache_key(method, path)
 
@@ -40,7 +44,9 @@ module Lenna
 
       # This method will create routes that are missing.
       # @param path [String] the path to be matched
+      #
       # @return     [Node]   the node that matches the path
+      #
       def find_or_create_route_node(path)
         current_node = @root_node
         split_path(path).each do |part|
@@ -64,6 +70,7 @@ module Lenna
       #                     root
       #                     └── users
       #                         └── :id
+      #
       def find_or_create_node(current_node, part)
         if part.start_with?(':')
           # If it is a placeholder, then we just create or update
@@ -80,19 +87,29 @@ module Lenna
         current_node.children[part.start_with?(':') ? :placeholder : part]
       end
 
+      # This method will setup the endpoint of the current node.
+      #
       # @param current_node [Node]  the current node
       # @param method       [String] the HTTP method
       # @param action       [Proc]   the action to be executed
+      #
+      # @return             [void]
+      #
       def setup_endpoint(current_node, method, action)
         current_node.endpoint ||= {}
         current_node.endpoint[method] = action
       end
 
+      # This method will split the path into parts.
+      #
       # @param path [String] the path to be split
+      #
       # @return     [Array]  the splitted path
+      #
       # @todo: Move this to a separate file and require it here.
       # Maybe utils or something like that.
       # Use Rack::Utils.split_path_info instead.
+      #
       def split_path(path) = path.split('/').reject(&:empty?)
     end
   end
