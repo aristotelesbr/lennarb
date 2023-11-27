@@ -7,8 +7,8 @@ module Lenna
     # @attr headers [Hash] the request headers
     # @attr body    [Hash] the request body
     # @attr params  [Hash] the request params
+    #
     class Request < ::Rack::Request
-
       # This method is used to set the request params.
       #
       # @param params [Hash] the request params
@@ -16,6 +16,7 @@ module Lenna
       # @return [Hash] the request params
       #
       # @api public
+      #
       def assign_params(params) = @params = params
 
       # This method is used to parse the body params.
@@ -23,6 +24,7 @@ module Lenna
       # @return [Hash] the request params
       #
       # @api public
+      #
       def params = super.merge(parse_body_params)
 
       # This method rewinds the body
@@ -32,6 +34,7 @@ module Lenna
       # @api public
       #
       # @since 0.1.0
+      #
       def body_content
         body.rewind
         body.read
@@ -46,6 +49,7 @@ module Lenna
       # @example:
       # Turn this:
       # HTTP_FOO=bar Foo=bar
+      #
       def headers
         content_type = env['CONTENT_TYPE']
         @headers ||= env.select { |k, _| k.start_with?('HTTP_') }
@@ -60,12 +64,25 @@ module Lenna
       # @return [Hash] the request body
       #
       # @api public
+      #
       def json_body = @json_body ||= parse_body_params
 
       private
 
+      # This method checks if the request is a json request.
+      #
+      # @return [Boolean] true if the request is a json request
+      #
+      # @api private
+      #
       def json_request? = media_type == 'application/json'
 
+      # This method parses the json body.
+      #
+      # @return [Hash] the request json body
+      #
+      # @api private
+      #
       def parse_json_body
         @parsed_json_body ||= ::JSON.parse(body_content) if json_request?
       rescue ::JSON::ParserError
@@ -93,6 +110,7 @@ module Lenna
       # @return [Hash] the request post params
       #
       # @api private
+      #
       def post_params
         @post_params ||=
           if body_content.empty?
@@ -109,6 +127,7 @@ module Lenna
       # @return [String] the formatted header name
       #
       # @api private
+      #
       def format_header_name(name)
         name.sub(/^HTTP_/, '').split('_').map(&:capitalize).join('-')
       end

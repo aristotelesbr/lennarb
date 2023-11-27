@@ -6,6 +6,7 @@ module Lenna
   module Middleware
     module Default
       # This middleware will handle errors.
+      #
       module ErrorHandler
         extend self
 
@@ -37,6 +38,7 @@ module Lenna
         # @return [void]
         #
         # @api private
+        #
         def render_error_page(error, env, req, res)
           case req.headers['Content-Type']
           in 'application/json' then render_json(error, env, res)
@@ -52,6 +54,7 @@ module Lenna
         # @return [void]
         #
         # @api private
+        #
         def render_json(error, env, res)
           case env['RACK_ENV']
           in 'development' | 'test' then res.json(
@@ -72,6 +75,7 @@ module Lenna
         # @return [void]
         #
         # @api private
+        #
         def render_html(error, env, res)
           res.html(error_page(error, env), status: 500)
         end
@@ -83,6 +87,7 @@ module Lenna
         # @return [void]
         #
         # @api private
+        #
         def log_error(env, error)
           env['rack.errors'].puts error.message
           env['rack.errors'].puts error.backtrace.join("\n")
@@ -90,6 +95,7 @@ module Lenna
         end
 
         # This method will render the error page.
+        #
         def error_page(error, env)
           style = <<-STYLE
           <style>
@@ -198,6 +204,7 @@ module Lenna
         #         puts 'bar'\n<strong style='color: red;'>    9: </strong>
         #         end\n<strong style='color: red;'>   10: </strong> foo\n<strong
         #         style='color: red;'>   11: </strong> "
+        #
         def extract_source(file, line_number)
           lines = ::File.readlines(file)
           start_line = [line_number - 3, 0].max
@@ -219,6 +226,7 @@ module Lenna
         #         "<strong style='color: red;'>    9: </strong> end\n",
         #         "<strong style='color: red;'>   10: </strong> foo\n",
         #         "<strong style='color: red;'>   11: </strong> "]
+        #
         def format_lines(lines, highlight_line)
           lines.map.with_index(highlight_line - 3 + 1) do |line, line_num|
             line_number_text = "#{line_num.to_s.rjust(6)}: "

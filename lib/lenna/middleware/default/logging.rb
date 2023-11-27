@@ -12,6 +12,7 @@ module Lenna
       # @example:
       #   Logging.call(req, res, next_middleware)
       #  # => [2021-01-01 00:00:00 +0000] "GET /" 200 0.00ms
+      #
       module Logging
         extend self
 
@@ -20,6 +21,7 @@ module Lenna
         # @param req             [Rack::Request ] The request
         # @param res             [Rack::Response] The response
         # @param next_middleware [Proc]           The next middleware
+        #
         def call(req, res, next_middleware)
           start_time = ::Time.now
           next_middleware.call
@@ -46,6 +48,7 @@ module Lenna
         #
         # @example:
         #   colorize_http_method('GET') # => 'GET'.green
+        #
         def colorize_http_method(request_method)
           case request_method
           in 'GET'    then 'GET'.green
@@ -65,6 +68,7 @@ module Lenna
         #
         # @example:
         #   colorize_status_code('200') # => '200'.green
+        #
         def colorize_status_code(status_code)
           case status_code[0]
           in '2' then status_code.green
@@ -85,6 +89,7 @@ module Lenna
         #
         # @example:
         #   calculate_duration(Time.now, Time.now + 1) # => 1000
+        #
         def calculate_duration(start_time, end_time)
           millis_in_second = 1000.0
           (end_time - start_time) * millis_in_second

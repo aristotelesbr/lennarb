@@ -18,10 +18,12 @@ require 'lenna/router/route_matcher'
 
 module Lenna
   # The Node struct is used to represent a node in the tree of routes.
+  #
   # @attr children          [Hash]   the children of the node
   # @attr endpoint          [String] the endpoint of the node
   # @attr placeholder_name  [String] the name of the placeholder
   # @attr placeholder       [Bool]   whether the node is a placeholder
+  #
   Node =
     ::Struct.new(:children, :endpoint, :placeholder_name, :placeholder) do
       def initialize(children = {}, endpoint = nil, placeholder_name = nil)
@@ -32,23 +34,43 @@ module Lenna
 
   # The router class is responsible for adding routes and calling the
   # middleware chain for each request.
+  #
   class Router
     # @return [Node] the root node of the tree of routes
+    #
+    # @see Node
+    #
     attr_reader :root_node
 
     # @return [Route::Cache] the cache of routes
+    #
+    # @see Cache
+    #
     attr_reader :cache
 
     # @return [Route::NamespaceStack] the stack of namespaces
+    #
+    # @see NamespaceStack
+    #
     attr_reader :namespace_stack
 
     # @return [MiddlewareManager] the middleware manager
+    #
+    # @see MiddlewareManager
+    #
     attr_reader :middleware_manager
 
     # @return [Route::Builder] the route builder
+    #
+    # @see Builder
+    #
     attr_reader :roter_builder
 
+    # This method is used to initialize the router.
+    # By default, it uses the App middleware and the Cache.
+    #
     # @return [void]
+    #
     def initialize(middleware_manager: Middleware::App.new, cache: Cache.new)
       @cache     = cache
       @root_node = Node.new({}, nil)
@@ -76,6 +98,7 @@ module Lenna
     #       # ...
     #     end
     #   end
+    #
     def namespace(prefix, &block)
       @namespace_stack.push(prefix)
       block.call(self)
@@ -89,7 +112,9 @@ module Lenna
     # @since 0.1.0
     #
     # @param middlewares [Array] the middlewares to be used
+    #
     # @return            [void]
+    #
     def use(*middlewares)
       @middleware_manager.use(middlewares)
     end
@@ -103,7 +128,9 @@ module Lenna
     # @param path        [String]         the path to be matched
     # @param middlewares [Array]          the middlewares to be used
     # @param action      [Proc]           the action to be executed
+    #
     # @return            [Lennarb::Route] the route that was added
+    #
     def get(path,    *, &) = add_route(::Rack::GET,    path, *, &)
     def put(path,    *, &) = add_route(::Rack::PUT,    path, *, &)
     def post(path,   *, &) = add_route(::Rack::POST,   path, *, &)
@@ -113,13 +140,16 @@ module Lenna
     def call(env) = dup.call!(env)
 
     # This method is used to call the middleware chain for each request.
+    # It also sets the RACK_ENV to development if it is not set.
     #
     # @param env [Hash] the Rack env
+    #
     # @return    [Array] the Lennarb::Response
     #
     # @since 0.1.0
+    #
     def call!(env)
-      # TODO: - Remove this after.
+      # @todo - Remove this after.
       # env.fetch('RACK_ENV', 'development')
       env['RACK_ENV'] ||= 'development'
 
@@ -147,6 +177,7 @@ module Lenna
     # @since 0.1.0
     #
     # @return            [Lenna::Route] the route that was added
+    #
     def add_route(http_method, path, *middlewares, &action)
       full_path = @namespace_stack.current_prefix + path
 
@@ -160,11 +191,16 @@ module Lenna
 
     # This method is used to process the request.
     #
+    # It uses the Route::Matcher to match the request to a route and
+    # execute the action.
+    #
     # @see Route::Matcher#match_and_execute_route
     #
     # @param req  [Request]  the request
     # @param res  [Response] the response
+    #
     # @return     [void]
+    #
     def process_request(req, res)
       @route_matcher ||= RouteMatcher.new(@root_node)
       @route_matcher.match_and_execute_route(req, res)
