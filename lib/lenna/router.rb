@@ -9,6 +9,8 @@ require 'rack'
 
 # Internal dependencies
 require 'lenna/middleware/app'
+require 'lenna/middleware/default/error_handler'
+require 'lenna/middleware/default/logging'
 require 'lenna/router/builder'
 require 'lenna/router/cache'
 require 'lenna/router/namespace_stack'
@@ -115,9 +117,7 @@ module Lenna
     #
     # @return            [void]
     #
-    def use(*middlewares)
-      @middleware_manager.use(middlewares)
-    end
+    def use(*middlewares) = @middleware_manager.use(middlewares)
 
     # Proxy methods to add routes
     #
@@ -143,9 +143,12 @@ module Lenna
     # @since 0.1.0
     #
     def call!(env)
-      # @todo - Remove this after.
-      # env.fetch('RACK_ENV', 'development')
-      env['RACK_ENV'] ||= 'development'
+      defult_middlewares = [
+        Middleware::Default::Logging,
+        Middleware::Default::ErrorHandler
+      ]
+
+      @middleware_manager.use(defult_middlewares)
 
       middleware_pipeline = @middleware_manager.fetch_or_build_middleware_chain(
         method(:process_request), []

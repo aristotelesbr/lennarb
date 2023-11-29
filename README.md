@@ -163,6 +163,33 @@ app.get('/hello', [TimeMiddleware, LoggerMiddleware]) do |_req, res|
 end
 ```
 
+#### Default middlewares
+
+Lennarb use two default middlewares: `Logging` and `ErrorHandling`.
+
+- `Lenna::Middleware::Logging` - Colorized http request status.
+
+```bash
+❯ bundle exec puma ./config.ru                                                                                                 
+Puma starting in single mode...                                                                                                
+* Puma version: 6.4.0 (ruby 3.2.2-p53) ("The Eagle of Durango")                                                                
+*  Min threads: 0                                                                                                              
+*  Max threads: 5                                                                                                              
+*  Environment: development                                                                                                    
+*          PID: 88312                                                                                                          
+* Listening on http://0.0.0.0:9292                             
+Use Ctrl-C to stop             
+[2023-11-29 14:06:08 -0300] "GET /" 200 0.19ms                                                                                 
+[2023-11-29 14:06:11 -0300] "GET /" 200 0.10ms                                                                                 
+[2023-11-29 14:06:11 -0300] "GET /" 200 0.20ms
+```
+
+- `Lenna::Middleware::ErrorHandling` - Error handling middleware in development mode.
+
+<p align="center">
+    <img src="https://drive.google.com/uc?export=view&id=1sKlHb49nWxBWSNQtaTwzF8wVUaCmdJCT" width="500">
+</p>
+
 ### Render HTML templates
 
 Lennarb allows you to render HTML templates using the `render` method on the response object. The `render` method takes two arguments: the name of the template file, and a hash of variables to pass to the template.
@@ -193,8 +220,6 @@ end
 ```
 
 The example above renders the `{ message: 'Hello World!' }` object as JSON.
-
-
 
 ### TODO
 
