@@ -2,8 +2,8 @@
 
 module Lenna
   class Router
-    # @api public
-    # @note This class is used to cache the routes.
+    # This class is used to cache the routes.
+    #
     class Cache
       def initialize = @cache = {}
 
