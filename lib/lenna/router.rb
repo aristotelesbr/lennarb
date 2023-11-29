@@ -169,6 +169,13 @@ module Lenna
 
     # This method is used to add a route to the tree of routes.
     #
+    # @param http_method [Symbol] the http method to be used (GET, POST, etc...)
+    # @param path        [String] the path to be matched
+    # @param middlewares       [Array<Proc>] the optional middlewares to be used
+    #                                  for the route.
+    # @param action      [Proc]   the block to be executed when the route is
+    #                             matched the block is passed the Rack env.
+    #
     # @see MiddlewareManager#build_middleware_chain
     # @see Route::Cache#add
     # @see Route::Builder#call
@@ -176,7 +183,7 @@ module Lenna
     #
     # @since 0.1.0
     #
-    # @return            [Lenna::Route] the route that was added
+    # @return            [void]
     #
     def add_route(http_method, path, *middlewares, &action)
       full_path = @namespace_stack.current_prefix + path

@@ -73,15 +73,11 @@ module Lenna
       #
       # @return [Boolean] true if the request is a json request
       #
-      # @api private
-      #
       def json_request? = media_type == 'application/json'
 
       # This method parses the json body.
       #
       # @return [Hash] the request json body
-      #
-      # @api private
       #
       def parse_json_body
         @parsed_json_body ||= ::JSON.parse(body_content) if json_request?
@@ -93,7 +89,6 @@ module Lenna
       #
       # @return [Hash] the request body params
       #
-      # @api private
       def parse_body_params
         case media_type
         when 'application/json'
@@ -109,8 +104,6 @@ module Lenna
       #
       # @return [Hash] the request post params
       #
-      # @api private
-      #
       def post_params
         @post_params ||=
           if body_content.empty?
@@ -125,8 +118,6 @@ module Lenna
       # @param name [String] the header name
       #
       # @return [String] the formatted header name
-      #
-      # @api private
       #
       def format_header_name(name)
         name.sub(/^HTTP_/, '').split('_').map(&:capitalize).join('-')

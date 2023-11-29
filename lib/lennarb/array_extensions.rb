@@ -23,4 +23,6 @@ module Lennarb
   end
 end
 
+# Extend the Array class with the ArrayExtensions module.
+#
 Array.extend(Lennarb::ArrayExtensions)
