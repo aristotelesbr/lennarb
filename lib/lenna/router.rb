@@ -126,8 +126,6 @@ module Lenna
     # @since 0.1.0
     #
     # @param path        [String]         the path to be matched
-    # @param middlewares [Array]          the middlewares to be used
-    # @param action      [Proc]           the action to be executed
     #
     # @return            [Lennarb::Route] the route that was added
     #
