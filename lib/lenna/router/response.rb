@@ -12,6 +12,13 @@ module Lenna
       private attr_writer :body, :headers, :status, :params
       public  attr_reader :body, :headers, :status, :params
 
+      # This method will initialize the response.
+      #
+      # @param headers [Hash]          the response headers
+      # @param status  [Integer]       the response status
+      # @param body    [Array(String)] the response body
+      #
+      # @return [void]
       def initialize(headers = {}, status = 200, body = [])
         @params  = {}
         @body    = body
@@ -26,6 +33,7 @@ module Lenna
       # @return      [void]
       #
       # @api public
+      #
       def assign_status(value) = put_status(value)
 
       # Thi method set the body value.
@@ -35,6 +43,7 @@ module Lenna
       # @return      [void]
       #
       # @api public
+      #
       def assign_body(value) = put_body(value)
 
       # This method will set the header value.
@@ -57,6 +66,7 @@ module Lenna
       #
       #   assign_header('X-Request-Id', ['456', '789'])
       #   # => ['123', '456', '789']
+      #
       def assign_header(key, value) = put_header(key, value)
 
       # Add multiple headers.
@@ -84,6 +94,7 @@ module Lenna
       # @return [String] the content type
       #
       # @api public
+      #
       def content_type = @headers['Content-Type']
 
       # This method will delete the header.
@@ -92,6 +103,7 @@ module Lenna
       # @return       [void]
       #
       # @api public
+      #
       def remove_header(key) = delete_header(key)
 
       # This method will get the redirect location.
@@ -101,6 +113,7 @@ module Lenna
       # @return      [String] the cookie
       #
       # @api public
+      #
       def cookie(value)
         value => ::String
 
@@ -118,6 +131,7 @@ module Lenna
       # @return      [void]
       #
       # @api public
+      #
       def assign_cookie(key, value)
         key   => ::String
         value => ::String
@@ -130,7 +144,9 @@ module Lenna
       # This method will get all the cookies.
       #
       # @return [Hash] the cookies
+      #
       # @api public
+      #
       def cookies
         @headers['Set-Cookie']
           .then { |cookie| cookie.split('; ') }
@@ -149,6 +165,7 @@ module Lenna
       # @return         [void]
       #
       # @api public
+      #
       def redirect(location, status: 302)
         location => ::String
 
@@ -165,6 +182,7 @@ module Lenna
       # @return [void]
       #
       # @api public
+      #
       def finish = finish!
 
       # This method will set the response content type.
@@ -175,6 +193,7 @@ module Lenna
       # @return        [void]
       #
       # @api public
+      #
       def assign_content_type(type, charset: nil)
         type => ::String
 
@@ -196,6 +215,7 @@ module Lenna
       # @return     [void]
       #
       # @api public
+      #
       def json(data:, status: 200)
         data => ::Array | ::Hash
 
@@ -213,6 +233,7 @@ module Lenna
       # @return    [void]
       #
       # @api public
+      #
       def html(str = nil, status: 200)
         put_status(status)
         put_header('Content-Type', 'text/html')
@@ -242,6 +263,7 @@ module Lenna
       #   render('index', locals: { name: 'John' })
       #   # => Render the template `views/index.html.erb` with the local
       #   #    variable `name` set to 'John'
+      #
       def render(template_name, path: 'views', locals: {}, status: 200)
         template_path = ::File.join(path, "#{template_name}.html.erb")
 
@@ -273,6 +295,7 @@ module Lenna
       #
       # @see #render
       # @see #finish!
+      #
       def not_found
         put_body(['Not Found'])
         put_status(404)
@@ -287,6 +310,7 @@ module Lenna
       # @return [Integer] the response status
       #
       # @api private
+      #
       def put_status(value)
         value => ::Integer
 
@@ -298,7 +322,9 @@ module Lenna
       # This method will set the body.
       #
       # @param body [Array(String)] the body to be used
+      #
       # @return     [void]
+      #
       def put_body(value)
         value => ::String | ::Array
 
@@ -314,6 +340,7 @@ module Lenna
       # @param value [String] the value to be used
       #
       # @return      [void]
+      #
       def put_header(key, value)
         raise ::ArgumentError, 'key must be a string' unless key.is_a?(::String)
 
@@ -332,11 +359,13 @@ module Lenna
       # @param key [String] the header name
       #
       # @return    [void]
+      #
       def delete_header(key) = @headers.delete(key)
 
       # @param value [String] the redirect location
       #
       # @return      [void]
+      #
       def location!(value)
         value => ::String
 
@@ -346,6 +375,7 @@ module Lenna
       # This method will finish the response.
       #
       # @return [void]
+      #
       def finish!
         default_router_header!
         default_content_length!    unless @headers['Content-Length']
@@ -357,6 +387,7 @@ module Lenna
       # This method will set the response default html content type.
       #
       # @return [void]
+      #
       def default_html_content_type!
         put_header('Content-Type', 'text/html')
       end
@@ -364,6 +395,7 @@ module Lenna
       # This method will set the response default content length.
       #
       # @return [void]
+      #
       def default_content_length!
         put_header('Content-Length', @body.join.size.to_s)
       end
@@ -371,6 +403,7 @@ module Lenna
       # This method will set the response default router header.
       #
       # @return [void]
+      #
       def default_router_header!
         put_header('Server', "Lennarb VERSION #{::Lennarb::VERSION}")
       end
