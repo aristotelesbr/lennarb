@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.6] - 2023-29-11
+
+### Changed
+
+- Add default middlewares to `Lennarb::Router` class. Now, the `Lennarb::Router` class has the following middlewares by default:
+  - `Lennarb::Middleware::Default::Logging`
+  - `Lennarb::Middleware::Default::ErrorHandling`
+
 ## [0.1.5] - 2023-25-11
 
 ### Added
