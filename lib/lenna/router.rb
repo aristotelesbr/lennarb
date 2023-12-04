@@ -73,12 +73,23 @@ module Lenna
     #
     # @return [void]
     #
-    def initialize(middleware_manager: Middleware::App.new, cache: Cache.new)
+    def initialize(
+      middleware_manager: Middleware::App.instance,
+      cache: Cache.new
+    )
       @cache     = cache
       @root_node = Node.new({}, nil)
       @middleware_manager = middleware_manager
       @namespace_stack    = NamespaceStack.new
       @roter_builder      = Builder.new(@root_node)
+
+      default_milddlewares = [
+        Middleware::Default::Logging,
+        Middleware::Default::ErrorHandler
+      ]
+
+      @middleware_manager.use(default_milddlewares) unless @default_milddlewares
+      @default_milddlewares = true
     end
 
     # This method is used to add a namespace to the routes.
@@ -143,13 +154,6 @@ module Lenna
     # @since 0.1.0
     #
     def call!(env)
-      defult_middlewares = [
-        Middleware::Default::Logging,
-        Middleware::Default::ErrorHandler
-      ]
-
-      @middleware_manager.use(defult_middlewares)
-
       middleware_pipeline = @middleware_manager.fetch_or_build_middleware_chain(
         method(:process_request), []
       )
@@ -183,9 +187,11 @@ module Lenna
     def add_route(http_method, path, *middlewares, &action)
       full_path = @namespace_stack.current_prefix + path
 
-      middleware_chain = @middleware_manager.build_middleware_chain(
+      middleware_chain = @middleware_manager.fetch_or_build_middleware_chain(
         action,
-        middlewares
+        middlewares,
+        http_method:,
+        path:
       )
 
       @roter_builder.call(http_method, full_path, middleware_chain, @cache)
