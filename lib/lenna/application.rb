@@ -11,12 +11,36 @@ require 'lenna/router'
 module Lenna
   # The base class is used to start the server.
   #
-  class Base < Router
+  class Application < Router
+    # Initialize the base class
+    #
+    # @param block [Proc] The block to be executed
+    #
+    # @return [void]
+    #
+    # @example:
+    #   Lenna::Base.new do |app|
+    #     app.get('/hello') do |req, res|
+    #       res.html('Hello World!')
+    #     end
+    #     app.get('/hello/:name') do |req, res|
+    #       name = req.params[:name]
+    #       res.html("Hello #{name}!")
+    #     end
+    #   end
+    #
+    # @api public
+    #
+    def initialize
+      super
+
+      yield self if block_given?
+    end
     # The default port is 3000
     #
     DEFAULT_PORT = 3000
     private_constant :DEFAULT_PORT
-    
+
     # The default host is localhost
     #
     DEFAULT_HOST = 'localhost'
