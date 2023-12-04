@@ -33,6 +33,7 @@ Gem::Specification.new do |spec|
 
   # Uncomment to register a new dependency of your gem
   spec.add_development_dependency 'minitest', '~> 5.20'
+  spec.add_development_dependency 'rack-test', '~> 2.1'
   spec.add_development_dependency 'rake', '~> 13.0', '>= 13.0.6'
   spec.metadata['rubygems_mfa_required'] = 'true'
 end
