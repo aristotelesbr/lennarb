@@ -94,7 +94,7 @@ Lennarb uses a simple routing system that allows you to define routes for your a
 
 ```rb
 app.get('/hello') do |_req, res|
-    res.html('Hello World!')
+  res.html('Hello World!')
 end
 ```
 
