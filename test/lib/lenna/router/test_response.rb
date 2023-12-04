@@ -12,12 +12,24 @@ module Lenna
         @res = Response.new
       end
 
+      def test_assign_params
+        @res.assign_params(foo: 'bar')
+
+        assert_equal({ foo: 'bar' }, @res.params)
+      end
+
+      def test_params=
+        @res.params = { foo: 'bar' }
+
+        assert_equal({ foo: 'bar' }, @res.params)
+      end
+
       def test_status
         assert_equal 200, @res.status
       end
 
-      def test_assign_status
-        @res.assign_status(404)
+      def test_status=
+        @res.status = 404
 
         assert_equal 404, @res.status
       end
@@ -35,7 +47,7 @@ module Lenna
 
         assert_equal ['Hello'], @res.body
 
-        @res.assign_body(['World'])
+        @res.body = ['World']
 
         assert_equal ['World'], @res.body
       end
@@ -67,8 +79,10 @@ module Lenna
 
       def test_assign_headers
         @res.assign_headers('Content-Type' => 'text/plain')
+        @res['Foo'] = 'Bar'
 
-        assert_equal({ 'Content-Type' => 'text/plain' }, @res.headers)
+        assert_equal('Bar', @res.headers['Foo'])
+        assert_equal('text/plain', @res.headers['Content-Type'])
       end
 
       def test_delete_header
