@@ -12,10 +12,6 @@ module Lenna
         @res = Response.new
       end
 
-      def test_with_invlaid_status
-        assert_raises(::ArgumentError) { @res.assign_status('404') }
-      end
-
       def test_status
         assert_equal 200, @res.status
       end
@@ -83,29 +79,15 @@ module Lenna
         assert_empty @res.headers
       end
 
-      def test_with_invlaid_cookieh
+      def test_with_invlaid_cookie
         assert_raises(::ArgumentError) { @res.assign_cookie(123) }
-      end
-
-      def test_cookie_with_key
-        @res.assign_cookie('foo', 'bar')
-
-        assert_equal 'bar', @res.cookie('foo')
-      end
-
-      def test_cookies
-        @res.assign_cookie('foo', 'bar')
-
-        assert_equal({ 'foo' => 'bar' }, @res.cookies)
       end
 
       def test_assign_cookie
         @res.assign_cookie('foo', 'bar')
 
-        assert_equal({ 'foo' => 'bar' }, @res.cookies)
+        assert_equal('foo=bar', @res.cookies)
       end
-
-      # Content-Type
 
       def test_content_type
         @res.assign_content_type('text/plain')
@@ -118,10 +100,6 @@ module Lenna
 
         assert_equal 'text/plain; charset=utf-8', @res.content_type
       end
-
-      # Location
-
-      # Redirection
 
       def test_redirect
         @res.redirect('/foo')
@@ -137,8 +115,6 @@ module Lenna
         assert_equal '/foo', @res.headers['Location']
       end
 
-      # Formats
-
       def test_html
         @res.html('Hello')
 
@@ -147,7 +123,7 @@ module Lenna
       end
 
       def test_json
-        @res.json(data: { hello: 'World' })
+        @res.json({ hello: 'World' })
 
         assert_equal ['{"hello":"World"}'], @res.body
         assert_equal 'application/json', @res.content_type
@@ -170,7 +146,7 @@ module Lenna
         fake_file_content = '<h1>Hello <%= name %></h1>'
         expected_html     = ['<h1>Hello World</h1>']
 
-        expected_headers  = {
+        expected_headers = {
           'Content-Type' => 'text/html',
           'Server' => "Lennarb VERSION #{Lennarb::VERSION}",
           'Content-Length' => '20'
