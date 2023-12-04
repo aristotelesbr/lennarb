@@ -9,6 +9,23 @@ module Lenna
     # @attr params  [Hash] the request params
     #
     class Request < ::Rack::Request
+      # This method is used to set the request headers.
+      #
+      # @param name  [String] the header name
+      # @param value [String] the header value
+      #
+      # @return [String] the header value
+      #
+      # @api public
+      #
+      # @example:
+      #   request.put_header('Foo', 'bar')
+      #
+      #  request.headers
+      #  # => { 'Foo' => 'bar' }
+      #
+      def put_header(name, value) = headers[name] = value
+
       # This method is used to set the request params.
       #
       # @param params [Hash] the request params
@@ -35,9 +52,9 @@ module Lenna
       #
       # @since 0.1.0
       #
-      def body_content
-        body.rewind
-        body.read
+      def body
+        super.rewind
+        super.read
       end
 
       # This method returns the headers in a normalized way.
@@ -59,7 +76,7 @@ module Lenna
         @headers
       end
 
-      # This method returns the request body in a normalized way.
+      # This method returns the request body like a json.
       #
       # @return [Hash] the request body
       #
@@ -69,13 +86,11 @@ module Lenna
 
       private
 
-      # This method checks if the request is a json request.
+      # This method returns the media type.
       #
-      # @return [Boolean] true if the request is a json request
+      # @return [String] the request media type
       #
-      # @api private
-      #
-      def json_request? = media_type == 'application/json'
+      def media_type = headers['Content-Type']
 
       # This method parses the json body.
       #
@@ -84,7 +99,7 @@ module Lenna
       # @api private
       #
       def parse_json_body
-        @parsed_json_body ||= ::JSON.parse(body_content) if json_request?
+        @parsed_json_body ||= ::JSON.parse(body)
       rescue ::JSON::ParserError
         {}
       end
@@ -96,12 +111,8 @@ module Lenna
       # @api private
       def parse_body_params
         case media_type
-        when 'application/json'
-          parse_json_body
-        when 'application/x-www-form-urlencoded', 'multipart/form-data'
-          post_params
-        else
-          {}
+        in 'application/json' then parse_json_body
+        else post_params
         end
       end
 
@@ -113,10 +124,10 @@ module Lenna
       #
       def post_params
         @post_params ||=
-          if body_content.empty?
+          if body.empty?
             {}
           else
-            ::Rack::Utils.parse_nested_query(body_content)
+            ::Rack::Utils.parse_nested_query(body)
           end
       end
 
