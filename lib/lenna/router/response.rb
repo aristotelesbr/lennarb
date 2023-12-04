@@ -9,14 +9,83 @@ module Lenna
     # @attr status  [Integer]       the response status
     # @attr params  [Hash]          the response params
     class Response
-      private attr_writer :body, :headers, :status, :params
-      public  attr_reader :body, :headers, :status, :params
+      # The status of the response.
+      #
+      # @return [Integer] the status of the Response
+      #
+      # @api public
+      #
+      # @example:
+      #   response.status = 200
+      #   # => 200
+      #
+      #   response.status
+      #   # => 200
+      #
+      public attr_accessor :status
+
+      # The body of the response.
+      #
+      # @return [Array(String)] the body of the Response
+      #
+      # @api public
+      #
+      # @example:
+      #
+      #   response.body
+      #   # => ['Hello, World!']
+      #
+      public attr_reader :body
+
+      # The headers of the response.
+      #
+      # @return [Hash] the headers of the Response
+      #
+      # @api public
+      #
+      # @example:
+      #
+      #   response.headers
+      #   # => { 'Content-Type' => 'text/html' }
+      #
+      public attr_reader :headers
+
+      # The params of the response.
+      #
+      # @return [Hash] the params of the Response
+      #
+      # @api public
+      #
+      # @example:
+      #
+      #   response.params
+      #   # => { 'name' => 'John' }
+      #
+      public attr_reader :params
+
+      # The length of the response.
+      #
+      # @return [Integer] the length of the Response
+      #
+      # @api public
+      #
+      # @example:
+      #
+      #   response.length
+      #   # => 0
+      #
+      public attr_reader :length
+
+      # private attr_writer :body, :headers, :status, :params
+      # public  attr_reader :body, :headers, :status, :params
 
       # This method will initialize the response.
       #
-      # @param headers [Hash]          the response headers
-      # @param status  [Integer]       the response status
-      # @param body    [Array(String)] the response body
+      # @param headers [Hash]          the response headers, default is {}
+      # @param status  [Integer]       the response status, default is 200
+      # @param body    [Array(String)] the response body, default is []
+      # @param params  [Hash]          the response params, default is {}
+      # @length        [Integer]      the response length, default is 0
       #
       # @return [void]
       def initialize(headers = {}, status = 200, body = [])
@@ -24,11 +93,26 @@ module Lenna
         @body    = body
         @status  = status
         @headers = headers
+        @length  = 0
       end
 
-      # This method will set the response status.
+      # Returns the response header corresponding to `key`.
       #
-      # @param value [Integer] the response status
+      # @param key [String] the header name
+      #
+      # @return    [String] the header value
+      #
+      # @api public
+      #
+      # @example:
+      #     res["Content-Type"]   # => "text/html"
+      #     res["Content-Length"] # => "42"
+      #
+      def [](key) = @headers[key]
+
+      # This method will set the status value.
+      #
+      # @param value [Integer] the status value
       #
       # @return      [void]
       #
@@ -68,6 +152,7 @@ module Lenna
       #   # => ['123', '456', '789']
       #
       def assign_header(key, value) = put_header(key, value)
+      alias []= assign_header
 
       # Add multiple headers.
       #
@@ -106,23 +191,6 @@ module Lenna
       #
       def remove_header(key) = delete_header(key)
 
-      # This method will get the redirect location.
-      #
-      # @param value [String] the key of the cookie
-      #
-      # @return      [String] the cookie
-      #
-      # @api public
-      #
-      def cookie(value)
-        value => ::String
-
-        @headers['Set-Cookie']
-          .then { |cookie| cookie.split('; ') }
-          .then { |cookie| cookie.find { |c| c.start_with?("#{value}=") } }
-          .then { |cookie| cookie.split('=').last }
-      end
-
       # This method will set the cookie.
       #
       # @param key   [String] the key of the cookie
@@ -132,13 +200,41 @@ module Lenna
       #
       # @api public
       #
+      # @example:
+      #   response.assign_cookie('foo', 'bar')
+      #   # => 'foo=bar'
+      #
+      #   response.header['Set-Cookie']
+      #   # => 'foo=bar'
+      #
+      #  response.assign_cookie('foo2', 'bar2')
+      #  # => 'foo=bar; foo2=bar2'
+      #  response.header['Set-Cookie']
+      #  # => 'foo=bar; foo2=bar2'
+      #
+      #  response.assign_cookie('bar', {
+      #    domain: 'example.com',
+      #    path: '/',
+      #    # expires: Time.now + 24 * 60 * 60,
+      #    secure: true,
+      #    httponly: true
+      #  })
+      #
+      # response.header['Set-Cookie'].split('\n').last
+      # # => 'bar=; domain=example.com; path=/; secure; HttpOnly'
+      #
+      # @note:
+      #  This method doesn't sign and/or encrypt the cookie.
+      #  If you want to sign and/or encrypt the cookie, then you can use
+      #  the `Rack::Session::Cookie` middleware.
+      #
       def assign_cookie(key, value)
         key   => ::String
         value => ::String
 
-        cookie = "#{key}=#{value}"
-
-        put_header('Set-Cookie', cookie)
+        ::Rack::Utils.set_cookie_header!(@headers, key, value)
+      rescue ::NoMatchingPatternError
+        raise ::ArgumentError, 'key must be a string'
       end
 
       # This method will get all the cookies.
@@ -147,14 +243,26 @@ module Lenna
       #
       # @api public
       #
-      def cookies
-        @headers['Set-Cookie']
-          .then { |cookie| cookie.split('; ') }
-          .each_with_object({}) do |cookie, acc|
-          key, value = cookie.split('=')
+      def cookies = @headers['set-cookie']
 
-          acc[key] = value
-        end
+      # This method will delete the cookie.
+      #
+      # @param key [String] the key of the cookie
+      #
+      # @return    [void]
+      #
+      # @api public
+      #
+      # @example:
+      #   response.delete_cookie('foo')
+      #   # => 'foo=; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 -0000'
+      #
+      def delete_cookie(key)
+        key => ::String
+
+        ::Rack::Utils.delete_cookie_header!(@headers, key)
+      rescue ::NoMatchingPatternError
+        raise ::ArgumentError, 'key must be a string'
       end
 
       # This method will set redirect location. The status will be set to 302.
@@ -216,7 +324,14 @@ module Lenna
       #
       # @api public
       #
-      def json(data:, status: 200)
+      # @example:
+      #   response.json({ foo: 'bar' })
+      #   # => { foo: 'bar' }
+      #
+      #  response.json([{ foo: 'bar' }])
+      #  # => [{ foo: 'bar' }]
+      #
+      def json(data = {}, status: 200)
         data => ::Array | ::Hash
 
         put_status(status)
