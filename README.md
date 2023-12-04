@@ -2,8 +2,6 @@
 
 Lennarb is a experimental lightweight, fast, and modular web framework for Ruby based on Rack.
 
-image
-
 ## Table of Contents
 
 - [About](#about)
@@ -26,6 +24,7 @@ Lennarb is designed to be simple and easy to use, while still providing the powe
 ## Installation
 
 Add this line to your application's Gemfile:
+
 
 ```rb
 gem 'lennarb'
@@ -224,13 +223,8 @@ The example above renders the `{ message: 'Hello World!' }` object as JSON.
 ### TODO
 
 - [ ] Add support for mime types
-- [ ] Add support for sessions
-- [ ] Add support for websockets
 - [ ] Add support for streaming
-- [ ] Add support for CORS
 - [ ] Add support for CSRF
-- [ ] Add support for caching
-- [ ] Add support for gzip compression
 - [ ] Add support for SSL
 - [ ] Add support for HTTP/2
 - [ ] Add support for HTTP/3
