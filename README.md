@@ -47,15 +47,43 @@ $ gem install lennarb
 After installing, you can begin using Lennarb to build your modular web applications with Ruby. Here is an example of how to get started:
 
 ```rb
-app = Lenna::Base.new
+require 'lennarb'
 
-app.get('/hello/:name') do |req, res|
+Lenna::Application do |app|
+  # Simple routes
+  app.get('/hello') do |_req, res|
+    res.html('Hello World!')
+  end
+  app.get('/hello/:name') do |req, res|
     name = req.params[:name]
 
-    res.html("Hello #{name}!")
+    res.json({message: "Hello #{name}!"})
+  end
+
+  # With namespaces
+  app.namespace("/api/v1") do |r|
+    r.get('/hello/:name') do |_req, res|
+      name = req.params[:name]
+      
+      res.html("Hello #{name} from API V1")
+    end
+  end
+
+  # With middlewares
+  app.get('/hello', TimeMiddleware) do |_req, res|
+    res.html('Hello World!')
+  end
+ 
+  # With multiple middlewares
+  app.get('/hello', [TimeMiddleware, LoggerMiddleware]) do |_req, res|
+    res.html('Hello World!')
+  end
+
+  # With global middlewares
+  app.use(Lenna::Middleware::Logger)
 end
 
-app.listen(8000)
+run app
 ```
 
 This example creates a new Lennarb application, defines a route for the `/hello/:name` path, and then starts the application on port 8000. When a request is made to the `/hello/:name` path, the application will respond with `Hello <name>!`, where `<name>` is the value of the `:name` parameter in the request path.
@@ -78,9 +106,9 @@ Lennarb allows you to define parameters in your routes. Parameters are defined u
 
 ```rb
 app.get('/hello/:name') do |req, res|
-    name = req.params[:name]
+  name = req.params[:name]
 
-    res.html("Hello #{name}!")
+  res.html("Hello #{name}!")
 end
 ```
 
@@ -92,9 +120,9 @@ Lennarb allows you to define namespaces in your routes. Namespaces are defined u
 
 ```rb
 app.namespace('/api') do |router|
-    roter.get('/hello') do |_req, res|
-        res.html('Hello World!')
-    end
+  roter.get('/hello') do |_req, res|
+    res.html('Hello World!')
+  end
 end
 ```
 
@@ -106,7 +134,7 @@ The Lennarb application object has a `use` method that allows you to add middlew
 
 ```rb
 app.get('/hello') do |_req, res|
-    res.html('Hello World!')
+  res.html('Hello World!')
 end
 
 app.use(Lenna::Middleware::Logger)
@@ -116,7 +144,7 @@ You can also define middleware for specific route.
 
 ```rb
 app.get('/hello', TimeMiddleware) do |_req, res|
-    res.html('Hello World!')
+  res.html('Hello World!')
 end
 ```
 
@@ -124,13 +152,13 @@ You can create your own middleware by creating a class that implements the `call
 
 ```rb
 class TimeMiddleware
-    def call(req, res, next_middleware)
-        puts Time.now
+  def call(req, res, next_middleware)
+    puts Time.now
 
-        req.headers['X-Time'] = Time.now
+    req.headers['X-Time'] = Time.now
 
-        next_middleware.call
-    end
+    next_middleware.call
+  end
 end
 ```
 
@@ -138,11 +166,11 @@ Or using a lambda functions.
 
 ```rb
 TimeMiddleware = ->(req, res, next_middleware) do
-    puts Time.now
+  puts Time.now
 
-    req.headers['X-Time'] = Time.now
-
-    next_middleware.call
+  req.headers['X-Time'] = Time.now
+  
+  next_middleware.call
 end
 ```
 
@@ -150,7 +178,7 @@ So you can use it like this:
 
 ```rb
 app.get('/hello', TimeMiddleware) do |_req, res|
-    res.html('Hello World!')
+  res.html('Hello World!')
 end
 ```
 
@@ -158,7 +186,7 @@ And you can use multiple middlewares on the same route.
 
 ```rb
 app.get('/hello', [TimeMiddleware, LoggerMiddleware]) do |_req, res|
-    res.html('Hello World!')
+  res.html('Hello World!')
 end
 ```
 
@@ -195,7 +223,7 @@ Lennarb allows you to render HTML templates using the `render` method on the res
 
 ```rb
 app.get('/hello') do |_req, res|
-    res.render('hello', locals: { name: 'World' })
+  res.render('hello', locals: { name: 'World' })
 end
 ```
 
@@ -204,7 +232,7 @@ By default, Lennarb looks for templates in the `views` directory in root path. Y
 
 ```rb
 app.get('/hello') do |_req, res|
-    res.render('hello', path: 'app/web/templates', locals: { name: 'World' })
+  res.render('hello', path: 'app/web/templates', locals: { name: 'World' })
 end
 ```
 
@@ -214,7 +242,7 @@ Lennarb allows you to render JSON using the `json` method on the response object
 
 ```rb
 app.get('/hello') do |_req, res|
-    res.json(data: { message: 'Hello World!' })
+  res.json(message: 'Hello World!')
 end
 ```
 
