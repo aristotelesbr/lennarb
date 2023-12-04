@@ -4,8 +4,6 @@ Lennarb is a experimental lightweight, fast, and modular web framework for Ruby 
 
 [![Testing](https://github.com/aristotelesbr/lennarb/actions/workflows/main.yml/badge.svg)](https://github.com/aristotelesbr/lennarb/blob/main/.github/workflows/main.yml)
 
-# tag 
-
 ## Table of Contents
 
 - [About](#about)
