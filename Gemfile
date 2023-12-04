@@ -39,4 +39,9 @@ group :development, :test do
   # Minitest provides a complete suite of testing facilities supporting TDD,
   # BDD, mocking, and benchmarking.
   gem 'minitest', '~> 5.20'
+  # [https://rubygems.org/gems/rack-test]
+  # Rack::Test is a small, simple testing API for Rack apps. It can be used on
+  # its own or as a reusable starting point for Web frameworks and testing
+  # libraries to build on.
+  gem 'rack-test', '~> 2.1'
 end
