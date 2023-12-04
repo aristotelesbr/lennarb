@@ -76,9 +76,6 @@ module Lenna
       #
       public attr_reader :length
 
-      # private attr_writer :body, :headers, :status, :params
-      # public  attr_reader :body, :headers, :status, :params
-
       # This method will initialize the response.
       #
       # @param headers [Hash]          the response headers, default is {}
@@ -96,6 +93,27 @@ module Lenna
         @length  = 0
       end
 
+      # This method will set the params.
+      #
+      # @param params [Hash] the params to be used
+      #
+      # @return       [void]
+      #
+      # @api public
+      #
+      # @example:
+      #   response.params = { 'name' => 'John' }
+      #   # => { 'name' => 'John' }
+      #
+      def assign_params(params)
+        params => ::Hash
+
+        @params = params
+      rescue ::NoMatchingPatternError
+        raise ::ArgumentError, 'params must be a hash'
+      end
+      alias :params= assign_params
+
       # Returns the response header corresponding to `key`.
       #
       # @param key [String] the header name
@@ -110,16 +128,6 @@ module Lenna
       #
       def [](key) = @headers[key]
 
-      # This method will set the status value.
-      #
-      # @param value [Integer] the status value
-      #
-      # @return      [void]
-      #
-      # @api public
-      #
-      def assign_status(value) = put_status(value)
-
       # Thi method set the body value.
       #
       # @param value [Array(String)] the body value
@@ -129,6 +137,7 @@ module Lenna
       # @api public
       #
       def assign_body(value) = put_body(value)
+      alias :body= assign_body
 
       # This method will set the header value.
       #
@@ -173,6 +182,7 @@ module Lenna
 
         headers.each { |key, value| put_header(key, value) }
       end
+      alias :headers= assign_headers
 
       # This method will get the content type.
       #
