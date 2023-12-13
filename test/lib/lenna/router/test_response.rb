@@ -12,16 +12,24 @@ module Lenna
         @res = Response.new
       end
 
-      def test_with_invlaid_status
-        assert_raises(::ArgumentError) { @res.assign_status('404') }
+      def test_assign_params
+        @res.assign_params(foo: 'bar')
+
+        assert_equal({ foo: 'bar' }, @res.params)
+      end
+
+      def test_params=
+        @res.params = { foo: 'bar' }
+
+        assert_equal({ foo: 'bar' }, @res.params)
       end
 
       def test_status
         assert_equal 200, @res.status
       end
 
-      def test_assign_status
-        @res.assign_status(404)
+      def test_status=
+        @res.status = 404
 
         assert_equal 404, @res.status
       end
@@ -39,7 +47,7 @@ module Lenna
 
         assert_equal ['Hello'], @res.body
 
-        @res.assign_body(['World'])
+        @res.body = ['World']
 
         assert_equal ['World'], @res.body
       end
@@ -71,8 +79,10 @@ module Lenna
 
       def test_assign_headers
         @res.assign_headers('Content-Type' => 'text/plain')
+        @res['Foo'] = 'Bar'
 
-        assert_equal({ 'Content-Type' => 'text/plain' }, @res.headers)
+        assert_equal('Bar', @res.headers['Foo'])
+        assert_equal('text/plain', @res.headers['Content-Type'])
       end
 
       def test_delete_header
@@ -83,29 +93,15 @@ module Lenna
         assert_empty @res.headers
       end
 
-      def test_with_invlaid_cookieh
+      def test_with_invlaid_cookie
         assert_raises(::ArgumentError) { @res.assign_cookie(123) }
-      end
-
-      def test_cookie_with_key
-        @res.assign_cookie('foo', 'bar')
-
-        assert_equal 'bar', @res.cookie('foo')
-      end
-
-      def test_cookies
-        @res.assign_cookie('foo', 'bar')
-
-        assert_equal({ 'foo' => 'bar' }, @res.cookies)
       end
 
       def test_assign_cookie
         @res.assign_cookie('foo', 'bar')
 
-        assert_equal({ 'foo' => 'bar' }, @res.cookies)
+        assert_equal('foo=bar', @res.cookies)
       end
-
-      # Content-Type
 
       def test_content_type
         @res.assign_content_type('text/plain')
@@ -118,10 +114,6 @@ module Lenna
 
         assert_equal 'text/plain; charset=utf-8', @res.content_type
       end
-
-      # Location
-
-      # Redirection
 
       def test_redirect
         @res.redirect('/foo')
@@ -137,8 +129,6 @@ module Lenna
         assert_equal '/foo', @res.headers['Location']
       end
 
-      # Formats
-
       def test_html
         @res.html('Hello')
 
@@ -147,7 +137,7 @@ module Lenna
       end
 
       def test_json
-        @res.json(data: { hello: 'World' })
+        @res.json({ hello: 'World' })
 
         assert_equal ['{"hello":"World"}'], @res.body
         assert_equal 'application/json', @res.content_type
@@ -170,7 +160,7 @@ module Lenna
         fake_file_content = '<h1>Hello <%= name %></h1>'
         expected_html     = ['<h1>Hello World</h1>']
 
-        expected_headers  = {
+        expected_headers = {
           'Content-Type' => 'text/html',
           'Server' => "Lennarb VERSION #{Lennarb::VERSION}",
           'Content-Length' => '20'

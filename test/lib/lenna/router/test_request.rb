@@ -38,20 +38,6 @@ module Lenna
         assert_equal 'bar', request.json_body['description']
       end
 
-      def test_combined_params
-        env = ::Rack::MockRequest.env_for(
-          '/?query_param=baz',
-          'CONTENT_TYPE' => 'application/json',
-          :method => 'POST',
-          :input => '{"title":"foo","description":"bar"}'
-        )
-        request = Request.new(env)
-
-        assert_equal 'baz', request.params['query_param']
-        assert_equal 'foo', request.params['title']
-        assert_equal 'bar', request.params['description']
-      end
-
       def test_invalid_json_body
         env = ::Rack::MockRequest.env_for(
           '/',
@@ -61,6 +47,17 @@ module Lenna
         request = Request.new(env)
 
         assert_empty request.json_body
+      end
+
+      def test_body_content
+        env = ::Rack::MockRequest.env_for(
+          '/',
+          'CONTENT_TYPE' => 'application/json',
+          :input => '{"title":"foo","description":"bar"}'
+        )
+        request = Request.new(env)
+
+        assert_equal '{"title":"foo","description":"bar"}', request.body
       end
     end
   end

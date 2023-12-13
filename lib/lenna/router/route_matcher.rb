@@ -31,7 +31,7 @@ module Lenna
         endpoint   = find_endpoint(@root_node, path_parts, params)
 
         if endpoint && (action = endpoint[req.request_method])
-          req.params.merge!(params)
+          req.assign_params(params)
           action.call(req, res)
         else
           res.not_found

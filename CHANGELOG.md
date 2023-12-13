@@ -4,6 +4,61 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.6] - 2023-29-11
+
+### Changed
+
+- Add default middlewares to `Lennarb::Router` class. Now, the `Lennarb::Router` class has the following middlewares by default:
+  - `Lennarb::Middleware::Default::Logging`
+  - `Lennarb::Middleware::Default::ErrorHandling`
+
+### Changed
+
+- Replace `assign_status` to `=` on Response
+
+```rb
+response.status = 200
+```
+
+- Rename `Lenna::Base` to `Lenna::Application` and accept a block to build the routes. Ex.
+
+```rb
+Lenna::Application.new do |app|
+    app.get '/hello' do |req, res|
+        res.status = 200
+        res['Content-Type'] = 'text/plain'
+        res.body = 'Hello World'
+    end
+    app.post '/hello' do |req, res|
+        res.status = 200
+        res['Content-Type'] = 'text/plain'
+        res.body = 'Hello World'
+    end
+end
+```
+
+- The Middleware app now implements [Singleton](https://ruby-doc.org/stdlib-2.5.1/libdoc/singleton/rdoc/Singleton.html) pattern to manager state.
+
+### Added
+
+- Add alias to `assign_header` to `[]=` on Response. Now, you can use:
+
+```rb
+response['Content-Type'] = 'application/json'
+```
+
+- Add alias to `assign_body` to `:body=` on Response. Now, you can use:
+
+```rb
+response.body = 'Hello World'
+```
+
+- Add alias to `assign_params` to `:params=` on Request. Now, you can use:
+
+```rb
+request.params = { name: 'John' }
+```
+
 ## [0.1.5] - 2023-25-11
 
 ### Added

@@ -6,6 +6,7 @@ module Lenna
   module Middleware
     module Default
       # This middleware will handle errors.
+      #
       module ErrorHandler
         extend self
 
@@ -24,7 +25,7 @@ module Lenna
           env = req.env
           log_error(env, e)
 
-          render_error_page(e, env, req, res)
+          render_error_page(e, req, res)
         end
 
         private
@@ -37,10 +38,11 @@ module Lenna
         # @return [void]
         #
         # @api private
-        def render_error_page(error, env, req, res)
+        #
+        def render_error_page(error, req, res)
           case req.headers['Content-Type']
-          in 'application/json' then render_json(error, env, res)
-          else                       render_html(error, env, res)
+          in 'application/json' then render_json(error, res)
+          else                       render_html(error, res)
           end
         end
 
@@ -52,15 +54,16 @@ module Lenna
         # @return [void]
         #
         # @api private
-        def render_json(error, env, res)
-          case env['RACK_ENV']
+        #
+        def render_json(error, res)
+          case ENV.fetch('RACK_ENV', 'development')
           in 'development' | 'test' then res.json(
             data: {
               error: error.message,
               status: 500
             }
           )
-          else res.json(error: 'Internal Server Error', status: 500)
+          else res.json(data: { error: 'Internal Server Error', status: 500 })
           end
         end
 
@@ -72,8 +75,9 @@ module Lenna
         # @return [void]
         #
         # @api private
-        def render_html(error, env, res)
-          res.html(error_page(error, env), status: 500)
+        #
+        def render_html(error, res)
+          res.html(error_page(error), status: 500)
         end
 
         # This method will log the error.
@@ -83,6 +87,7 @@ module Lenna
         # @return [void]
         #
         # @api private
+        #
         def log_error(env, error)
           env['rack.errors'].puts error.message
           env['rack.errors'].puts error.backtrace.join("\n")
@@ -90,7 +95,8 @@ module Lenna
         end
 
         # This method will render the error page.
-        def error_page(error, env)
+        #
+        def error_page(error)
           style = <<-STYLE
           <style>
             body { font-family: 'Helvetica Neue', sans-serif; background-color: #F7F7F7; color: #333; margin: 0; padding: 0; }
@@ -135,7 +141,7 @@ module Lenna
                 <div class="item-right">#{svg_logo}</div>
               </div>
           #{'    '}
-              #{error_message_and_backtrace(error, env)}
+              #{error_message_and_backtrace(error)}
             </div>
           </body>
           </html>
@@ -149,8 +155,8 @@ module Lenna
         # @return [String] The HTML string
         #
         # @api private
-        def error_message_and_backtrace(error, env)
-          if env['RACK_ENV'] == 'development'
+        def error_message_and_backtrace(error)
+          if ENV['RACK_ENV'] == 'development'
             truncated_message =
               error.message[0..500] + (error.message.length > 500 ? '...' : '')
 
@@ -198,6 +204,7 @@ module Lenna
         #         puts 'bar'\n<strong style='color: red;'>    9: </strong>
         #         end\n<strong style='color: red;'>   10: </strong> foo\n<strong
         #         style='color: red;'>   11: </strong> "
+        #
         def extract_source(file, line_number)
           lines = ::File.readlines(file)
           start_line = [line_number - 3, 0].max
@@ -219,6 +226,7 @@ module Lenna
         #         "<strong style='color: red;'>    9: </strong> end\n",
         #         "<strong style='color: red;'>   10: </strong> foo\n",
         #         "<strong style='color: red;'>   11: </strong> "]
+        #
         def format_lines(lines, highlight_line)
           lines.map.with_index(highlight_line - 3 + 1) do |line, line_num|
             line_number_text = "#{line_num.to_s.rjust(6)}: "
