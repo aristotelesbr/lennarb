@@ -1,19 +1,20 @@
 # frozen_string_literal: true
 
-# Set the environment to test
-#
-ENV['RACK_ENV'] = 'test'
+# Released under the MIT License.
+# Copyright, 2023, by Aristóteles Coutinho.
 
-$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
-require 'lennarb'
+ENV["RACK_ENV"] = "test"
+
+$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
+require "lennarb"
 
 # Require test helpers
 #
-require 'minitest/autorun'
+require "minitest/autorun"
 
 # Require Rack::test
 #
-require 'rack/test'
+require "rack/test"
 
 # Default settigns for base class
 #

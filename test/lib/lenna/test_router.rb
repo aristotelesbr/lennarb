@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
-require 'test_helper'
+# Released under the MIT License.
+# Copyright, 2023, by Aristóteles Coutinho.
+
+require "test_helper"
 
 module Lenna
   class Router
@@ -17,30 +20,30 @@ module Lenna
 
       def test_add_namespace
         router = Router.new
-        router.namespace('/foo') do |route|
-          route.get('/bar') { |_req, res| res.html('Hello, World!') }
+        router.namespace("/foo") do |route|
+          route.get("/bar") { |_req, res| res.html("Hello, World!") }
         end
 
-        env = ::Rack::MockRequest.env_for('/foo/bar')
+        env = ::Rack::MockRequest.env_for("/foo/bar")
 
         status, headers, body = router.call(env)
 
         assert_equal 200, status
-        assert_equal 'text/html', headers['Content-Type']
-        assert_equal 'Hello, World!', body.join
+        assert_equal "text/html", headers["Content-Type"]
+        assert_equal "Hello, World!", body.join
       end
 
       def test_call
         router = Router.new
-        router.get('/foo') { |_req, res| res.html('Hello, World!') }
+        router.get("/foo") { |_req, res| res.html("Hello, World!") }
 
-        env = ::Rack::MockRequest.env_for('/foo')
+        env = ::Rack::MockRequest.env_for("/foo")
 
         status, headers, body = router.call(env)
 
         assert_equal 200, status
-        assert_equal 'text/html', headers['Content-Type']
-        assert_equal 'Hello, World!', body.join
+        assert_equal "text/html", headers["Content-Type"]
+        assert_equal "Hello, World!", body.join
       end
 
       def test_call_with_middleware
@@ -49,22 +52,22 @@ module Lenna
         timex = ::Time.now.to_s
 
         simple_middleware =
-          -> (_req, res, next_middleware) {
-            res.headers['X-Time'] = timex
+          ->(_req, res, next_middleware) {
+            res.headers["X-Time"] = timex
             next_middleware.call
           }
 
         router.use(simple_middleware)
 
-        router.get('/foo') { |_req, res| res.html('Hello, World!') }
+        router.get("/foo") { |_req, res| res.html("Hello, World!") }
 
-        env = ::Rack::MockRequest.env_for('/foo')
+        env = ::Rack::MockRequest.env_for("/foo")
 
         status, headers, body = router.call(env)
 
         assert_equal 200, status
-        assert_equal timex, headers['X-Time']
-        assert_equal 'Hello, World!', body.join
+        assert_equal timex, headers["X-Time"]
+        assert_equal "Hello, World!", body.join
       end
 
       def test_call_with_middleware_in_route
@@ -73,22 +76,22 @@ module Lenna
         timex = ::Time.now.to_s
 
         simple_middleware =
-          -> (_req, res, next_middleware) {
-            res.headers['X-Time'] = timex
+          ->(_req, res, next_middleware) {
+            res.headers["X-Time"] = timex
             next_middleware.call
           }
 
-        router.get('/foo', simple_middleware) do |_req, res|
-          res.html('Hello, World!')
+        router.get("/foo", simple_middleware) do |_req, res|
+          res.html("Hello, World!")
         end
 
-        env = ::Rack::MockRequest.env_for('/foo')
+        env = ::Rack::MockRequest.env_for("/foo")
 
         status, headers, body = router.call(env)
 
         assert_equal 200, status
-        assert_equal timex, headers['X-Time']
-        assert_equal 'Hello, World!', body.join
+        assert_equal timex, headers["X-Time"]
+        assert_equal "Hello, World!", body.join
       end
     end
   end

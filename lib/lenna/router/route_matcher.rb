@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Released under the MIT License.
+# Copyright, 2023, by Aristóteles Coutinho.
+
 module Lenna
   class Router
     # @note This class is responsible for matching the request path
@@ -26,9 +29,9 @@ module Lenna
       # @see #find_endpoint
       # @see Lenna::Response#not_found
       def match_and_execute_route(req, res)
-        params     = {}
+        params = {}
         path_parts = split_path(req.path_info)
-        endpoint   = find_endpoint(@root_node, path_parts, params)
+        endpoint = find_endpoint(@root_node, path_parts, params)
 
         if endpoint && (action = endpoint[req.request_method])
           req.assign_params(params)
@@ -41,7 +44,7 @@ module Lenna
       private
 
       # @todo: Refactor this method to a module.
-      def split_path(path) = path.split('/').reject(&:empty?)
+      def split_path(path) = path.split("/").reject(&:empty?)
 
       # @param node   [Lenna::Node] The node to search
       # @param parts  [Array]       The path parts

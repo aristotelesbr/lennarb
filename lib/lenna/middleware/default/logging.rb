@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
-require 'colorize'
+# Released under the MIT License.
+# Copyright, 2023, by Aristóteles Coutinho.
+
+require "colorize"
 
 module Lenna
   module Middleware
@@ -29,10 +32,10 @@ module Lenna
 
           http_method = colorize_http_method(req.request_method)
           status_code = colorize_status_code(res.status.to_s)
-          duration    = calculate_duration(start_time, end_time)
+          duration = calculate_duration(start_time, end_time)
 
           log_message = "[#{start_time}] \"#{http_method} #{req.path_info}\" " \
-                        "#{status_code} #{format('%.2f', duration)}ms"
+                        "#{status_code} #{format("%.2f", duration)}ms"
 
           ::Kernel.puts(log_message)
         end
@@ -51,10 +54,10 @@ module Lenna
         #
         def colorize_http_method(request_method)
           case request_method
-          in 'GET'    then 'GET'.green
-          in 'POST'   then 'POST'.magenta
-          in 'PUT'    then 'PUT'.yellow
-          in 'DELETE' then 'DELETE'.red
+          in "GET" then "GET".green
+          in "POST" then "POST".magenta
+          in "PUT" then "PUT".yellow
+          in "DELETE" then "DELETE".red
           else request_method.blue
           end
         end
@@ -71,10 +74,10 @@ module Lenna
         #
         def colorize_status_code(status_code)
           case status_code[0]
-          in '2' then status_code.green
-          in '3' then status_code.blue
-          in '4' then status_code.yellow
-          in '5' then status_code.red
+          in "2" then status_code.green
+          in "3" then status_code.blue
+          in "4" then status_code.yellow
+          in "5" then status_code.red
           else status_code
           end
         end

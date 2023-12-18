@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
-require 'singleton'
+# Released under the MIT License.
+# Copyright, 2023, by Aristóteles Coutinho.
+
+require "singleton"
 
 module Lenna
   module Middleware
@@ -35,7 +38,7 @@ module Lenna
       # @since 0.1.0
       #
       def initialize
-        @global_middlewares      = []
+        @global_middlewares = []
         @middleware_chains_cache = {}
       end
 
@@ -49,7 +52,7 @@ module Lenna
       # @api public
       #
       def reset!
-        @global_middlewares      = []
+        @global_middlewares = []
         @middleware_chains_cache = {}
       end
 
@@ -85,7 +88,7 @@ module Lenna
           if http_method && path
             [http_method, path, route_middlewares].hash.to_s
           else
-            ['global', route_middlewares].hash.to_s
+            ["global", route_middlewares].hash.to_s
           end
 
         @middleware_chains_cache[signature] ||=

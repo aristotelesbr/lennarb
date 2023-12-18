@@ -4,6 +4,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.7] - 2023-30-11
+
+### Changed
+
+- Update `README.md` with the new features. Move examples to `guides` folder.
+- Replace `rubocop` to `standard` gem to lint the code.
+- Move `puma` gem to development dependencies.
+- Use tabs instead of spaces to indent the code.
+
+### Added
+
+- Add `standard` gem to lint the code.
+- Add `maintenance` gropu to `Gemfile` with:
+	- Add `bake-gem` gem to run the tasks.
+	- Add `bake-modernize` gem to update the code to the latest Ruby version.
+	- Add `utopia-project` gem to generate the project.
+	- Add `bake-github-pages` to generate the GitHub Pages.
+
+### Removed
+
+- Remove `listen` method to run development server. Now, you must be use `.config.ru` file to run the development server. Ex.
+
+```rb
+# .config.ru
+
+require 'lennarb'
+
+app = Lennarb::Application.new do |app|
+		app.get '/hello' do |req, res|
+				res.status = 200
+				res['Content-Type'] = 'text/plain'
+				res.body = 'Hello World'
+		end
+		app.post '/hello' do |req, res|
+				res.status = 200
+				res['Content-Type'] = 'text/plain'
+				res.body = 'Hello World'
+		end
+end
+
+run app
+```
+
+
 ## [0.1.6] - 2023-29-11
 
 ### Changed

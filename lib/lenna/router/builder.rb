@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Released under the MIT License.
+# Copyright, 2023, by Aristóteles Coutinho.
+
 module Lenna
   class Router
     # The Route::Builder class is responsible for building the tree of routes.
@@ -72,7 +75,7 @@ module Lenna
       #                         └── :id
       #
       def find_or_create_node(current_node, part)
-        if part.start_with?(':')
+        if part.start_with?(":")
           # If it is a placeholder, then we just create or update
           # the placeholder node with the placeholder name.
           placeholder_name = part[1..].to_sym
@@ -84,7 +87,7 @@ module Lenna
         else
           current_node.children[part] ||= Node.new
         end
-        current_node.children[part.start_with?(':') ? :placeholder : part]
+        current_node.children[part.start_with?(":") ? :placeholder : part]
       end
 
       # This method will setup the endpoint of the current node.
@@ -110,7 +113,7 @@ module Lenna
       # Maybe utils or something like that.
       # Use Rack::Utils.split_path_info instead.
       #
-      def split_path(path) = path.split('/').reject(&:empty?)
+      def split_path(path) = path.split("/").reject(&:empty?)
     end
   end
 end

@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Released under the MIT License.
+# Copyright, 2023, by Aristóteles Coutinho.
+
 module Lenna
   class Router
     # This class is used to manage the namespaces.
@@ -17,7 +20,7 @@ module Lenna
 
       # @return [void]
       #
-      def initialize = @stack = ['']
+      def initialize = @stack = [""]
 
       # This method is used to push a prefix to the stack.
       #

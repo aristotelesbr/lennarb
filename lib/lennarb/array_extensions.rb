@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Released under the MIT License.
+# Copyright, 2023, by Aristóteles Coutinho.
+
 module Lennarb
   # The ArrayExtensions module is used to add the wrap method to the Array
   # class.

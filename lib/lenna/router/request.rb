@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Released under the MIT License.
+# Copyright, 2023, by Aristóteles Coutinho.
+
 module Lenna
   class Router
     # The Request class is responsible for managing the request.
@@ -68,11 +71,11 @@ module Lenna
       # HTTP_FOO=bar Foo=bar
       #
       def headers
-        content_type = env['CONTENT_TYPE']
-        @headers ||= env.select { |k, _| k.start_with?('HTTP_') }
-                        .transform_keys { |k| format_header_name(k) }
+        content_type = env["CONTENT_TYPE"]
+        @headers ||= env.select { |k, _| k.start_with?("HTTP_") }
+          .transform_keys { |k| format_header_name(k) }
 
-        @headers['Content-Type'] = content_type if content_type
+        @headers["Content-Type"] = content_type if content_type
         @headers
       end
 
@@ -90,7 +93,7 @@ module Lenna
       #
       # @return [String] the request media type
       #
-      def media_type = headers['Content-Type']
+      def media_type = headers["Content-Type"]
 
       # This method parses the json body.
       #
@@ -111,7 +114,7 @@ module Lenna
       # @api private
       def parse_body_params
         case media_type
-        in 'application/json' then parse_json_body
+        in "application/json" then parse_json_body
         else post_params
         end
       end
@@ -140,7 +143,7 @@ module Lenna
       # @api private
       #
       def format_header_name(name)
-        name.sub(/^HTTP_/, '').split('_').map(&:capitalize).join('-')
+        name.sub(/^HTTP_/, "").split("_").map(&:capitalize).join("-")
       end
     end
   end

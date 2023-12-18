@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'lennarb/version'
+require 'colorize'
+
+puts 'Generating gem version...'.green
+system('bundle exec gem build lennarb.gemspec')
+puts 'Gem version generated successfully'.green
+
+puts 'Installing gem version...'.green
+
+version = Lennarb::VERSION
+system("gem install ./lennarb-#{version}.gem")
+puts 'Lenna installed successfully'.green
+

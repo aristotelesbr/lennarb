@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
-require 'test_helper'
+# Released under the MIT License.
+# Copyright, 2023, by Aristóteles Coutinho.
+
+require "test_helper"
 
 module Lenna
   class Router
@@ -16,7 +19,7 @@ module Lenna
       def test_add_and_get
         root_node = Node.new({}, nil)
 
-        cache_key = @cache.cache_key('GET', '/')
+        cache_key = @cache.cache_key("GET", "/")
         @cache.add(cache_key, root_node)
 
         assert_equal @cache.get(cache_key), root_node
@@ -29,7 +32,7 @@ module Lenna
       def test_when_exist
         root_node = Node.new({}, nil)
 
-        cache_key = @cache.cache_key('GET', '/')
+        cache_key = @cache.cache_key("GET", "/")
         @cache.add(cache_key, root_node)
 
         assert @cache.exist?(cache_key)

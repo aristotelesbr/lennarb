@@ -1,22 +1,24 @@
 # frozen_string_literal: true
 
-# Standard library dependencies
-require 'erb'
-require 'json'
+# Released under the MIT License.
+# Copyright, 2023, by Aristóteles Coutinho.
+
+require "erb"
+require "json"
 
 # External dependencies
-require 'rack'
+require "rack"
 
 # Internal dependencies
-require 'lenna/middleware/app'
-require 'lenna/middleware/default/error_handler'
-require 'lenna/middleware/default/logging'
-require 'lenna/router/builder'
-require 'lenna/router/cache'
-require 'lenna/router/namespace_stack'
-require 'lenna/router/request'
-require 'lenna/router/response'
-require 'lenna/router/route_matcher'
+require "lenna/middleware/app"
+require "lenna/middleware/default/error_handler"
+require "lenna/middleware/default/logging"
+require "lenna/router/builder"
+require "lenna/router/cache"
+require "lenna/router/namespace_stack"
+require "lenna/router/request"
+require "lenna/router/response"
+require "lenna/router/route_matcher"
 
 module Lenna
   # The Node struct is used to represent a node in the tree of routes.
@@ -77,11 +79,11 @@ module Lenna
       middleware_manager: Middleware::App.instance,
       cache: Cache.new
     )
-      @cache     = cache
+      @cache = cache
       @root_node = Node.new({}, nil)
       @middleware_manager = middleware_manager
-      @namespace_stack    = NamespaceStack.new
-      @roter_builder      = Builder.new(@root_node)
+      @namespace_stack = NamespaceStack.new
+      @roter_builder = Builder.new(@root_node)
 
       default_milddlewares = [
         Middleware::Default::Logging,
@@ -136,9 +138,12 @@ module Lenna
     #
     # @since 0.1.0
     #
-    def get(path,    *, &) = add_route(::Rack::GET,    path, *, &)
-    def put(path,    *, &) = add_route(::Rack::PUT,    path, *, &)
-    def post(path,   *, &) = add_route(::Rack::POST,   path, *, &)
+    def get(path, *, &) = add_route(::Rack::GET, path, *, &)
+
+    def put(path, *, &) = add_route(::Rack::PUT, path, *, &)
+
+    def post(path, *, &) = add_route(::Rack::POST, path, *, &)
+
     def delete(path, *, &) = add_route(::Rack::DELETE, path, *, &)
 
     # @see #call!

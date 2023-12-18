@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Released under the MIT License.
+# Copyright, 2023, by Aristóteles Coutinho.
+
 module Lenna
   class Router
     # The Response class is responsible for managing the response.
@@ -86,11 +89,11 @@ module Lenna
       #
       # @return [void]
       def initialize(headers = {}, status = 200, body = [])
-        @params  = {}
-        @body    = body
-        @status  = status
+        @params = {}
+        @body = body
+        @status = status
         @headers = headers
-        @length  = 0
+        @length = 0
       end
 
       # This method will set the params.
@@ -110,9 +113,9 @@ module Lenna
 
         @params = params
       rescue ::NoMatchingPatternError
-        raise ::ArgumentError, 'params must be a hash'
+        raise ::ArgumentError, "params must be a hash"
       end
-      alias :params= assign_params
+      alias_method :params=, :assign_params
 
       # Returns the response header corresponding to `key`.
       #
@@ -137,7 +140,7 @@ module Lenna
       # @api public
       #
       def assign_body(value) = put_body(value)
-      alias :body= assign_body
+      alias_method :body=, :assign_body
 
       # This method will set the header value.
       #
@@ -161,7 +164,7 @@ module Lenna
       #   # => ['123', '456', '789']
       #
       def assign_header(key, value) = put_header(key, value)
-      alias []= assign_header
+      alias_method :[]=, :assign_header
 
       # Add multiple headers.
       #
@@ -182,7 +185,7 @@ module Lenna
 
         headers.each { |key, value| put_header(key, value) }
       end
-      alias :headers= assign_headers
+      alias_method :headers=, :assign_headers
 
       # This method will get the content type.
       #
@@ -190,7 +193,7 @@ module Lenna
       #
       # @api public
       #
-      def content_type = @headers['Content-Type']
+      def content_type = @headers["Content-Type"]
 
       # This method will delete the header.
       # @param header [String] the header name
@@ -239,12 +242,12 @@ module Lenna
       #  the `Rack::Session::Cookie` middleware.
       #
       def assign_cookie(key, value)
-        key   => ::String
+        key => ::String
         value => ::String
 
         ::Rack::Utils.set_cookie_header!(@headers, key, value)
       rescue ::NoMatchingPatternError
-        raise ::ArgumentError, 'key must be a string'
+        raise ::ArgumentError, "key must be a string"
       end
 
       # This method will get all the cookies.
@@ -253,7 +256,7 @@ module Lenna
       #
       # @api public
       #
-      def cookies = @headers['set-cookie']
+      def cookies = @headers["set-cookie"]
 
       # This method will delete the cookie.
       #
@@ -272,7 +275,7 @@ module Lenna
 
         ::Rack::Utils.delete_cookie_header!(@headers, key)
       rescue ::NoMatchingPatternError
-        raise ::ArgumentError, 'key must be a string'
+        raise ::ArgumentError, "key must be a string"
       end
 
       # This method will set redirect location. The status will be set to 302.
@@ -287,12 +290,12 @@ module Lenna
       def redirect(location, status: 302)
         location => ::String
 
-        put_header('Location', location)
+        put_header("Location", location)
         put_status(status)
 
         finish!
       rescue ::NoMatchingPatternError
-        raise ::ArgumentError, 'location must be a string'
+        raise ::ArgumentError, "location must be a string"
       end
 
       # This method will finish the response.
@@ -317,13 +320,13 @@ module Lenna
 
         case charset
         in ::String then put_header(
-          'Content-Type',
+          "Content-Type",
           "#{type}; charset=#{charset}"
         )
-        else put_header('Content-Type', type)
+        else put_header("Content-Type", type)
         end
       rescue ::NoMatchingPatternError
-        raise ::ArgumentError, 'type must be a string'
+        raise ::ArgumentError, "type must be a string"
       end
 
       # This method will set the response data and finish the response.
@@ -345,7 +348,7 @@ module Lenna
         data => ::Array | ::Hash
 
         put_status(status)
-        put_header('Content-Type', 'application/json')
+        put_header("Content-Type", "application/json")
         put_body(data.to_json)
 
         finish!
@@ -361,7 +364,7 @@ module Lenna
       #
       def html(str = nil, status: 200)
         put_status(status)
-        put_header('Content-Type', 'text/html')
+        put_header("Content-Type", "text/html")
         put_body(str)
 
         finish!
@@ -389,7 +392,7 @@ module Lenna
       #   # => Render the template `views/index.html.erb` with the local
       #   #    variable `name` set to 'John'
       #
-      def render(template_name, path: 'views', locals: {}, status: 200)
+      def render(template_name, path: "views", locals: {}, status: 200)
         template_path = ::File.join(path, "#{template_name}.html.erb")
 
         # Check if the template exists
@@ -422,7 +425,7 @@ module Lenna
       # @see #finish!
       #
       def not_found
-        put_body(['Not Found'])
+        put_body(["Not Found"])
         put_status(404)
 
         finish!
@@ -441,7 +444,7 @@ module Lenna
 
         self.status = value
       rescue ::NoMatchingPatternError
-        raise ::ArgumentError, 'status must be an integer'
+        raise ::ArgumentError, "status must be an integer"
       end
 
       # This method will set the body.
@@ -455,10 +458,10 @@ module Lenna
 
         case value
         in ::String then @body = [value]
-        in ::Array  then @body = value
+        in ::Array then @body = value
         end
       rescue ::NoMatchingPatternError
-        raise ::ArgumentError, 'body must be a string or an array'
+        raise ::ArgumentError, "body must be a string or an array"
       end
 
       # @param key   [String] the header name
@@ -467,18 +470,18 @@ module Lenna
       # @return      [void]
       #
       def put_header(key, value)
-        raise ::ArgumentError, 'key must be a string' unless key.is_a?(::String)
+        raise ::ArgumentError, "key must be a string" unless key.is_a?(::String)
 
         unless value.is_a?(::String) || value.is_a?(::Array)
-          raise ::ArgumentError, 'value must be a string or an array'
+          raise ::ArgumentError, "value must be a string or an array"
         end
 
         header_value = @headers[key]
 
-        new_values      = ::Array.wrap(value)
+        new_values = ::Array.wrap(value)
         existing_values = ::Array.wrap(header_value)
 
-        @headers[key] = (existing_values + new_values).uniq.join(', ')
+        @headers[key] = (existing_values + new_values).uniq.join(", ")
       end
 
       # @param key [String] the header name
@@ -494,7 +497,7 @@ module Lenna
       def location!(value)
         value => ::String
 
-        put_header('Location', value)
+        put_header("Location", value)
       end
 
       # This method will finish the response.
@@ -503,8 +506,8 @@ module Lenna
       #
       def finish!
         default_router_header!
-        default_content_length!    unless @headers['Content-Length']
-        default_html_content_type! unless @headers['Content-Type']
+        default_content_length! unless @headers["Content-Length"]
+        default_html_content_type! unless @headers["Content-Type"]
 
         [@status, @headers, @body]
       end
@@ -514,7 +517,7 @@ module Lenna
       # @return [void]
       #
       def default_html_content_type!
-        put_header('Content-Type', 'text/html')
+        put_header("Content-Type", "text/html")
       end
 
       # This method will set the response default content length.
@@ -522,7 +525,7 @@ module Lenna
       # @return [void]
       #
       def default_content_length!
-        put_header('Content-Length', @body.join.size.to_s)
+        put_header("Content-Length", @body.join.size.to_s)
       end
 
       # This method will set the response default router header.
@@ -530,7 +533,7 @@ module Lenna
       # @return [void]
       #
       def default_router_header!
-        put_header('Server', "Lennarb VERSION #{::Lennarb::VERSION}")
+        put_header("Server", "Lennarb VERSION #{::Lennarb::VERSION}")
       end
     end
   end
