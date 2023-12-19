@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-# Set environment
-#
+# Released under the MIT License.
+# Copyright, 2024, by Aristóteles Coutinho.
+
 ENV['RACK_ENV'] ||= 'development'
 
 # Extension for Array class

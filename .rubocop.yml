@@ -1,4 +1,3 @@
-
 ---
 require:
   - rubocop-minitest
@@ -11,6 +10,12 @@ AllCops:
 
 Layout/LineLength:
   Max: 80
+
+Layout/IndentationStyle:
+  EnforcedStyle: tabs
+
+Layout/IndentationWidth:
+  Width: 1
 
 Layout/MultilineMethodCallIndentation:
   Enabled: false

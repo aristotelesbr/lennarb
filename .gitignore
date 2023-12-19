@@ -1,10 +1,6 @@
 /.bundle/
-/.yardoc
-/_yardoc/
-/coverage/
-/doc/
 /pkg/
-/spec/reports/
-/tmp/
-.yardopts
-*.gem
+/gems.locked
+/.covered.db
+/external
+/docs

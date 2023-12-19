@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
-module Lennarb
-  VERSION = '0.1.6'
+# Released under the MIT License.
+# Copyright, 2023, by Aristóteles Coutinho.
 
-  public_constant :VERSION
+module Lennarb
+	VERSION = '0.1.7'
+
+	public_constant :VERSION
 end
