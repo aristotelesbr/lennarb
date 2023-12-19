@@ -97,7 +97,7 @@ module Lenna
 			#     chain.
 			#
 			def build_middleware_chain(action, middlewares)
-				all_middlewares = (@global_middlewares + Array(middlewares)).uniq
+				all_middlewares = (@global_middlewares + Array(middlewares))
 
 				all_middlewares.reverse.reduce(action) do |next_middleware, middleware|
 					->(req, res) {

@@ -74,14 +74,6 @@ module Lenna
 			@middleware_manager = middleware_manager
 			@namespace_stack = NamespaceStack.new
 			@roter_builder = Builder.new(@root_node)
-
-			default_milddlewares = [
-				Middleware::Default::Logging,
-				Middleware::Default::ErrorHandler
-			]
-
-			@middleware_manager.use(default_milddlewares) unless @default_milddlewares
-			@default_milddlewares = true
 		end
 
 		# This method is used to add a namespace to the routes.
@@ -114,7 +106,7 @@ module Lenna
 		#
 		# @parameter middlewares [Array] the middlewares to be used
 		#
-		# @return            [void]
+		# @return                [void]
 		#
 		def use(*middlewares) = @middleware_manager.use(middlewares)
 
@@ -136,7 +128,11 @@ module Lenna
 		#
 		def call!(env)
 			middleware_pipeline = @middleware_manager.fetch_or_build_middleware_chain(
-				method(:process_request), []
+				method(:process_request),
+				[
+					Middleware::Default::Logging,
+					Middleware::Default::ErrorHandler
+				]
 			)
 
 			req = Request.new(env)
