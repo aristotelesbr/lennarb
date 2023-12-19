@@ -97,25 +97,8 @@ end
 
 Now, the `MyMiddleware` will be executed before the request handler of `/users` route.
 
-## Using middlewares in a specific namespace
+## Using middlewares in a specific nested namespace
 
-You can use middlewares in a specific namespace:
+In this version, you can't use middlewares in a specific nested namespace. But you can use middlewares in a specific namespace and use middlewares in a specific route.
 
-```ruby
-
-# my_app.rb
-
-require 'lennarb'
-
-Lenna::Application.new do |route|
-	route.get '/' do |req, res|
-		res.html 'Hello World'
-	end
-
-	route.namespace '/api', MyMiddleware do |api|
-		api.get '/users' do |req, res|
-			res.json [{ name: 'John' }, { name: 'Doe' }]
-		end
-	end
-end
-```
+Done, now you know how to use middlewares in Lennarb.
