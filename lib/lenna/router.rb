@@ -39,6 +39,8 @@ module Lenna
 	# The router class is responsible for adding routes and calling the
 	# middleware chain for each request.
 	#
+	# @private
+	#
 	class Router
 		# @return [Node] the root node of the tree of routes
 		#
@@ -74,21 +76,16 @@ module Lenna
 			@middleware_manager = middleware_manager
 			@namespace_stack = NamespaceStack.new
 			@roter_builder = Builder.new(@root_node)
-
-			default_milddlewares = [
-				Middleware::Default::Logging,
-				Middleware::Default::ErrorHandler
-			]
-
-			@middleware_manager.use(default_milddlewares) unless @default_milddlewares
-			@default_milddlewares = true
 		end
 
 		# This method is used to add a namespace to the routes.
 		#
 		# @parameter prefix [String] the prefix to be used
 		# @parameter block  [Proc]   the block to be executed
+		#
 		# @return           [void]
+		#
+		# @public `Since v0.1.0`
 		#
 		# see {Route::NamespaceStack#push}
 		#
@@ -108,18 +105,28 @@ module Lenna
 
 		# This method is used to add a middleware to the middleware manager.
 		#
-		# @see MiddlewareManager#use
+		# See {MiddlewareManager#use}
 		#
-		# @since 0.1.0
+		# @public `Since v0.1.0`
+		#
 		#
 		# @parameter middlewares [Array] the middlewares to be used
 		#
-		# @return            [void]
+		# @return                [void]
 		#
 		def use(*middlewares) = @middleware_manager.use(middlewares)
 
 		# Proxy methods to add routes
 		#
+		# @parameter path  [String] the path to be matched
+		# @parameter *     [Array]  the middlewares to be used
+		# @yield { ... }            the block to be executed
+		#
+		# @return          [void]
+		#
+		# see {#add_route}
+		#
+		# @public `Since v0.1`
 		def get(path, *, &) = add_route(::Rack::GET, path, *, &)
 		def put(path, *, &) = add_route(::Rack::PUT, path, *, &)
 		def post(path, *, &) = add_route(::Rack::POST, path, *, &)
@@ -136,7 +143,11 @@ module Lenna
 		#
 		def call!(env)
 			middleware_pipeline = @middleware_manager.fetch_or_build_middleware_chain(
-				method(:process_request), []
+				method(:process_request),
+				[
+					Middleware::Default::Logging,
+					Middleware::Default::ErrorHandler
+				]
 			)
 
 			req = Request.new(env)

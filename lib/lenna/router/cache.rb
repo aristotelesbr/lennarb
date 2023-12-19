@@ -7,6 +7,8 @@ module Lenna
 	class Router
 		# This class is used to cache the routes.
 		#
+		# @private
+		#
 		class Cache
 			def initialize = @cache = {}
 

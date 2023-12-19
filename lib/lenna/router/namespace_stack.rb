@@ -7,7 +7,7 @@ module Lenna
 	class Router
 		# This class is used to manage the namespaces.
 		#
-		# @private Since `v1`
+		# @private `Since v0.1.0`
 		#
 		class NamespaceStack
 			# @return [Array] The stack of namespaces

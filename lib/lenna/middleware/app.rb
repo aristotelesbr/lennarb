@@ -16,6 +16,8 @@ module Lenna
 		# The middlewares that are added to a specific route are added to the
 		#   global middlewares.
 		#
+		# @private Since `v0.1.0`
+		#
 		class App
 			include Singleton
 
@@ -97,7 +99,7 @@ module Lenna
 			#     chain.
 			#
 			def build_middleware_chain(action, middlewares)
-				all_middlewares = (@global_middlewares + Array(middlewares)).uniq
+				all_middlewares = (@global_middlewares + Array(middlewares))
 
 				all_middlewares.reverse.reduce(action) do |next_middleware, middleware|
 					->(req, res) {

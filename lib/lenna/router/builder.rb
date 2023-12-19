@@ -20,6 +20,8 @@ module Lenna
 		# This way, the search for a route is O(n) where n is the length of the
 		# path.
 		#
+		# @private
+		#
 		class Builder
 			def initialize(root_node) = @root_node = root_node
 

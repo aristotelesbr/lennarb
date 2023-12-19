@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Released under the MIT License.
+# Copyright, 2023, by Aristóteles Coutinho.
+
 source 'https://rubygems.org'
 
 # Specify your gem's dependencies in lennarb.gemspec

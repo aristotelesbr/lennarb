@@ -4,12 +4,19 @@
 # Copyright, 2023, by Aristóteles Coutinho.
 
 # Internal dependencies
+#
 require 'lenna/middleware/default/error_handler'
 require 'lenna/middleware/default/logging'
 require 'lenna/router'
 
+# The Lenna module is used to namespace the framework.
+#
+# @public
+#
 module Lenna
 	# The base class is used to start the server.
+	#
+	# @public
 	#
 	class Application < Router
 		# Initialize the base class
@@ -25,6 +32,8 @@ module Lenna
 	end
 
 	# The base module is used to include the base class.
+	#
+	# @public
 	#
 	module Base
 		def self.included(base)
