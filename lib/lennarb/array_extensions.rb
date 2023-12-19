@@ -7,6 +7,8 @@ module Lennarb
 	# The ArrayExtensions module is used to add the wrap method to the Array
 	# class.
 	#
+	# @public Since `v0.1.0`
+	#
 	module ArrayExtensions
 		# Wraps the object in an array if it is not already an array.
 		#

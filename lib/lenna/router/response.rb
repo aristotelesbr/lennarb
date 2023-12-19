@@ -12,6 +12,8 @@ module Lenna
 		# @attr status  [Integer]       the response status
 		# @attr params  [Hash]          the response params
 		#
+		# @public `Since v0.1.0`
+		#
 		class Response
 			# The status of the response.
 			#

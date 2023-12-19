@@ -1,6 +1,12 @@
 # Middlewares
 
+This guide shows how to use middlewares in Lennarb.
+
+## What is a middleware?
+
 Middlewares are functions that are executed before the request handler. They are useful for tasks such as authentication, authorization, logging, etc.
+
+## Default middlewares
 
 The Lenna use two default middlewares: `Lenna::Middleware::ErrorHandler` and `Lenna::Middleware::Logging`
 

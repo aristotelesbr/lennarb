@@ -11,6 +11,8 @@ module Lenna
 		# @attr body    [Hash] the request body
 		# @attr params  [Hash] the request params
 		#
+		# @public `Since v0.1.0`
+		#
 		class Request < ::Rack::Request
 			# This method is used to set the request headers.
 			#

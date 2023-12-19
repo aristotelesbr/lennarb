@@ -10,6 +10,8 @@ module Lenna
 		module Default
 			# This middleware will handle errors.
 			#
+			# @private Since `v0.1.0`
+			#
 			module ErrorHandler
 				extend self
 

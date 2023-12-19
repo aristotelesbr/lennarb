@@ -4,7 +4,13 @@ Lennarb is a experimental lightweight, fast, and modular web framework for Ruby 
 
 ## Usage
 
-Please see the [project documentation](https://rubygems.org/gems/lennarb) for more details.
+Please see the [project documentation](https://aristotelesbr.github.io/lennarb) for more details.
+
+  - [Getting Started](https://aristotelesbr.github.io/lennarbguides/getting-started/index) - This guide show you how to use the `lennarb`
+
+  - [Middlewares](https://aristotelesbr.github.io/lennarbguides/middlewares/index) - This guide shows how to use middlewares in Lennarb.
+
+  - [Namespace routes](https://aristotelesbr.github.io/lennarbguides/namespace-routes/index) - This guide show you how to use namespace routes.
 
 ## Contributing
 
