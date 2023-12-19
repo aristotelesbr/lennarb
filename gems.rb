@@ -34,8 +34,6 @@ group :maintenance, optional: true do
 	gem 'utopia-project'
 end
 
-gem 'debug'
-
 group :development, :test do
 	# [https://rubygems.org/gems/covered]
 	# Covered is a simple code coverage tool for Ruby.
