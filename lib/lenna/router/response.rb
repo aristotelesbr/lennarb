@@ -11,6 +11,7 @@ module Lenna
 		# @attr body    [Array(String)] the response body
 		# @attr status  [Integer]       the response status
 		# @attr params  [Hash]          the response params
+		#
 		class Response
 			# The status of the response.
 			#
@@ -49,6 +50,7 @@ module Lenna
 			# @return [Integer] the length of the Response
 			#
 			# @public
+			#
 			public attr_reader :length
 
 			# This method will initialize the response.
@@ -119,6 +121,7 @@ module Lenna
 			#
 			# @parameter header [String] the header name
 			# @parameter value  [String] the header value
+			#
 			# @return           [void]
 			#
 			# @public
@@ -139,7 +142,7 @@ module Lenna
 			# Add multiple headers.
 			#
 			# @parameter headers [Hash] the headers
-			# @return        [void]
+			# @return            [void]
 			#
 			# ex.
 			#   headers = {
@@ -175,9 +178,9 @@ module Lenna
 			# This method will set the cookie.
 			#
 			# @parameter key   [String] the key of the cookie
+			# @return          [void]
 			# @parameter value [String] the value of the cookie
 			#
-			# @return      [void]
 			#
 			# @public
 			#
@@ -204,7 +207,7 @@ module Lenna
 			# response.header['Set-Cookie'].split('\n').last
 			# # => 'bar=; domain=example.com; path=/; secure; HttpOnly'
 			#
-			# @note:
+			# note:
 			#  This method doesn't sign and/or encrypt the cookie.
 			#  If you want to sign and/or encrypt the cookie, then you can use
 			#  the `Rack::Session::Cookie` middleware.
@@ -234,7 +237,7 @@ module Lenna
 			#
 			# @public
 			#
-			# ex:
+			# ex.
 			#   response.delete_cookie('foo')
 			#   # => 'foo=; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 -0000'
 			#
@@ -296,13 +299,13 @@ module Lenna
 
 			# This method will set the response data and finish the response.
 			#
-			# @parameter data [Hash, Array] the response data
+			# @parameter data [Hash | Array] the response data
 			#
 			# @return         [void]
 			#
 			# @public
 			#
-			# @example:
+			# ex.
 			#   response.json({ foo: 'bar' })
 			#   # => { foo: 'bar' }
 			#
@@ -401,8 +404,6 @@ module Lenna
 			#
 			# @return [Integer] the response status
 			#
-			# @api private
-			#
 			def put_status(value)
 				value => ::Integer
 
@@ -422,7 +423,7 @@ module Lenna
 
 				case value
 				in ::String then @body = [value]
-				in ::Array then @body = value
+				in ::Array  then @body = value
 				end
 			rescue ::NoMatchingPatternError
 				raise ::ArgumentError, 'body must be a string or an array'
@@ -448,6 +449,8 @@ module Lenna
 				@headers[key] = (existing_values + new_values).uniq.join(', ')
 			end
 
+			# This method will delete a header by key.
+			#
 			# @parameter key [String] the header name
 			#
 			# @return        [void]
