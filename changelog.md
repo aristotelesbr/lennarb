@@ -1,10 +1,11 @@
 # Changelog
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.7] - 2023-30-11
+## [0.1.7] - 2023-30-19
 
 ### Changed
 
@@ -17,10 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add `standard` gem to lint the code.
 - Add `maintenance` gropu to `Gemfile` with:
-	- Add `bake-gem` gem to run the tasks.
-	- Add `bake-modernize` gem to update the code to the latest Ruby version.
-	- Add `utopia-project` gem to generate the project.
-	- Add `bake-github-pages` to generate the GitHub Pages.
+  - Add `bake-gem` gem to run the tasks.
+  - Add `bake-modernize` gem to update the code to the latest Ruby version.
+  - Add `utopia-project` gem to generate the project.
+  - Add `bake-github-pages` to generate the GitHub Pages.
+- Add `bake` gem to run the tasks.
+- Add `puma` gem to run the development server.
 
 ### Removed
 
@@ -47,6 +50,17 @@ end
 run app
 ```
 
+- Remove Rakefile. Now, you must be use `bake` gem to run the tasks. Ex.
+
+```sh
+bundle exec bake test
+```
+
+## Bug Fixes
+
+- Fix default middlewares to `Lennarb::Router` class. Now, the `Lennarb::Router` class has the following middlewares by default:
+  - `Lennarb::Middleware::Default::Logging`
+  - `Lennarb::Middleware::Default::ErrorHandling`
 
 ## [0.1.6] - 2023-29-11
 
@@ -158,4 +172,3 @@ request.params = { name: 'John' }
 ### Fixed
 
 ### Security
-
