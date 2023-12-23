@@ -8,8 +8,11 @@ AllCops:
   Exclude:
     - "bin/**/*"
 
+Naming/RescuedExceptionsVariableName:
+  Enabled: false
+
 Layout/LineLength:
-  Max: 80
+  Max: 120
 
 Layout/IndentationStyle:
   EnforcedStyle: tabs
