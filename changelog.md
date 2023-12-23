@@ -36,6 +36,15 @@ app.use Lenna::Middleware::Default::Reload
 
 In the next version, this middleware will be available by default in development environment.
 
+- Add `root` method to `Lennarb` module to get the root path of the project. Ex.
+
+```rb
+# app.rb
+
+Lennarb.root.join('app.rb')
+# => /home/user/project/app.rb
+```
+
 ## Remove
 
 - Remove `Logging` and `ErrorHandling` middlewares from any environment. Now, theses middlewares are only available in development environment.
