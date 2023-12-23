@@ -34,6 +34,9 @@ Layout/SpaceInLambdaLiteral:
 Metrics/BlockLength:
   Enabled: false
 
+Lint/RedundantCopDisableDirective:
+  Enabled: false
+
 Lint/AmbiguousBlockAssociation:
   Enabled: false
 
