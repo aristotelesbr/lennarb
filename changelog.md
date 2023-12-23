@@ -5,6 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.7] - 2023-23-12
+
+## Added
+
+- Add `console` gem to print the logs in the console.
+- Add CLI module to run the server. Now, you can run the server with:
+
+```sh
+bundle exec lennarb server
+```
+
+- Add `--port` option to CLI module. Now, you can run the server in a specific port with:
+
+```sh
+bundle exec lennarb server --port 3000
+```
+
+- Add `Reload` middleware to reload the application in development environment. You can import and use this middleware in your application. Ex.
+
+```rb
+# app.rb
+
+require 'lenna/middleware/default/reload'
+
+app = Lenna::Application.new
+
+app.use Lenna::Middleware::Default::Reload
+```
+
+In the next version, this middleware will be available by default in development environment.
+
+## Remove
+
+- Remove `Logging` and `ErrorHandling` middlewares from any environment. Now, theses middlewares are only available in development environment.
+
 ## [0.1.6] - 2023-21-12
 
 ### Changed
