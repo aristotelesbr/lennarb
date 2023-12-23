@@ -1,6 +1,11 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require_relative '../lib/lenna/cli/new_app/init'
+require 'lenna/cli/app'
+require 'lenna/cli/commands/start_server'
 
-Lenna::Cli::NewApp::Init.start(ARGV)
+# Call the CLI to start the server
+#
+# @private `Since v0.1`
+#
+Lenna::Cli::App.new(ARGV).execute(Lenna::Cli::Commands::StartServer)

@@ -5,6 +5,7 @@
 
 require 'optparse'
 
+require 'lenna/cli/commands/interface'
 require 'lennarb/version'
 
 module Lenna
@@ -31,7 +32,7 @@ module Lenna
 			# @return [void]
 			#
 			def execute(strategy)
-				strategy.is_a?(Commands::Interface) or fail ::ArgumentError
+				strategy.is_a?(Lenna::Cli::Commands::Interface) or fail ::ArgumentError
 
 				parser!(@args).then { strategy.execute(_1) }
 			end
@@ -60,9 +61,14 @@ module Lenna
 					end
 
 					opts.on('-n', '--new', 'Create a new app') do
-						options[:new] = true
+						options[:port] = 3000
+						options[:server] = 'puma'
 					end
-				end.parser!(args)
+
+					opts.on('-s', '--start', 'Start the server') do
+						options[:start] = true
+					end
+				end.parse!(args)
 
 				options
 			end
