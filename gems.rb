@@ -17,6 +17,9 @@ gem 'rack', '~> 3.0', '>= 3.0.8'
 # [https://rubygems.org/gems/colorize]
 # Colorize is a Ruby gem used to color text in terminals.
 gem 'colorize', '~> 1.1'
+# [https://rubygems.org/gems/console]
+# Console is a Ruby gem used to create interactive command line applications.
+gem 'console', '~> 1.23'
 
 group :maintenance, optional: true do
 	# [https://rubygems.org/gems/bake-gem]
@@ -44,10 +47,10 @@ group :development, :test do
 	# [https://rubygems.org/gems/bake]
 	# Bake is a build tool for Ruby projects. It is designed to be simple,
 	# fast and extensible.
-	gem 'bake'
 	# [https://rubygems.org/gems/puma]
+	gem 'bake', '~> 0.18.2'
 	# Puma is a simple, fast, threaded, and highly concurrent HTTP 1.1 server for
-	# Ruby/Rack applications. 
+	# Ruby/Rack applications.
 	gem 'puma', '~> 6.4'
 	# RuboCop is a Ruby code style checking and code formatting tool. It aims to
 	# enforce the community-driven Ruby Style Guide.

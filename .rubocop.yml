@@ -8,8 +8,11 @@ AllCops:
   Exclude:
     - "bin/**/*"
 
+Naming/RescuedExceptionsVariableName:
+  Enabled: false
+
 Layout/LineLength:
-  Max: 80
+  Max: 120
 
 Layout/IndentationStyle:
   EnforcedStyle: tabs
@@ -29,6 +32,9 @@ Layout/SpaceInLambdaLiteral:
     - require_space
 
 Metrics/BlockLength:
+  Enabled: false
+
+Lint/RedundantCopDisableDirective:
   Enabled: false
 
 Lint/AmbiguousBlockAssociation:
@@ -55,6 +61,15 @@ Metrics/ModuleLength:
 
 Metrics/PerceivedComplexity:
   Max: 10
+
+Style/MixinGrouping:
+  Enabled: false
+
+Style/MethodCalledOnDoEndBlock:
+  Enabled: false
+
+Style/SignalException:
+  Enabled: false
 
 Style/AsciiComments:
   Enabled: false

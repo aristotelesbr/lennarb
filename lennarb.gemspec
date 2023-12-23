@@ -20,14 +20,17 @@ Gem::Specification.new do |spec|
 		'source_code_uri' => 'https://github.com/aristotelesbr/lennarb'
 	}
 
+	spec.executables = ['lenna']
+
 	spec.files = Dir['{lib}/**/*', '*.md', base: __dir__]
 
 	spec.required_ruby_version = '>= 3.0'
 
 	spec.add_dependency 'colorize', '~> 1.1'
+	spec.add_dependency 'console', '~> 1.23'
 	spec.add_dependency 'rack', '~> 3.0', '>= 3.0.8'
 
-	spec.add_development_dependency 'bake', '>= 0.18.2'
+	spec.add_development_dependency 'bake', '~> 0.18', '>= 0.18.2'
 	spec.add_development_dependency 'covered', '~> 0.25.1'
 	spec.add_development_dependency 'puma', '~> 6.4'
 	spec.add_development_dependency 'rack-test', '~> 2.1'
