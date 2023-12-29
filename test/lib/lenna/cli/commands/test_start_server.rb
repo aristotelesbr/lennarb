@@ -2,16 +2,14 @@
 
 require 'test_helper'
 
-require 'lenna/cli/commands/start_server'
-
 module Lenna
 	module Cli
 		module Commands
 			class TestStartServer < ::Minitest::Test
 				def test_execute_with_invalid_server
-					input = { port: 4000, server: 'invalid_driver' }
+					input = %w[server -p 3000 -s invalid]
 
-					assert_raises(::ArgumentError) { Commands::StartServer.execute(input) }
+					assert_raises(::ArgumentError) { Commands::StartServer.new(input).call }
 				end
 			end
 		end
