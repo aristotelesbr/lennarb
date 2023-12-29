@@ -4,7 +4,7 @@
 # Copyright, 2023, by Aristóteles Coutinho.
 
 require 'console'
-require 'lenna/cli/commands/interface'
+require 'optparse'
 
 module Lenna
 	module Cli
@@ -13,17 +13,37 @@ module Lenna
 			#
 			# @private `Since v0.1.0`
 			#
-			module StartServer
-				extend Lenna::Cli::Commands::Interface, self
+			class StartServer
+				include Lenna::Cli::Commands::Interface
+
+				# @!attribute [rw] port
+				#   @return [Integer] Port to start the server
+				#
+				private attr_accessor :port
+				# @!attribute [rw] server
+				#   @return [String] Server to start
+				#
+				private attr_accessor :server
+				# @!attribute [rw] command
+				#   @return [String] Command to execute
+				#
+				private attr_accessor :command
+
+				def initialize(args)
+					self.command = args.shift
+
+					options = parse_options!(args)
+
+					self.port   = options[:port]
+					self.server = options[:server]
+				end
+
 				# Execute the command
 				#
 				# @return [void]
 				#
-				def execute(args)
-					port   = args[:port]   || 4000
-					server = args[:server] || 'puma'
-
-					::Console.info("Starting server on port #{port}...")
+				def call
+					::Console.debug("Starting server on port #{port}...")
 
 					case server
 					in 'puma' | 'falcon' => server then start_server(port:, server:)
@@ -33,14 +53,38 @@ module Lenna
 
 				private
 
+				# Parse the options
+				#
+				# @parameter args [Array<String>] The arguments
+				#
+				# @return [Hash] The options
+				#
+				def parse_options!(args)
+					options = { port: 4000, server: 'puma' }
+
+					::OptionParser.new do |opts|
+						opts.banner = "Usage: lenna #{command} [options]"
+
+						opts.on('-p', '--port [PORT]', Integer, 'Port to start the server') do |port|
+							options[:port] = port
+						end
+
+						opts.on('-s', '--server [SERVER]', String, 'Server to start') do |server|
+							options[:server] = server
+						end
+					end.parse!(args)
+
+					options
+				end
+
 				# Start the server
 				#
-				# @paramaeter port [Integer] Port to start the server
+				# @paramaeter port   [Integer] Port to start the server
 				# @paramaeter server [String] Server to start
 				#
 				# @return [void]
 				#
-				def start_server(port: 4000, server: 'puma')
+				def start_server(port:, server:)
 					return warn_not_installed(server) unless instaled_gem?(server)
 
 					::File.exist?(config_file) or fail ::StandardError, ::Console.error("'config.ru' not found in #{poroject_name}.")
