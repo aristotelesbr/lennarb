@@ -7,20 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.7] - 2023-23-12
 
-## Added
+### Added
 
 - Add `console` gem to print the logs in the console.
-- Add CLI module to run the server. Now, you can run the server with:
 
-```sh
-bundle exec lennarb server
-```
+- Add CLI module to:
+  - Create a new project with `lennarb new` command.
+  - Run the server with `lennarb server` command.
 
-- Add `--port` option to CLI module. Now, you can run the server in a specific port with:
-
-```sh
-bundle exec lennarb server --port 3000
-```
+- Add simple guide to create and run a project with Lennarb. See [guides/command-line/readme.md](guides/command-line/readme.md) for more details.
 
 - Add `Reload` middleware to reload the application in development environment. You can import and use this middleware in your application. Ex.
 
@@ -45,9 +40,15 @@ Lennarb.root.join('app.rb')
 # => /home/user/project/app.rb
 ```
 
-## Remove
+- Add `zeitwerk` gem to load the files in the project.
+
+### Remove
 
 - Remove `Logging` and `ErrorHandling` middlewares from any environment. Now, theses middlewares are only available in development environment.
+
+### Changed
+
+- Change log level to `fatal` in test environment.
 
 ## [0.1.6] - 2023-21-12
 
@@ -125,16 +126,16 @@ request.params = { name: 'John' }
 require 'lennarb'
 
 app = Lennarb::Application.new do |app|
-		app.get '/hello' do |req, res|
-				res.status = 200
-				res['Content-Type'] = 'text/plain'
-				res.body = 'Hello World'
-		end
-		app.post '/hello' do |req, res|
-				res.status = 200
-				res['Content-Type'] = 'text/plain'
-				res.body = 'Hello World'
-		end
+  app.get '/hello' do |req, res|
+    res.status = 200
+    res['Content-Type'] = 'text/plain'
+    res.body = 'Hello World'
+  end
+  app.post '/hello' do |req, res|
+    res.status = 200
+    res['Content-Type'] = 'text/plain'
+    res.body = 'Hello World'
+  end
 end
 
 run app

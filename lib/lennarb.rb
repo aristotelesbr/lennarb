@@ -18,6 +18,18 @@ require 'lennarb/version'
 #
 require 'pathname'
 
+# Zeitwerk
+#
+require 'zeitwerk'
+
+# Zeitwerk loader
+#
+Zeitwerk::Loader.new.tap do |loader|
+	loader.inflector.inflect('Version' => 'VERSION')
+	loader.push_dir(__dir__)
+	loader.setup
+end
+
 # Lennarb module
 #
 module Lennarb

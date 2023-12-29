@@ -20,6 +20,11 @@ gem 'colorize', '~> 1.1'
 # [https://rubygems.org/gems/console]
 # Console is a Ruby gem used to create interactive command line applications.
 gem 'console', '~> 1.23'
+# [htpps://rubygems.org/gems/zeitwerk
+# Zeitwerk implements constant autoloading with Ruby semantics. 
+# Each gem and application may have their own independent autoloader, with its 
+# own configuration, inflector, and logger.
+gem 'zeitwerk', '~> 2.6', '>= 2.6.12'
 
 group :maintenance, optional: true do
 	# [https://rubygems.org/gems/bake-gem]

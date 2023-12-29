@@ -3,68 +3,36 @@
 # Released under the MIT License.
 # Copyright, 2023, by Aristóteles Coutinho.
 
-require 'optparse'
-
-require 'lennarb/version'
-
 module Lenna
 	module Cli
 		# Mediator class for CLI
 		#
 		# @private `Since v0.1.0`
 		#
-		class App
-			# @return [Array] Arguments passed to CLI
-			#
-			attr_reader :args
-
-			# Initialize a new instance of the class
-			#
-			# @parameter args [Array] Arguments passed to CLI
-			#
-			def initialize(args)
-				@args = args
-			end
-
+		module App
+			extend self
 			# Execute the command
 			#
 			# @return [void]
 			#
-			def execute(strategy)
-				strategy.is_a?(Commands::Interface) or fail ::ArgumentError
+			def run!(args)
+				subcommand = args.shift
 
-				parser!(@args).then { strategy.execute(_1) }
+				strategy = parse_options(subcommand, args)
+
+				strategy.is_a?(Lenna::Cli::Commands::Interface) or fail ::ArgumentError
+
+				strategy.call
 			end
 
 			private
 
-			# Parse the options passed to CLI
-			#
-			# @parameter args [Array] Arguments passed to CLI
-			#
-			# @return [Hash] Options passed to CLI
-			#
-			def parser!(args)
-				options = {}
-				OptionParser.new do |opts|
-					opts.banner = 'Usage: lenna [options]'
-
-					opts.on('-v', '--version', 'Print version') do
-						puts Lenna::VERSION
-						exit
-					end
-
-					opts.on('-h', '--help', 'Print help') do
-						puts opts
-						exit
-					end
-
-					opts.on('-n', '--new', 'Create a new app') do
-						options[:new] = true
-					end
-				end.parser!(args)
-
-				options
+			def parse_options(command, args)
+				case command
+				in 'new'    | 'start' then Lenna::Cli::Commands::CreateProject.new(args)
+				in 'server' | 's'     then Lenna::Cli::Commands::StartServer.new(args)
+				else 'help'
+				end
 			end
 		end
 	end

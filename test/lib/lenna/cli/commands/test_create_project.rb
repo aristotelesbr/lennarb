@@ -4,7 +4,6 @@
 # Copyright, 2023, by Aristóteles Coutinho.
 
 require 'fileutils'
-require 'lenna/cli/commands/create_project'
 require 'test_helper'
 
 module Lenna
@@ -13,9 +12,10 @@ module Lenna
 			class TestCreateProject < Minitest::Test
 				def setup
 					@app_name = 'test_app'
+					input = [@app_name]
 					FileUtils.mkdir_p(@app_name)
 
-					Commands::CreateProject.execute(@app_name)
+					Commands::CreateProject.new(input).call
 				end
 
 				def test_create_gemfile
@@ -28,15 +28,14 @@ module Lenna
 						# Lenna is a lightweight and experimental web framework for Ruby. It's designed
 						# to be modular and easy to use. Also, that's how I affectionately call my wife.
 						gem 'lennarb', '~> 0.1.7'
-						# [https://rubygems.org/gems/falcon]
-						# A fast, asynchronous, rack-compatible web server.
-						gem 'falcon', '~> 0.42.3'
+						# [https://rubygems.org/gems/puma]
+						# Puma is a simple, fast, threaded, and highly parallel HTTP 1.1 server for Ruby/Rack applications.
+						gem 'puma', '~> 6.4'
 
 						group :development, :test do
 						end
 					GEMFILE
 
-					# gemfile_path = File.join(Lennarb::ROOT_PATH, @app_name, 'Gemfile')
 					gemfile_path = Lennarb.root.join(@app_name, 'Gemfile')
 
 					assert_path_exists gemfile_path

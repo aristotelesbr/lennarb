@@ -67,10 +67,7 @@ module Lenna
 		#
 		# @return [void]
 		#
-		def initialize(
-			middleware_manager: Middleware::App.instance,
-			cache: Cache.new
-		)
+		def initialize(middleware_manager: Middleware::App.instance, cache: Cache.new)
 			@cache = cache
 			@root_node = Node.new({}, nil)
 			@middleware_manager = middleware_manager
@@ -142,12 +139,21 @@ module Lenna
 		# @return        [Array] the Lennarb::Response
 		#
 		def call!(env)
+			# TODO: Use pifano to set middlewares by environment.
+			#
+			middlewares_by_enviroment =
+				if ENV['RACK_ENV'] == 'development'
+					[
+						Middleware::Default::Logging,
+						Middleware::Default::ErrorHandler
+					]
+				else
+					[]
+				end
+
 			middleware_pipeline = @middleware_manager.fetch_or_build_middleware_chain(
 				method(:process_request),
-				[
-					Middleware::Default::Logging,
-					Middleware::Default::ErrorHandler
-				]
+				middlewares_by_enviroment
 			)
 
 			req = Request.new(env)
@@ -177,12 +183,7 @@ module Lenna
 		def add_route(http_method, path, *middlewares, &action)
 			full_path = @namespace_stack.current_prefix + path
 
-			middleware_chain = @middleware_manager.fetch_or_build_middleware_chain(
-				action,
-				middlewares,
-				http_method:,
-				path:
-			)
+			middleware_chain = @middleware_manager.fetch_or_build_middleware_chain(action, middlewares, http_method:, path:)
 
 			@roter_builder.call(http_method, full_path, middleware_chain, @cache)
 		end
