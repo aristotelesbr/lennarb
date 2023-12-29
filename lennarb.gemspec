@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
 		'source_code_uri' => 'https://github.com/aristotelesbr/lennarb'
 	}
 
+	spec.bindir = 'exe'
 	spec.executables = ['lenna']
 
 	spec.files = Dir['{lib}/**/*', '*.md', base: __dir__]

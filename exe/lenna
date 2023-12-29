@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Released under the MIT License.
+# Copyright, 2023, by Aristóteles Coutinho.
+
+# Require the main file
+#
+# @private `Since v0.1`
+#
+require 'lennarb'
+
+# Call the CLI to start the server
+#
+# @private `Since v0.1`
+#
+Lenna::Cli::App.run!(ARGV)
