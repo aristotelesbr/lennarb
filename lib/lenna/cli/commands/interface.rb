@@ -7,7 +7,11 @@ module Lenna
 	module Cli
 		module Commands
 			module Interface
-				def self.execute(args)
+				def new(args)
+					raise NotImplementedError
+				end
+
+				def call
 					raise NotImplementedError
 				end
 			end
