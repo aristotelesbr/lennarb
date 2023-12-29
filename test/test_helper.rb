@@ -5,6 +5,10 @@
 
 ENV['RACK_ENV'] = 'test'
 
+# Set the console level to fatal
+#
+ENV['CONSOLE_LEVEL'] = 'fatal'
+
 $LOAD_PATH.unshift File.expand_path('../lib', __dir__)
 require 'lennarb'
 
