@@ -3,11 +3,9 @@
 # Released under the MIT License.
 # Copyright, 2023, by Aristóteles Coutinho.
 
-require 'colorize'
+require 'console'
 require 'erb'
 require 'fileutils'
-require 'lenna/cli/commands/interface'
-require 'lennarb/version'
 
 module Lenna
 	module Cli
@@ -16,15 +14,28 @@ module Lenna
 			#
 			# @private `Since v0.1.0`
 			#
-			module CreateProject
-				extend Lenna::Cli::Commands::Interface, self
+			class CreateProject
+				include ::Lenna::Cli::Commands::Interface
+
+				# @!attribute [r] app_name
+				#
+				private attr_accessor :app_name
+
+				# Initialize the command
+				#
+				# @parameter app_name [Array<String>] The name of the app
+				#
+				def initialize(app_name)
+					self.app_name = app_name[0]
+				end
+
 				# Execute the command
 				#
 				# @parameter app_name [String] The name of the app
 				#
 				# @return [void]
 				#
-				def execute(app_name)
+				def call
 					return puts 'Please specify an app name'.red if app_name.nil?
 
 					create_app(app_name) do
@@ -45,7 +56,7 @@ module Lenna
 				# @return [void]
 				#
 				def create_app(app_name)
-					puts "Creating a new app named #{app_name}".green
+					::Console.info("Creating a new app named #{app_name}")
 
 					::FileUtils.mkdir_p(app_name)
 
@@ -83,7 +94,10 @@ module Lenna
 				# @See lenna/cli/templates/application
 				#
 				def create_app_directory
-					create_template('application', {}, 'app/application.rb')
+					simple_template = <<~HTML.strip
+      '<h2>Hello, welcome to Lenna! #{Lennarb::VERSION}</h1>'
+					HTML
+					create_template('application', { simple_template: }, 'app/application.rb')
 				end
 
 				# Method for creating file based on a template
@@ -98,9 +112,12 @@ module Lenna
 						.root
 						.join("lib/lenna/cli/templates/#{template_name}.erb")
 						.then { ::File.read(_1) }
-						.then { ::ERB.new(_1)   }
-						.then { result_with_hash(template_data) }
-						.then { ::File.write(file_name, _1) }
+						.then { ::ERB.new(_1).result_with_hash(template_data) }
+						.then do |content|
+							return ::File.write(file_name, content) unless file_name.include?('/')
+
+							::FileUtils.mkdir_p(::File.dirname(file_name)) && ::File.write(file_name, content)
+						end
 				end
 			end
 		end

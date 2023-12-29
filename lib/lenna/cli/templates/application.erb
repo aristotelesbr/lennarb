@@ -1,14 +1,11 @@
 # frozen_string_literal: true
 
-# frozen_string_literal: true
-
 require 'lennarb'
 
 class Application
   include Lenna::Base
 
-  app.get '/hello/:name' do |req, res|
-    name = req.params[:name] || 'World'
-    res.json({ data: "Hello #{name}!" })
-  end
+	app.get '/' do |req, res|
+		res.html(<%= simple_template %>)
+	end
 end
