@@ -29,9 +29,7 @@ module Lenna
 		def test_app_with_block
 			app_instance = TestCase.app
 
-			assert_instance_of Lenna::Application,
-																						app_instance,
-																						'The app method should return an instance of Lenna::Application'
+			assert_instance_of Lenna::Application, app_instance, 'The app method should return an instance of Lenna::Application'
 		end
 	end
 end

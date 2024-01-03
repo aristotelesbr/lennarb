@@ -18,24 +18,11 @@ module Lenna
 				end
 
 				app.get('/hello/:name/:age') do |request, response|
-					response.html(
-						"Hello, #{request.params[:name]}! " \
-						"You are #{request.params[:age]} years old."
-					)
+					response.html("Hello, #{request.params[:name]}! You are #{request.params[:age]} years old.")
 				end
 
 				app.post('/hello') do |request, response|
 					response.html("Hello, #{request.json_body['name']}!")
-				end
-
-				default_middleware =
-					->(_request, response, next_middleware) {
-						response.headers['Default-Origin'] = 'Lenna'
-						next_middleware.call
-					}
-
-				app.post('/welcome', default_middleware) do |request, response|
-					response.html("Welcome #{request.json_body['name']}!")
 				end
 
 				app.get('/json') do |_request, response|
@@ -68,26 +55,10 @@ module Lenna
 		end
 
 		def test_post_with_json_body
-			post(
-				'/hello',
-				{ name: 'John' }.to_json,
-				'CONTENT_TYPE' => 'application/json'
-			)
+			post('/hello', { name: 'John' }.to_json, 'CONTENT_TYPE' => 'application/json')
 
 			assert_predicate last_response, :ok?
 			assert_equal 'Hello, John!', last_response.body
-		end
-
-		def test_post_with_json_body_and_middleware
-			post(
-				'/welcome',
-				{ name: 'John' }.to_json,
-				'CONTENT_TYPE' => 'application/json'
-			)
-
-			assert_predicate last_response, :ok?
-			assert_equal 'Welcome John!', last_response.body
-			assert_equal 'Lenna', last_response.headers['Default-Origin']
 		end
 
 		def test_get_json

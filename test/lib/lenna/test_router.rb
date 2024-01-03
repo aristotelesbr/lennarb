@@ -11,87 +11,53 @@ module Lenna
 			def test_initialize
 				router = Router.new
 
-				assert_kind_of Node, router.root_node
-				assert_kind_of Cache, router.cache
-				assert_kind_of Builder, router.roter_builder
-				assert_kind_of NamespaceStack, router.namespace_stack
-				assert_kind_of Middleware::App, router.middleware_manager
+				assert_kind_of TrieNode, router.root_node
 			end
 
 			def test_add_namespace
-				router = Router.new
-				router.namespace('/foo') do |route|
-					route.get('/bar') { |_req, res| res.html('Hello, World!') }
+				router    = Router.new
+				namespace = '/api'
+
+				router.add_namespace(namespace) do
+					router.add_route(::Rack::GET, '/foo') { 'Test Response' }
 				end
 
-				env = ::Rack::MockRequest.env_for('/foo/bar')
+				method = 'GET'
+				path   = '/api/foo'
 
-				status, headers, body = router.call(env)
+				block,   = router.find_route(method, path)
+				response = block.call if block
 
-				assert_equal 200, status
-				assert_equal 'text/html', headers['Content-Type']
-				assert_equal 'Hello, World!', body.join
+				assert_equal 'Test Response', response
 			end
 
-			def test_call
+			def test_add_route
 				router = Router.new
-				router.get('/foo') { |_req, res| res.html('Hello, World!') }
 
-				env = ::Rack::MockRequest.env_for('/foo')
+				router.add_route(::Rack::GET, '/foo') { 'Test Response' }
 
-				status, headers, body = router.call(env)
+				method = 'GET'
+				path   = '/foo'
 
-				assert_equal 200, status
-				assert_equal 'text/html', headers['Content-Type']
-				assert_equal 'Hello, World!', body.join
+				block,   = router.find_route(method, path)
+				response = block.call if block
+
+				assert_equal 'Test Response', response
 			end
 
-			def test_call_with_middleware
+			def test_find_route
 				router = Router.new
 
-				timex = ::Time.now.to_s
+				router.add_route(::Rack::GET,  '/foo') { 'Foo Result' }
+				router.add_route(::Rack::POST, '/bar') { 'Bar Result' }
 
-				simple_middleware =
-					->(_req, res, next_middleware) {
-						res.headers['X-Time'] = timex
-						next_middleware.call
-					}
+				method = 'POST'
+				path   = '/bar'
 
-				router.use(simple_middleware)
+				block,   = router.find_route(method, path)
+				response = block.call if block
 
-				router.get('/foo') { |_req, res| res.html('Hello, World!') }
-
-				env = ::Rack::MockRequest.env_for('/foo')
-
-				status, headers, body = router.call(env)
-
-				assert_equal 200, status
-				assert_equal timex, headers['X-Time']
-				assert_equal 'Hello, World!', body.join
-			end
-
-			def test_call_with_middleware_in_route
-				router = Router.new
-
-				timex = ::Time.now.to_s
-
-				simple_middleware =
-					->(_req, res, next_middleware) {
-						res.headers['X-Time'] = timex
-						next_middleware.call
-					}
-
-				router.get('/foo', simple_middleware) do |_req, res|
-					res.html('Hello, World!')
-				end
-
-				env = ::Rack::MockRequest.env_for('/foo')
-
-				status, headers, body = router.call(env)
-
-				assert_equal 200, status
-				assert_equal timex, headers['X-Time']
-				assert_equal 'Hello, World!', body.join
+				assert_equal 'Bar Result', response
 			end
 		end
 	end

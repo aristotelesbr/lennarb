@@ -4,7 +4,7 @@
 # Copyright, 2023, by Aristóteles Coutinho.
 
 module Lennarb
-	VERSION = '0.1.7'
+	VERSION = '0.1.8'
 
 	public_constant :VERSION
 end
