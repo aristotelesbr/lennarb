@@ -93,7 +93,7 @@ module Lenna
 			end
 
 			current_node.endpoint = true
-			current_node.blocks[method.upcase] = block # Armazena o bloco com a chave do método
+			current_node.blocks[method.upcase] = block
 		end
 
 		# This method will create the nodes that are missing.
@@ -106,7 +106,7 @@ module Lenna
 		# @private `Since v0.1`
 		# See {Route::Builder#find_route}
 		#
-		def find_route(method, path)
+		def find_route(method, path) # rubocop:disable Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
 			cache_key = "#{method}#{path}"
 
 			return @route_cache[cache_key] if @route_cache.key?(cache_key)
@@ -123,7 +123,8 @@ module Lenna
 					params[key[1..].to_sym] = segment
 					current_node = node
 				else
-					return nil # Rota não encontrada
+					# No route found
+					return nil
 				end
 			end
 
