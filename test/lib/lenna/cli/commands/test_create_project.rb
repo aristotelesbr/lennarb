@@ -27,7 +27,7 @@ module Lenna
 						# [https://rubygems.org/gems/lennarb]
 						# Lenna is a lightweight and experimental web framework for Ruby. It's designed
 						# to be modular and easy to use. Also, that's how I affectionately call my wife.
-						gem 'lennarb', '~> 0.1.7'
+						gem 'lennarb', '~> #{Lennarb::VERSION}'
 						# [https://rubygems.org/gems/puma]
 						# Puma is a simple, fast, threaded, and highly parallel HTTP 1.1 server for Ruby/Rack applications.
 						gem 'puma', '~> 6.4'
