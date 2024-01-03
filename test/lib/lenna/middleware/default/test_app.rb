@@ -45,8 +45,8 @@ module Lenna
 
 			def test_middleware_execution_order_and_final_state
 				env = ::Rack::MockRequest.env_for('/')
-				request = Lenna::Router::Request.new(env)
-				response = Lenna::Router::Response.new
+				request = Lenna::Request.new(env)
+				response = Lenna::Response.new
 
 				mdw1 =
 					lambda do |_req, res, next_middleware|
