@@ -95,7 +95,7 @@ module Lenna
 				#
 				def create_app_directory
 					simple_template = <<~HTML.strip
-      '<h2>Hello, welcome to Lenna! #{Lennarb::VERSION}</h1>'
+      '<h1>Hello, welcome to Lenna! #{Lennarb::VERSION}</h1>'
 					HTML
 					create_template('application', { simple_template: }, 'app/application.rb')
 				end
