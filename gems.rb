@@ -46,6 +46,10 @@ group :maintenance, optional: true do
 end
 
 group :development, :test do
+	# [https://rubygems.org/gems/rake]
+	# Rake is a Make-like program implemented in Ruby. Tasks and dependencies
+	# are specified in standard Ruby syntax.
+	gem 'rake', '~> 13.1'
 	# [https://rubygems.org/gems/covered]
 	# Covered is a simple code coverage tool for Ruby.
 	gem 'covered', '~> 0.25.1'
