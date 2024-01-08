@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2024-08-01
+
+### Removed
+
+- Remove `zeitwerk` gem to load the files in the project.
+- Remove `console` gem to print the logs in the console.
+- Remove `Lenna` module. Now, the `Lennarb` class is the main class of the project.
+- Remove `Middleware` module.
+- Remove `CLI` module.
+- Remove `Cache` module
+
+### Changed
+
+- Change `Lennarb::Application` class to `Lennarb` class.
+- Request class and Response class now are in `Lennarb` class
+- Change `Lennarb::Router` class to `Lennarb` class
+
+### Fixed
+
+- Improve performance of the RPS (Requests per second), memory and CPU usage. Now the performance is similar to the [Roda](https://github.com/jeremyevans/roda/tree/master).
+
 ## [0.1.7] - 2023-23-12
 
 ### Added

@@ -1,8 +1,20 @@
 # Lennarb
 
-Lennarb is a experimental lightweight, fast, and modular web framework for Ruby based on Rack.
+Lennarb is a lightweight, fast, and modular web framework for Ruby based on Rack.
 
 ## Usage
+
+### Basic Usage
+
+To use Lennarb is very simple, just create a instance of `Lennarb` and use the methods `get`, `post`, `put`, `patch` etc..
+
+```rb
+app = Lennarb.new
+
+app.get("/hello/:name") do |req, res|
+	res.html("Hello #{params[:name]}")
+end
+```
 
 Please see the [project documentation](https://aristotelesbr.github.io/lennarb) for more details.
 
