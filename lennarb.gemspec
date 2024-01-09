@@ -38,6 +38,6 @@ Gem::Specification.new do |spec|
 	spec.add_development_dependency 'puma', '~> 6.4'
 	spec.add_development_dependency 'rake', '~> 13.0'
 	spec.add_development_dependency 'rake-test', '~> 2.1'
-	spec.add_development_dependency 'rubocop', '~> 1.59', require: false
+	spec.add_development_dependency 'rubocop', '~> 1.59'
 	spec.add_development_dependency 'rubocop-minitest', '~> 0.33.0'
 end
