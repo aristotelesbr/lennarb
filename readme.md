@@ -1,16 +1,40 @@
 # Lennarb
 
-Lennarb is a experimental lightweight, fast, and modular web framework for Ruby based on Rack.
+Lennarb is a lightweight, fast, and modular web framework for Ruby based on Rack. The **Lennarb**	supports Ruby (MRI) 3.0+
 
 ## Usage
+
+To use Lennarb is very simple, just create a instance of `Lennarb` and use the methods `get`, `post`, `put`, `patch` etc..
+
+```rb
+app = Lennarb.new
+
+app.get("/hello/:name") do |req, res|
+  name = req.params[:name]
+
+  res.html("Hello #{name}")
+end
+```
+
+To more examples of usage see [getting started](https://aristotelesbr.github.io/lennarbguides/getting-started/index) documentation.
+
+## Performance
+
+### Requests per second (RPS) - Dinamic routes
+
+<p>
+  <img src="static/rps.png" alt="Benchmarks" width="100%">
+</p>
+
+To more details about the benchmarks, please see the [project documentation](https://aristotelesbr.github.io/lennarb/performance/index).
+
+## Documentation
 
 Please see the [project documentation](https://aristotelesbr.github.io/lennarb) for more details.
 
   - [Getting Started](https://aristotelesbr.github.io/lennarbguides/getting-started/index) - This guide show you how to use the `lennarb`
 
-  - [Middlewares](https://aristotelesbr.github.io/lennarbguides/middlewares/index) - This guide shows how to use middlewares in Lennarb.
-
-  - [Namespace routes](https://aristotelesbr.github.io/lennarbguides/namespace-routes/index) - This guide show you how to use namespace routes.
+  - [Response](https://aristotelesbr.github.io/lennarbguides/response/index) - This guide show you how to use the Response object
 
 ## Contributing
 

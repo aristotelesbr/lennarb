@@ -28,9 +28,8 @@ Gem::Specification.new do |spec|
 	spec.required_ruby_version = '>= 3.0'
 
 	spec.add_dependency 'colorize', '~> 1.1'
-	spec.add_dependency 'console', '~> 1.23'
 	spec.add_dependency 'rack', '~> 3.0', '>= 3.0.8'
-	spec.add_dependency 'zeitwerk', '~> 2.6', '>= 2.6.12'
+	spec.add_dependency 'async', '~> 2.8'
 
 	spec.add_development_dependency 'bake', '~> 0.18', '>= 0.18.2'
 	spec.add_development_dependency 'covered', '~> 0.25.1'
@@ -38,4 +37,5 @@ Gem::Specification.new do |spec|
 	spec.add_development_dependency 'rack-test', '~> 2.1'
 	spec.add_development_dependency 'rubocop', '~> 1.59'
 	spec.add_development_dependency 'rubocop-minitest', '~> 0.33.0'
+	spec.add_development_dependency 'rack', '~> 3.0', '>= 3.0.8'
 end

@@ -12,15 +12,31 @@ $ gem add lennarb
 
 ## Usage
 
-To use the gem, you need to require and use `Lenna::Application` or `Leann::Base` to define your routes:
+A basic app looks like this:
 
 ```ruby
 # config.ru
 
 require 'lennarb'
 
-app = Lenna::Application.new do |route|
-	route.get '/' do |req, res|
+app = Lenna.new
+
+app.get '/' do |req, res|
+	res.html 'Hello World'
+end
+
+run app
+```
+
+You can also use a block to define the app:
+
+```ruby
+# config.ru
+
+require 'lennarb'
+
+app = Lenna.new do |app|
+	app.get '/' do |req, res|
 		res.html 'Hello World'
 	end
 end
@@ -28,24 +44,7 @@ end
 run app
 ```
 
-You can also use `Lenna::Base` to define your routes:
-
-```ruby
-
-class MyApp
-	include Lenna::Base
-
-	app.get '/' do |_req, res|
-		res.html 'Hello World'
-	end
-end
-
-run MyApp.new
-```
-
-When you include `Lenna::Base` in your class, it will define a app method that returns a `Lenna::Application` instance.
-
-## Params
+## Parameters
 
 You can get params from the request using `req.params`:
 
@@ -56,7 +55,6 @@ app.get '/hello/:name' do |req, res|
 	res.html "Hello #{req.params[:name]}"
 end
 ```
-
 
 ## Run
 

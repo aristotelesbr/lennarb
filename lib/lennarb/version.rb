@@ -3,8 +3,8 @@
 # Released under the MIT License.
 # Copyright, 2023, by Aristóteles Coutinho.
 
-module Lennarb
-	VERSION = '0.1.7'
+class Lennarb
+	VERSION = '0.2.0'
 
 	public_constant :VERSION
 end
