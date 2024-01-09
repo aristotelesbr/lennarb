@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Released under the MIT License.
+# Copyright, 2023-2024, by Aristóteles Coutinho.
+
 class Lennarb
 	class Response
 		# @!attribute [rw] status

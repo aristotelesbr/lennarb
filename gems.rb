@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Released under the MIT License.
-# Copyright, 2023, by Aristóteles Coutinho.
+# Copyright, 2023-2024, by Aristóteles Coutinho.
 
 source 'https://rubygems.org'
 
@@ -71,3 +71,4 @@ group :development, :test do
 	# specified in standard Ruby syntax. Rake has the following features:
 	gem 'rake', '~> 13.1'
 end
+

@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Released under the MIT License.
+# Copyright, 2024, by Aristóteles Coutinho.
+
 lennarb_routes =
 	lambda do |f, level, prefix, calc_path, lvars|
 		base = BASE_ROUTE.dup
