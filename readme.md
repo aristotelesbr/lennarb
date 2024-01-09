@@ -22,9 +22,7 @@ To more examples of usage see [getting started](https://aristotelesbr.github.io/
 
 ### Requests per second (RPS) - Dinamic routes
 
-<p>
-  <img src="static/rps.png" alt="Benchmarks" width="100%">
-</p>
+![Benchmarks](static/rps.png)
 
 To more details about the benchmarks, please see the [project documentation](https://aristotelesbr.github.io/lennarb/performance/index).
 
