@@ -10,13 +10,15 @@ To use Lennarb is very simple, just create a instance of `Lennarb` and use the m
 app = Lennarb.new
 
 app.get("/hello/:name") do |req, res|
-	res.html("Hello #{params[:name]}")
+  name = req.params[:name]
+
+  res.html("Hello #{name}")
 end
 ```
 
-## Performance
+To more examples of usage see [getting started](https://aristotelesbr.github.io/lennarbguides/getting-started/index) documentation.
 
-The **Lennarb** is very fast. The following benchmarks were performed on a MacBook Pro (Retina, 13-inch, Early 2013) with 2,7 GHz Intel Core i7 and 8 GB 1867 MHz DDR3. Based on [jeremyevans/r10k](https://github.com/jeremyevans/r10k) using the following [template build](static/r10k/build/lennarb.rb).
+## Performance
 
 ### Requests per second (RPS) - Dinamic routes
 
@@ -24,17 +26,9 @@ The **Lennarb** is very fast. The following benchmarks were performed on a MacBo
   <img src="static/rps.png" alt="Benchmarks" width="100%">
 </p>
 
-### Memory usage
+To more details about the benchmarks, please see the [project documentation](https://aristotelesbr.github.io/lennarb/performance/index).
 
-<p>
-	<img src="static/memory.png" alt="Benchmarks" width="100%">
-</p>
-
-### Runtime startup
-
-<p>
-	<img src="static/runtime_with_startup.png" alt="Benchmarks" width="100%">
-</p>
+## Documentation
 
 Please see the [project documentation](https://aristotelesbr.github.io/lennarb) for more details.
 
