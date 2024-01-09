@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
 	spec.version = Lennarb::VERSION
 
 	spec.summary = 'A lightweight and experimental web framework for Ruby.'
-	spec.authors = ['Aristóteles Coutinho', 'aristotelesbr']
+	spec.authors = ['Aristóteles Coutinho']
 	spec.license = 'MIT'
 
 	spec.homepage = 'https://aristotelesbr.github.io/lennarb'
