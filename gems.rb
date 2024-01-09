@@ -17,14 +17,6 @@ gem 'rack', '~> 3.0', '>= 3.0.8'
 # [https://rubygems.org/gems/colorize]
 # Colorize is a Ruby gem used to color text in terminals.
 gem 'colorize', '~> 1.1'
-# [https://rubygems.org/gems/console]
-# Console is a Ruby gem used to create interactive command line applications.
-gem 'console', '~> 1.23'
-# [htpps://rubygems.org/gems/zeitwerk
-# Zeitwerk implements constant autoloading with Ruby semantics. 
-# Each gem and application may have their own independent autoloader, with its 
-# own configuration, inflector, and logger.
-gem 'zeitwerk', '~> 2.6', '>= 2.6.12'
 
 group :maintenance, optional: true do
 	# [https://rubygems.org/gems/bake-gem]
@@ -74,4 +66,8 @@ group :development, :test do
 	# its own or as a reusable starting point for Web frameworks and testing
 	# libraries to build on.
 	gem 'rack-test', '~> 2.1'
+	# [https://rubygems.org/gems/rake]
+	# Rake is a Make-like program implemented in Ruby. Tasks and dependencies are
+	# specified in standard Ruby syntax. Rake has the following features:
+	gem 'rake', '~> 13.1'
 end

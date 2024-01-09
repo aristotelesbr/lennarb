@@ -10,8 +10,6 @@
 #
 require 'lennarb'
 
-# Call the CLI to start the server
+# Show the version
 #
-# @private `Since v0.1`
-#
-Lenna::Cli::App.run!(ARGV)
+puts Lennarb::VERSION
