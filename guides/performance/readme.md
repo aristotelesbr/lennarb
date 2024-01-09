@@ -6,21 +6,15 @@ All tests are performed using the **Ruby 3.3.0**
 
 ### Requests per second (RPS) - Dinamic routes
 
-<p>
-  <img src="static/rps.png" alt="Benchmarks" width="100%">
-</p>
+![Benchmarks](static/rps.png)
 
 ### Memory usage
 
-<p>
-	<img src="static/memory.png" alt="Benchmarks" width="100%">
-</p>
+![Benchmarks](static/memory.png)
 
 ### Runtime startup
 
-<p>
-	<img src="static/runtime_with_startup.png" alt="Benchmarks" width="100%">
-</p>
+![Benchmarks](static/runtime.png)
 
 ## Best numbers
 
