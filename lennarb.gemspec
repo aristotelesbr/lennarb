@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
 	spec.version = Lennarb::VERSION
 
 	spec.summary = 'A lightweight and experimental web framework for Ruby.'
-	spec.authors = ['Aristóteles Coutinho', 'aristotelesbr']
+	spec.authors = ['Aristóteles Coutinho']
 	spec.license = 'MIT'
 
 	spec.homepage = 'https://aristotelesbr.github.io/lennarb'
@@ -25,9 +25,8 @@ Gem::Specification.new do |spec|
 	spec.bindir = 'exe'
 	spec.executables = ['lenna']
 
-	spec.required_ruby_version = '>= 3.0'
+	spec.required_ruby_version = '>= 3.1'
 
-	spec.add_dependency 'async', '~> 2.8'
 	spec.add_dependency 'colorize', '~> 1.1'
 	spec.add_dependency 'rack', '~> 3.0', '>= 3.0.8'
 
