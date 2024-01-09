@@ -1,6 +1,6 @@
 # Lennarb
 
-Lennarb is a lightweight, fast, and modular web framework for Ruby based on Rack. The **Lennarb**	supports Ruby (MRI) 3.0+
+Lennarb is a lightweight, fast, and modular web framework for Ruby based on Rack. The **Lennarb** supports Ruby (MRI) 3.0+
 
 ## Usage
 
@@ -30,9 +30,9 @@ To more details about the benchmarks, please see the [project documentation](htt
 
 Please see the [project documentation](https://aristotelesbr.github.io/lennarb) for more details.
 
-  - [Getting Started](https://aristotelesbr.github.io/lennarbguides/getting-started/index) - This guide show you how to use the `lennarb`
+- [Getting Started](https://aristotelesbr.github.io/lennarbguides/getting-started/index) - This guide show you how to use the `lennarb`
 
-  - [Response](https://aristotelesbr.github.io/lennarbguides/response/index) - This guide show you how to use the Response object
+- [Response](https://aristotelesbr.github.io/lennarbguides/response/index) - This guide show you how to use the Response object
 
 ## Contributing
 
