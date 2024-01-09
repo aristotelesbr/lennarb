@@ -10,12 +10,12 @@ require 'open3'
 #
 # @parameter test [String] the path to file
 def test(test: nil)
-  test_dir = 'test'
+	test_dir = 'test'
 
-  all_tests_command = "Dir.glob(\"./#{test_dir}/**/test_*.rb\").each { require _1 }"
-  test_command = test ? "ruby -I#{test_dir} #{test}" : "ruby -I#{test_dir} -e '#{all_tests_command}'"
+	all_tests_command = "Dir.glob(\"./#{test_dir}/**/test_*.rb\").each { require _1 }"
+	test_command = test ? "ruby -I#{test_dir} #{test}" : "ruby -I#{test_dir} -e '#{all_tests_command}'"
 
-  stdout, _stderr, _status = Open3.capture3(test_command)
+	stdout, _stderr, _status = Open3.capture3(test_command)
 
-  puts stdout.green
+	puts stdout.green
 end
