@@ -46,15 +46,15 @@ This table shows the startup time in seconds. Lower values indicate faster start
 
 ### Requests per second (RPS)
 
-![Benchmarks](static/rps.png)
+![Benchmarks](../../static/rps.png)
 
 ### Initial memory usage
 
-![Benchmarks](static/memory.png)
+![Benchmarks](../../static/memory.png)
 
 ### Runtime startup
 
-![Benchmarks](static/runtime.png)
+![Benchmarks](../../static/runtime_with_startup.png)
 
 
 ## Conclusion
