@@ -29,10 +29,15 @@ Gem::Specification.new do |spec|
 
 	spec.add_dependency 'async', '~> 2.8'
 	spec.add_dependency 'colorize', '~> 1.1'
-	spec.add_dependency 'rack', '~> 3.0'
+	spec.add_dependency 'rack', '~> 3.0, >= 3.0.8'
 
 	spec.add_development_dependency 'bundler', '~> 2.2'
 	spec.add_development_dependency 'minitest', '~> 5.20'
 	spec.add_development_dependency 'rake', '~> 13.0'
 	spec.add_development_dependency 'rake-test', '~> 2.1'
+	spec.add_development_dependency 'rubocop', '~> 1.59', require: false
+	spec.add_development_dependency 'rubocop-minitest', '~> 0.33.0'
+	spec.add_development_dependency 'covered', '~> 0.25.1'
+	spec.add_development_dependency 'bake', '~> 0.18.2'
+	spec.add_development_dependency 'puma', '~> 6.4'
 end
