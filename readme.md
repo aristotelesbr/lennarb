@@ -2,47 +2,42 @@
 
 Lennarb is a lightweight, fast, and modular web framework for Ruby based on Rack. The **Lennarb** supports Ruby (MRI) 3.0+
 
-## Usage
+**Basic Usage**
 
-To use Lennarb is very simple, just create a instance of `Lennarb` and use the methods `get`, `post`, `put`, `patch` etc..
+```ruby
+require "lennarb"
 
-```rb
-app = Lennarb.new
-
-app.get("/hello/:name") do |req, res|
-  name = req.params[:name]
-
-  res.html("Hello #{name}")
+Lennarb.new do |router|
+  router.get("/hello/:name") do |req, res|
+    name = req.params[:name]
+    res.html("Hello, #{name}!")
+  end
 end
 ```
 
-To more examples of usage see [getting started](https://aristotelesbr.github.io/lennarbguides/getting-started/index) documentation.
-
 ## Performance
 
-### Requests per second (RPS) - Dinamic routes
+### 1. Requests per Second (RPS)
 
-![Benchmarks](static/rps.png)
+| Position | Application | 10 RPS     | 100 RPS    | 1.000 RPS | 10.000 RPS |
+| -------- | ----------- | ---------- | ---------- | --------- | ---------- |
+| 1        | Lenna       | 126.252,36 | 108.086,55 | 87.111,91 | 68.460,64  |
+| 2        | Roda        | 123.360,37 | 88.380,56  | 66.990,77 | 48.108,29  |
+| 3        | Syro        | 114.105,38 | 80.909,39  | 61.415,86 | 46.639,81  |
+| 4        | Hanami-API  | 68.089,18  | 52.851,88  | 40.801,78 | 27.996,00  |
 
-To more details about the benchmarks, please see the [project documentation](https://aristotelesbr.github.io/lennarb/performance/index).
+This table ranks the routers by the number of requests they can process per second. Higher numbers indicate better performance.
 
-## Documentation
+Plese see [Performance](https://github.com.br/guides/performance/index) for more information.
 
-Please see the [project documentation](https://aristotelesbr.github.io/lennarb) for more details.
+## Usage
 
-- [Getting Started](https://aristotelesbr.github.io/lennarbguides/getting-started/index) - This guide show you how to use the `lennarb`
+  - [Getting Started](https://github.com.br/guides/getting-started/index) - This guide covers getting up and running with **Lennarb**.
 
-- [Response](https://aristotelesbr.github.io/lennarbguides/response/index) - This guide show you how to use the Response object
+  - [Performance](https://github.com.br/guides/performance/index) - The **Lennarb** is very fast. The following benchmarks were performed on a MacBook Pro (Retina, 13-inch, Early 2013) with 2,7 GHz Intel Core i7 and 8 GB 1867 MHz DDR3. Based on [jeremyevans/r10k](https://github.com/jeremyevans/r10k) using the following [template build](static/r10k/build/lennarb.rb).
 
-## Contributing
-
-We welcome contributions to this project.
-
-1.  Fork it.
-2.  Create your feature branch (`git checkout -b my-new-feature`).
-3.  Commit your changes (`git commit -am 'Add some feature'`).
-4.  Push to the branch (`git push origin my-new-feature`).
-5.  Create new Pull Request.
+  - [Response](https://github.com.br/guides/response/index) - This is the response guide.
+    The `res` object is used to send a response to the client. The Lennarb use a custom response object to send responses to the client. The `res` object is an instance of `Lennarb::Response`.
 
 ### Developer Certificate of Origin
 
