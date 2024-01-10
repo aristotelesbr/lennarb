@@ -1,10 +1,8 @@
 # Performance
 
-The **Lennarb** is very fast. The following benchmarks were performed on a MacBook Pro (Retina, 13-inch, Early 2013) with 2,7 GHz Intel Core i7 and 8 GB 1867 MHz DDR3. Based on [jeremyevans/r10k](https://github.com/jeremyevans/r10k) using the following [template build](static/r10k/build/lennarb.rb).
+The **Lennarb** is very fast. The following benchmarks were performed on a MacBook Pro (Retina, 13-inch, Early 2013) with 2,7 GHz Intel Core i7 and 8 GB 1867 MHz DDR3. Based on [jeremyevans/r10k](https://github.com/jeremyevans/r10k) using the following. All tests are performed using the **Ruby 3.3.0**
 
-All tests are performed using the **Ruby 3.3.0**
-
-## Benchmark numbers
+## Benchmark results
 
 This document contains the benchmarks comparing **Lennarb** with other routers based on Rack. Metrics evaluated include Requests per Second, Initial memory usage and Startup time.
 
@@ -41,21 +39,42 @@ This table shows the initial memory usage in KB. Lower values indicate lower mem
 
 This table shows the startup time in seconds. Lower values indicate faster startup times.
 
-
 ## Graphs
 
-### Requests per second (RPS)
+See the graphs in the `benchmarks` directory of the lennarb project.
 
-![Benchmarks](../../static/rps.png)
+## Steps to run the benchmarks
 
-### Initial memory usage
+### 1. Install the router gem you want to test
 
-![Benchmarks](../../static/memory.png)
+```bash
+$ gem install lennarb
+$ gem install syro
+$ gem install roda
+```
 
-### Runtime startup
+### 2. Clone the jeremyevans/r10k repository
 
-![Benchmarks](../../static/runtime_with_startup.png)
+```bash
+$ git clone https://github.com/jeremyevans/r10k
+```
 
+### 3. Create a new file in the `r10k` directory
+
+In the `r10k` directory, create a new file called `lennarb.rb` into `builders` directory with the code below:
+
+```bash
+$ touch r10k/builders/lennarb.rb
+```
+
+Put the code below into `lennarb.rb` file:
+
+
+### 4. Run the benchmarks
+
+```bash
+$ bundle exec rake benchmarks R10K_APPS="lennarb syro roda"
+```
 
 ## Conclusion
 
