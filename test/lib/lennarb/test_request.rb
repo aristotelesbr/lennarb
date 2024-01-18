@@ -5,7 +5,7 @@
 
 require 'test_helper'
 
-module Lennarb
+class Lennarb
 	class TestRequest < Minitest::Test
 		def test_initialize
 			request = Lennarb::Request.new({})
