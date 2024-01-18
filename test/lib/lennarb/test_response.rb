@@ -5,7 +5,7 @@
 
 require 'test_helper'
 
-module Lennarb
+class Lennarb
 	class TestResponse < Minitest::Test
 		def test_default_instance_variables
 			response = Lennarb::Response.new
