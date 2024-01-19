@@ -12,7 +12,7 @@ class Lennarb
 		# @return [RouteNode]
 		#
 		def initialize
-			@children = {}
+			@children  = {}
 			@blocks    = {}
 			@param_key = nil
 		end

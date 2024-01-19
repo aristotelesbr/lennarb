@@ -6,22 +6,22 @@
 class Lennarb
 	class Response
 		# @!attribute [rw] status
-		#  @return [Integer]
+		#  @returns [Integer]
 		#
 		attr_accessor :status
 
 		# @!attribute [r] body
-		#  @return [Array]
+		#  @returns [Array]
 		#
 		attr_reader :body
 
 		# @!attribute [r] headers
-		#  @return [Hash]
+		#  @returns [Hash]
 		#
 		attr_reader :headers
 
 		# @!attribute [r] length
-		#  @return [Integer]
+		#  @returns [Integer]
 		#
 		attr_reader :length
 
@@ -41,7 +41,7 @@ class Lennarb
 
 		# Initialize the response object
 		#
-		# @return [Response]
+		# @returns [Response]
 		#
 		def initialize
 			@status = 404
@@ -54,7 +54,7 @@ class Lennarb
 		#
 		# @parameter [String] key
 		#
-		# @return [String] value
+		# @returns [String] value
 		#
 		def [](key)
 			@headers[key]
@@ -65,7 +65,7 @@ class Lennarb
 		# @parameter [String] key
 		# @parameter [String] value
 		#
-		# @return [String] value
+		# @returns [String] value
 		#
 		def []=(key, value)
 			@headers[key] = value
@@ -75,7 +75,7 @@ class Lennarb
 		#
 		# @parameter [String] str
 		#
-		# @return [String] str
+		# @returns [String] str
 		#
 		def write(str)
 			str = str.to_s
@@ -88,7 +88,7 @@ class Lennarb
 		#
 		# @parameter [String] str
 		#
-		# @return [String] str
+		# @returns [String] str
 		#
 		def text(str)
 			@headers[CONTENT_TYPE] = ContentType[:TEXT]
@@ -99,7 +99,7 @@ class Lennarb
 		#
 		# @parameter [String] str
 		#
-		# @return [String] str
+		# @returns [String] str
 		#
 		def html(str)
 			@headers[CONTENT_TYPE] = ContentType[:HTML]
@@ -110,7 +110,7 @@ class Lennarb
 		#
 		# @parameter [String] str
 		#
-		# @return [String] str
+		# @returns [String] str
 		#
 		def json(str)
 			@headers[CONTENT_TYPE] = ContentType[:JSON]
@@ -129,7 +129,7 @@ class Lennarb
 
 		# Finish the response
 		#
-		# @return [Array] response
+		# @returns [Array] response
 		#
 		def finish
 			[@status, @headers, @body]

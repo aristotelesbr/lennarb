@@ -23,7 +23,7 @@ class Lennarb
 	class LennarbError < StandardError; end
 
 	# @attribute [r] root
-	# @return [RouteNode]
+	# @returns [RouteNode]
 	#
 	attr_reader :root
 
@@ -31,7 +31,7 @@ class Lennarb
 	#
 	# @yield { ... } The application
 	#
-	# @return [Lennarb]
+	# @returns [Lennarb]
 	#
 	def initialize
 		@root = RouteNode.new
@@ -42,7 +42,7 @@ class Lennarb
 	#
 	# @parameter [String] path
 	#
-	# @return [Array] parts. Ex. ['users', ':id']
+	# @returns [Array] parts. Ex. ['users', ':id']
 	#
 	SplitPath = ->(path) { path.split('/').reject(&:empty?) }
 	private_constant :SplitPath
@@ -51,16 +51,16 @@ class Lennarb
 	#
 	# @parameter [Hash] env
 	#
-	# @return [Array] response
+	# @returns [Array] response
 	#
 	def call(env)
-		res = Response.new
 		http_method = env.fetch('REQUEST_METHOD').to_sym
 		parts       = SplitPath[env.fetch('PATH_INFO')]
 
 		block, params = @root.match_route(parts, http_method)
 		return [404, { 'content-type' => 'text/plain' }, ['Not Found']] unless block
 
+		res = Response.new
 		req = Request.new(env, params)
 		instance_exec(req, res, &block)
 
@@ -72,7 +72,7 @@ class Lennarb
 	# @parameter [String] path
 	# @parameter [Proc] block
 	#
-	# @return [void]
+	# @returns [void]
 	#
 	def get(path, &block)    = add_route(path, :GET, block)
 	def post(path, &block)   = add_route(path, :POST, block)
@@ -88,7 +88,7 @@ class Lennarb
 	# @parameter [String] http_method
 	# @parameter [Proc] block
 	#
-	# @return [void]
+	# @returns [void]
 	#
 	def add_route(path, http_method, block)
 		parts = SplitPath[path]
