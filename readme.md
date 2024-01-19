@@ -19,6 +19,10 @@ end
 
 ### 1. Requests per Second (RPS)
 
+![RPS](https://raw.githubusercontent.com/aristotelesbr/lennarb/main/benchmark/rps.png)
+
+See all [graphs](https://github.com/aristotelesbr/lennarb/blob/main/benchmark)
+
 | Position | Application | 10 RPS     | 100 RPS    | 1.000 RPS | 10.000 RPS |
 | -------- | ----------- | ---------- | ---------- | --------- | ---------- |
 | 1        | Lenna       | 126.252,36 | 108.086,55 | 87.111,91 | 68.460,64  |
