@@ -8,6 +8,8 @@ This document contains the benchmarks comparing **Lennarb** with other routers b
 
 ### 1. Requests per Second (RPS)
 
+![RPS](https://raw.githubusercontent.com/aristotelesbr/lennarb/main/benchmark/rps.png)
+
 | Position | Application | 10 RPS     | 100 RPS    | 1.000 RPS | 10.000 RPS |
 | -------- | ----------- | ---------- | ---------- | --------- | ---------- |
 | 1        | Lenna       | 126.252,36 | 108.086,55 | 87.111,91 | 68.460,64  |
@@ -19,6 +21,8 @@ This table ranks the routers by the number of requests they can process per seco
 
 ### 2. Initial memory usage (in KB)
 
+![Memory](https://raw.githubusercontent.com/aristotelesbr/lennarb/main/benchmark/memory.png)
+
 | Position | Application | 10 KB  | 100 KB | 1.000 KB | 10.000 KB |
 | -------- | ----------- | ------ | ------ | -------- | --------- |
 | 1        | Syro        | 12,160 | 12,544 | 16,460   | 49,692    |
@@ -29,6 +33,8 @@ This table ranks the routers by the number of requests they can process per seco
 This table shows the initial memory usage in KB. Lower values indicate lower memory consumption.
 
 ### 3. Startup time (in seconds)
+
+![Startup](https://raw.githubusercontent.com/aristotelesbr/lennarb/main/benchmark/runtime_with_startup.png)
 
 | Position | Application | 10 seg | 100 seg | 1.000 seg | 10.000 seg |
 | -------- | ----------- | ------ | ------- | --------- | ---------- |
@@ -70,7 +76,6 @@ $ touch r10k/builders/lennarb.rb
 Put the code below into `lennarb.rb` file:
 
 ```rb
-
 # frozen_string_literal: true
 
 # Released under the MIT License.
