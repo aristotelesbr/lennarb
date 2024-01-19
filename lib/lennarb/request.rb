@@ -10,7 +10,7 @@ class Lennarb
 		# @parameter [Hash] env
 		# @parameter [Hash] route_params
 		#
-		# @return [Request]
+		# @returns [Request]
 		#
 		def initialize(env, route_params = {})
 			super(env)
@@ -19,7 +19,7 @@ class Lennarb
 
 		# Get the request body
 		#
-		# @return [String]
+		# @returns [String]
 		def params
 			@params ||= super.merge(@route_params)
 		end
@@ -28,7 +28,7 @@ class Lennarb
 
 		# Get the query string
 		#
-		# @return [String]
+		# @returns [String]
 		#
 		def query_params
 			@query_params ||= Rack::Utils.parse_nested_query(query_string)
