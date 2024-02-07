@@ -74,13 +74,11 @@ class Lennarb
 	#
 	# @returns [void]
 	#
-	def get(path, &block)    = add_route(path, :GET, block)
-	def post(path, &block)   = add_route(path, :POST, block)
-	def put(path, &block)    = add_route(path, :PUT, block)
-	def patch(path, &block)  = add_route(path, :PATCH, block)
-	def delete(path, &block) = add_route(path, :DELETE, block)
-
-	private
+	def get(path, &block)    = __add_route__(path, :GET, block)
+	def post(path, &block)   = __add_route__(path, :POST, block)
+	def put(path, &block)    = __add_route__(path, :PUT, block)
+	def patch(path, &block)  = __add_route__(path, :PATCH, block)
+	def delete(path, &block) = __add_route__(path, :DELETE, block)
 
 	# Add a route
 	#
@@ -90,8 +88,52 @@ class Lennarb
 	#
 	# @returns [void]
 	#
-	def add_route(path, http_method, block)
+	def __add_route__(path, http_method, block)
 		parts = SplitPath[path]
 		@root.add_route(parts, http_method, block)
+	end
+
+	# Base module for the application. The main purpose is to include the class methods
+	# and call the Lennarb instance.
+	#
+	module ApplicationBase
+		# Include the class methods
+		#
+		# @parameter [Class] base
+		#
+		# @returns [void]
+		#
+		def self.included(base) = base.extend(ClassMethods)
+
+		# Call the Lennarb instance
+		#
+		# @parameter [Hash] env
+		#
+		# @returns [Array]
+		#
+		def call(env) = self.class.lennarb_instance.call(env)
+
+		# Class methods
+		#
+		module ClassMethods
+			# Get the Lennarb instance
+			#
+			# @returns [Lennarb]
+			#
+			def lennarb_instance = @lennarb_instance ||= Lennarb.new
+
+			# Add a route
+			#
+			# @parameter [String] path
+			# @parameter [Proc] block
+			#
+			# @returns [void]
+			#
+			def get(path, &block)    = lennarb_instance.__add_route__(path, :GET, block)
+			def put(path, &block)    = lennarb_instance.__add_route__(path, :PUT, block)
+			def post(path, &block)   = lennarb_instance.__add_route__(path, :POST, block)
+			def patch(path, &block)  = lennarb_instance.__add_route__(path, :PATCH, block)
+			def delete(path, &block) = lennarb_instance.__add_route__(path, :DELETE, block)
+		end
 	end
 end
