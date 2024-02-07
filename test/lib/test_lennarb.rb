@@ -29,6 +29,17 @@ class TestLennarb < Minitest::Test
 		assert_respond_to app, :call
 	end
 
+	def test_extends_application_base
+		extend Lennarb::ApplicationBase
+
+		assert_respond_to self, :call
+		assert_respond_to self, :get
+		assert_respond_to self, :post
+		assert_respond_to self, :put
+		assert_respond_to self, :patch
+		assert_respond_to self, :delete
+	end
+
 	def app
 		Lennarb.new do |route|
 			route.get '/users' do |_req, res|
