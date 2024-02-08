@@ -80,7 +80,7 @@ class Lennarb
 		def write(str)
 			str = str.to_s
 			@length += str.bytesize
-			@headers[CONTENT_LENGTH] ||= @length.to_s
+			@headers[CONTENT_LENGTH] = @length.to_s
 			@body << str
 		end
 
