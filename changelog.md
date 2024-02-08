@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.1] - 2024-08-02
+
+### Change
+
+- Change behavior of `Lennarb::ApplicationBase` class to be the base class of the `Lennarb` class. Now, the `Lennarb` class is a subclass of `Lennarb::ApplicationBase` class.
+
+That permits to create a new application with the `Lennarb::ApplicationBase` class and use http methods to create the routes. Ex.
+
+```rb
+# app.rb
+
+require 'lennarb'
+
+class MyApp < Lennarb::ApplicationBase
+	get '/hello' do |req, res|
+		res.html('Hello World')
+	end
+end
+```
+
+### Removed
+
+- Remove `Lennarb::Application` module from the project. Now, the `Lennarb` class is the main class of the project.
+
+
 ## [0.4.0] - 2024-07-02
 
 ### Added

@@ -29,15 +29,31 @@ class TestLennarb < Minitest::Test
 		assert_respond_to app, :call
 	end
 
-	def test_extends_application_base
-		extend Lennarb::ApplicationBase
+	class TestApp < Lennarb::ApplicationBase
+		get '/' do |_req, res|
+			res.html('GET Response')
+		end
 
-		assert_respond_to self, :call
-		assert_respond_to self, :get
-		assert_respond_to self, :post
-		assert_respond_to self, :put
-		assert_respond_to self, :patch
-		assert_respond_to self, :delete
+		post '/' do |_req, res|
+			res.html('POST Response')
+		end
+	end
+
+	def test_subclass_has_http_methods
+		assert_respond_to TestApp, :get
+		assert_respond_to TestApp, :post
+		assert_respond_to TestApp, :put
+		assert_respond_to TestApp, :delete
+		assert_respond_to TestApp, :patch
+	end
+
+	def test_routes_are_defined
+		refute_empty TestApp.routes
+		assert_equal 2, TestApp.routes.count
+		assert_equal :get, TestApp.routes.first[:method]
+		assert_equal '/', TestApp.routes.first[:path]
+		assert_equal :post, TestApp.routes.last[:method]
+		assert_equal '/', TestApp.routes.last[:path]
 	end
 
 	def app

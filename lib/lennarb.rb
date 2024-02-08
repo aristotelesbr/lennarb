@@ -27,6 +27,7 @@ class Lennarb
 	#
 	attr_reader :root
 
+	@routes = []
 	# Initialize the application
 	#
 	# @yield { ... } The application
@@ -74,11 +75,13 @@ class Lennarb
 	#
 	# @returns [void]
 	#
-	def get(path, &block)    = __add_route__(path, :GET, block)
-	def post(path, &block)   = __add_route__(path, :POST, block)
-	def put(path, &block)    = __add_route__(path, :PUT, block)
-	def patch(path, &block)  = __add_route__(path, :PATCH, block)
-	def delete(path, &block) = __add_route__(path, :DELETE, block)
+	def get(path, &block)    = add_route(path, :GET, block)
+	def post(path, &block)   = add_route(path, :POST, block)
+	def put(path, &block)    = add_route(path, :PUT, block)
+	def patch(path, &block)  = add_route(path, :PATCH, block)
+	def delete(path, &block) = add_route(path, :DELETE, block)
+
+	private
 
 	# Add a route
 	#
@@ -88,39 +91,18 @@ class Lennarb
 	#
 	# @returns [void]
 	#
-	def __add_route__(path, http_method, block)
+	def add_route(path, http_method, block)
 		parts = SplitPath[path]
 		@root.add_route(parts, http_method, block)
 	end
 
-	# Base module for the application. The main purpose is to include the class methods
-	# and call the Lennarb instance.
+	# Base class for Lennarb applications
 	#
-	module ApplicationBase
-		# Include the class methods
-		#
-		# @parameter [Class] base
-		#
-		# @returns [void]
-		#
-		def self.included(base) = base.extend(ClassMethods)
+	class ApplicationBase < Lennarb
+		@routes = []
 
-		# Call the Lennarb instance
-		#
-		# @parameter [Hash] env
-		#
-		# @returns [Array]
-		#
-		def call(env) = self.class.lennarb_instance.call(env)
-
-		# Class methods
-		#
-		module ClassMethods
-			# Get the Lennarb instance
-			#
-			# @returns [Lennarb]
-			#
-			def lennarb_instance = @lennarb_instance ||= Lennarb.new
+		class << self
+			attr_reader :routes
 
 			# Add a route
 			#
@@ -129,11 +111,43 @@ class Lennarb
 			#
 			# @returns [void]
 			#
-			def get(path, &block)    = lennarb_instance.__add_route__(path, :GET, block)
-			def put(path, &block)    = lennarb_instance.__add_route__(path, :PUT, block)
-			def post(path, &block)   = lennarb_instance.__add_route__(path, :POST, block)
-			def patch(path, &block)  = lennarb_instance.__add_route__(path, :PATCH, block)
-			def delete(path, &block) = lennarb_instance.__add_route__(path, :DELETE, block)
+			%i[get post put patch delete].each do |http_method|
+				define_method(http_method) do |path, &block|
+					routes << { method: http_method, path:, proc: block }
+				end
+			end
+		end
+
+		# Inherited hook
+		#
+		# @parameter [Class] subclass
+		#
+		# @returns [void]
+		#
+		def self.inherited(subclass)
+			super
+			subclass.instance_variable_set(:@routes, routes.dup)
+		end
+
+		# Initialize the application
+		#
+		# @returns [ApplicationBase]
+		#
+		def initialize
+			super
+			setup_routes
+		end
+
+		private
+
+		# Setup the routes
+		#
+		# @returns [void]
+		#
+		def setup_routes
+			self.class.routes.each do |route_info|
+				__send__(route_info[:method], route_info[:path], &route_info[:proc])
+			end
 		end
 	end
 end
