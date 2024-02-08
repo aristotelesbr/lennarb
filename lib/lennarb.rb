@@ -76,10 +76,12 @@ class Lennarb
 	# @returns [void]
 	#
 	def get(path, &block)    = add_route(path, :GET, block)
-	def post(path, &block)   = add_route(path, :POST, block)
 	def put(path, &block)    = add_route(path, :PUT, block)
+	def post(path, &block)   = add_route(path, :POST, block)
+	def head(path, &block)   = add_route(path, :HEAD, block)
 	def patch(path, &block)  = add_route(path, :PATCH, block)
 	def delete(path, &block) = add_route(path, :DELETE, block)
+	def options(path, &block) = add_route(path, :OPTIONS, block)
 
 	private
 
