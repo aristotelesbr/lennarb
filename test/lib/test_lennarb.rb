@@ -29,33 +29,6 @@ class TestLennarb < Minitest::Test
 		assert_respond_to app, :call
 	end
 
-	class TestApp < Lennarb::ApplicationBase
-		get '/' do |_req, res|
-			res.html('GET Response')
-		end
-
-		post '/' do |_req, res|
-			res.html('POST Response')
-		end
-	end
-
-	def test_subclass_has_http_methods
-		assert_respond_to TestApp, :get
-		assert_respond_to TestApp, :post
-		assert_respond_to TestApp, :put
-		assert_respond_to TestApp, :delete
-		assert_respond_to TestApp, :patch
-	end
-
-	def test_routes_are_defined
-		refute_empty TestApp.routes
-		assert_equal 2, TestApp.routes.count
-		assert_equal :get, TestApp.routes.first[:method]
-		assert_equal '/', TestApp.routes.first[:path]
-		assert_equal :post, TestApp.routes.last[:method]
-		assert_equal '/', TestApp.routes.last[:path]
-	end
-
 	def app
 		Lennarb.new do |route|
 			route.get '/users' do |_req, res|

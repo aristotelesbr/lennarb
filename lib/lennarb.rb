@@ -27,7 +27,6 @@ class Lennarb
 	#
 	attr_reader :root
 
-	@routes = []
 	# Initialize the application
 	#
 	# @yield { ... } The application
@@ -55,17 +54,40 @@ class Lennarb
 	# @returns [Array] response
 	#
 	def call(env)
-		http_method = env.fetch('REQUEST_METHOD').to_sym
-		parts       = SplitPath[env.fetch('PATH_INFO')]
+		http_method = env[Rack::REQUEST_METHOD].to_sym
+		parts       = SplitPath[env[Rack::PATH_INFO]]
 
 		block, params = @root.match_route(parts, http_method)
 		return [404, { 'content-type' => 'text/plain' }, ['Not Found']] unless block
 
-		res = Response.new
-		req = Request.new(env, params)
-		instance_exec(req, res, &block)
+		@res = Response.new
+		req  = Request.new(env, params)
 
-		res.finish
+		catch(:halt) do
+			instance_exec(req, @res, &block)
+			finish!
+		end
+	end
+
+	# Finish the request
+	#
+	# @returns [Array] Response
+	#
+	def finish! = halt(@res.finish)
+
+	# Immediately stops the request and returns `response`
+	# as per Rack's specification.
+	#
+	#     halt([200, { "Content-Type" => "text/html" }, ["hello"]])
+	#     halt([res.status, res.headers, res.body])
+	#     halt(res.finish)
+	#
+	# @parameter [Array] response
+	#
+	# @returns [Array] response
+	#
+	def halt(response)
+		throw(:halt, response)
 	end
 
 	# Add a routes
@@ -75,12 +97,12 @@ class Lennarb
 	#
 	# @returns [void]
 	#
-	def get(path, &block)    = add_route(path, :GET, block)
-	def put(path, &block)    = add_route(path, :PUT, block)
-	def post(path, &block)   = add_route(path, :POST, block)
-	def head(path, &block)   = add_route(path, :HEAD, block)
-	def patch(path, &block)  = add_route(path, :PATCH, block)
-	def delete(path, &block) = add_route(path, :DELETE, block)
+	def get(path, &block)     = add_route(path, :GET, block)
+	def put(path, &block)     = add_route(path, :PUT, block)
+	def post(path, &block)    = add_route(path, :POST, block)
+	def head(path, &block)    = add_route(path, :HEAD, block)
+	def patch(path, &block)   = add_route(path, :PATCH, block)
+	def delete(path, &block)  = add_route(path, :DELETE, block)
 	def options(path, &block) = add_route(path, :OPTIONS, block)
 
 	private
@@ -96,60 +118,5 @@ class Lennarb
 	def add_route(path, http_method, block)
 		parts = SplitPath[path]
 		@root.add_route(parts, http_method, block)
-	end
-
-	# Base class for Lennarb applications
-	#
-	class ApplicationBase < Lennarb
-		@routes = []
-
-		class << self
-			attr_reader :routes
-
-			# Add a route
-			#
-			# @parameter [String] path
-			# @parameter [Proc] block
-			#
-			# @returns [void]
-			#
-			%i[get post put patch delete].each do |http_method|
-				define_method(http_method) do |path, &block|
-					routes << { method: http_method, path:, proc: block }
-				end
-			end
-		end
-
-		# Inherited hook
-		#
-		# @parameter [Class] subclass
-		#
-		# @returns [void]
-		#
-		def self.inherited(subclass)
-			super
-			subclass.instance_variable_set(:@routes, routes.dup)
-		end
-
-		# Initialize the application
-		#
-		# @returns [ApplicationBase]
-		#
-		def initialize
-			super
-			setup_routes
-		end
-
-		private
-
-		# Setup the routes
-		#
-		# @returns [void]
-		#
-		def setup_routes
-			self.class.routes.each do |route_info|
-				__send__(route_info[:method], route_info[:path], &route_info[:proc])
-			end
-		end
 	end
 end
