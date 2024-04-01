@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [0.4.3] - 2024-04-01
+
+### Added
+
+### Remove
+
+- Remove `Lennarb::ApplicationBase` class from the project. Now, the `Lennarb` class is the main class of the project.
+
+### Changed
+
+- Improve performance of the RPS (Requests per second), memory and CPU usage.
+- Change the `finish` method from `Lennarb` class to call `halt(@res.finish)` method to finish the response.
+
 ## [0.4.2] - 2024-08-02
 
 ### Added
