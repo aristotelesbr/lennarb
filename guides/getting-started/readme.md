@@ -44,14 +44,55 @@ end
 run app
 ```
 
-## Parameters
+## Use `Lennarb::Router` module
 
-You can get params from the request using `req.params`:
+You can use the `Lennarb::Router` module to define routes using the `route` method:
 
 ```ruby
 # app.rb
 
-app.get '/hello/:name' do |req, res|
+require 'lennarb'
+
+class App
+	include Lennarb::Router
+
+	route.get '/' do |_req, res|
+		res.status = 200
+		res.html 'Hello World'
+	end
+end
+```
+
+The `route` method is a instance of `Lennarb`. So, you can use the following methods:
+
+- `route.get`
+- `route.post`
+- `route.put`
+- `route.delete`
+- `route.patch`
+- `route.options`
+- `route.head`
+
+Now you can use the `App` class in your `config.ru`:
+
+```ruby
+# config.ru
+
+require_relative 'app'
+
+run App.app
+```
+
+The `app` method freeze the routes and return a `Lennarb` instance.
+
+## Parameters
+
+You can get `params` from the request using `req.params`:
+
+```ruby
+# app.rb
+
+route.get '/hello/:name' do |req, res|
 	res.html "Hello #{req.params[:name]}"
 end
 ```

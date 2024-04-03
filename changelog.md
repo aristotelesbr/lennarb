@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.4] - 2024-04-02
+
+### Added
+
+- Add `Lennarb::Router` module to manage the routes in the project. Now, the `Lennarb` class is the main class of the project.
+
 ## [0.4.3] - 2024-04-01
 
 ### Added
