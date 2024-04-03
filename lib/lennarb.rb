@@ -15,6 +15,7 @@ require 'rack'
 require_relative 'lennarb/request'
 require_relative 'lennarb/response'
 require_relative 'lennarb/route_node'
+require_relative 'lennarb/router'
 require_relative 'lennarb/version'
 
 class Lennarb
@@ -89,6 +90,12 @@ class Lennarb
 	def halt(response)
 		throw(:halt, response)
 	end
+
+	# Freeze the routes
+	#
+	# @returns [void]
+	#
+	def freeze! = @root.freeze
 
 	# Add a routes
 	#
