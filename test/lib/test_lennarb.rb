@@ -29,31 +29,40 @@ class TestLennarb < Minitest::Test
 		assert_respond_to app, :call
 	end
 
-	class TestApp < Lennarb::ApplicationBase
-		get '/' do |_req, res|
+	class TestApp
+		include Lennarb::Router
+
+		route.get '/' do |_req, res|
+			res.status = 200
 			res.html('GET Response')
 		end
 
-		post '/' do |_req, res|
+		route.post '/' do |_req, res|
+			res.status = 201
 			res.html('POST Response')
 		end
 	end
 
-	def test_subclass_has_http_methods
-		assert_respond_to TestApp, :get
-		assert_respond_to TestApp, :post
-		assert_respond_to TestApp, :put
-		assert_respond_to TestApp, :delete
-		assert_respond_to TestApp, :patch
+	def use_app(app) = Rack::Test::Session.new(app)
+
+	def test_router
+		app = use_app(TestApp.app)
+
+		app.get '/'
+
+		assert_equal 200, app.last_response.status
+		assert_equal 'GET Response', app.last_response.body
+		assert_equal 'text/html', app.last_response.headers[Rack::CONTENT_TYPE]
 	end
 
-	def test_routes_are_defined
-		refute_empty TestApp.routes
-		assert_equal 2, TestApp.routes.count
-		assert_equal :get, TestApp.routes.first[:method]
-		assert_equal '/', TestApp.routes.first[:path]
-		assert_equal :post, TestApp.routes.last[:method]
-		assert_equal '/', TestApp.routes.last[:path]
+	def test_router_post
+		app = use_app(TestApp.app)
+
+		app.post '/'
+
+		assert_equal 201, app.last_response.status
+		assert_equal 'POST Response', app.last_response.body
+		assert_equal 'text/html', app.last_response.headers[Rack::CONTENT_TYPE]
 	end
 
 	def app
