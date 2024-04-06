@@ -12,10 +12,10 @@ require 'rack'
 
 # Base class for Lennarb
 #
+require_relative 'lennarb/application_core'
 require_relative 'lennarb/request'
 require_relative 'lennarb/response'
 require_relative 'lennarb/route_node'
-require_relative 'lennarb/router'
 require_relative 'lennarb/version'
 
 class Lennarb
@@ -66,29 +66,8 @@ class Lennarb
 
 		catch(:halt) do
 			instance_exec(req, @res, &block)
-			finish!
+			@res.finish
 		end
-	end
-
-	# Finish the request
-	#
-	# @returns [Array] Response
-	#
-	def finish! = halt(@res.finish)
-
-	# Immediately stops the request and returns `response`
-	# as per Rack's specification.
-	#
-	#     halt([200, { "Content-Type" => "text/html" }, ["hello"]])
-	#     halt([res.status, res.headers, res.body])
-	#     halt(res.finish)
-	#
-	# @parameter [Array] response
-	#
-	# @returns [Array] response
-	#
-	def halt(response)
-		throw(:halt, response)
 	end
 
 	# Freeze the routes

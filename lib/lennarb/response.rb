@@ -125,6 +125,8 @@ class Lennarb
 		def redirect(path, status = 302)
 			@headers[LOCATION] = path
 			@status = status
+
+			throw :halt, finish
 		end
 
 		# Finish the response
