@@ -44,60 +44,153 @@ end
 run app
 ```
 
-## Use `Lennarb::Router` module
+## Use `Lennarb::Application::Base` class
 
-You can use the `Lennarb::Router` module to define routes using the `route` method:
-
-```ruby
-# app.rb
-
-require 'lennarb'
-
-class App
-	include Lennarb::Router
-
-	route.get '/' do |_req, res|
-		res.status = 200
-		res.html 'Hello World'
-	end
-end
-```
-
-The `route` method is a instance of `Lennarb`. So, you can use the following methods:
-
-- `route.get`
-- `route.post`
-- `route.put`
-- `route.delete`
-- `route.patch`
-- `route.options`
-- `route.head`
-
-Now you can use the `App` class in your `config.ru`:
+You can also use the `Lennarb::Application::Base` class to define your app:
 
 ```ruby
 # config.ru
 
-require_relative 'app'
+require 'lennarb'
 
-run App.app
-```
-
-The `app` method freeze the routes and return a `Lennarb` instance.
-
-## Parameters
-
-You can get `params` from the request using `req.params`:
-
-```ruby
-# app.rb
-
-route.get '/hello/:name' do |req, res|
-	res.html "Hello #{req.params[:name]}"
+class App < Lennarb::Application::Base
 end
 ```
 
-## Run
+## Define routes
+
+When you use the `Lennarb::Application::Base` class, you can use the following methods:
+
+- `get`
+- `post`
+- `put`
+- `delete`
+- `patch`
+- `head`
+- `options`
+
+```ruby
+# config.ru
+
+require 'lennarb'
+
+class App < Lennarb::Application::Base
+	get '/' do |req, res|
+		res.html 'Hello World'
+	end
+end
+
+run App.new
+```
+
+## Run!
+
+You can use `run!` method to run your app to use default configurations, like:
+
+```ruby
+# config.ru
+
+require 'lennarb'
+
+class App < Lennarb::Application::Base
+	get '/' do |req, res|
+		res.html 'Hello World'
+	end
+end
+
+App.run!
+```
+
+- Freeze the app routes
+- Default middlewares:
+	- `Lennarb::Middlewares::Logger`
+	- `Lennarb::Middlewares::Static`
+	- `Lennarb::Middlewares::NotFound`
+	- `Lennarb::Middlewares::Lint`L
+	- `Lennarb::Middlewares::ShowExceptions`
+	- `Lennarb::Middlewares::MethodOverride`
+
+After that, you can run your app with the `rackup` command:
+
+## Callbacks
+
+You can use the `before` and `after` methods to define callbacks:
+
+```ruby
+# config.run
+
+require 'lennarb'
+
+class App < Lennarb::Application::Base
+	before do |req, res|
+		puts 'Before'
+	end
+
+	get '/' do |req, res|
+		res.html 'Hello World'
+	end
+
+	after do |req, res|
+		puts 'After'
+	end
+end
+
+run App.run!
+```
+
+You can also use the `before` and `after` methods to define callbacks for specific routes:
+
+```ruby
+# config.ru
+
+require 'lennarb'
+
+class App < Lennarb::Application::Base
+	before '/about' do |req, res|
+		puts 'Before about'
+	end
+
+	get '/about' do |req, res|
+		res.html 'About'
+	end
+
+	after '/about' do |req, res|
+		puts 'After about'
+	end
+end
+```
+
+## Middlewares
+
+You can use the `use` method to add middlewares:
+
+```ruby
+
+# config.ru
+
+require 'lennarb'
+
+class App < Lennarb::Application::Base
+	use Lennarb::Middlewares::Logger
+	use Lennarb::Middlewares::Static
+
+	get '/' do |req, res|
+		res.html 'Hello World'
+	end
+end
+
+run App.run!
+```
+
+## Custom 404 page
+
+If you are using `run!` method, you can use the custom 404 page just creating a `404.html` file in the `public` folder.
+
+## Custom 500 page
+
+TODO
+
+## Run your app
 
 ```bash
 $ rackup

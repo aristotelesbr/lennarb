@@ -12,10 +12,10 @@ require 'rack'
 
 # Base class for Lennarb
 #
+require_relative 'lennarb/application/base'
 require_relative 'lennarb/request'
 require_relative 'lennarb/response'
 require_relative 'lennarb/route_node'
-require_relative 'lennarb/router'
 require_relative 'lennarb/version'
 
 class Lennarb
@@ -26,7 +26,7 @@ class Lennarb
 	# @attribute [r] root
 	# @returns [RouteNode]
 	#
-	attr_reader :root
+	attr_reader :_root
 
 	# Initialize the application
 	#
@@ -35,7 +35,7 @@ class Lennarb
 	# @returns [Lennarb]
 	#
 	def initialize
-		@root = RouteNode.new
+		@_root = RouteNode.new
 		yield self if block_given?
 	end
 
@@ -58,7 +58,7 @@ class Lennarb
 		http_method = env[Rack::REQUEST_METHOD].to_sym
 		parts       = SplitPath[env[Rack::PATH_INFO]]
 
-		block, params = @root.match_route(parts, http_method)
+		block, params = @_root.match_route(parts, http_method)
 		return [404, { 'content-type' => 'text/plain' }, ['Not Found']] unless block
 
 		@res = Response.new
@@ -66,36 +66,15 @@ class Lennarb
 
 		catch(:halt) do
 			instance_exec(req, @res, &block)
-			finish!
+			@res.finish
 		end
-	end
-
-	# Finish the request
-	#
-	# @returns [Array] Response
-	#
-	def finish! = halt(@res.finish)
-
-	# Immediately stops the request and returns `response`
-	# as per Rack's specification.
-	#
-	#     halt([200, { "Content-Type" => "text/html" }, ["hello"]])
-	#     halt([res.status, res.headers, res.body])
-	#     halt(res.finish)
-	#
-	# @parameter [Array] response
-	#
-	# @returns [Array] response
-	#
-	def halt(response)
-		throw(:halt, response)
 	end
 
 	# Freeze the routes
 	#
 	# @returns [void]
 	#
-	def freeze! = @root.freeze
+	def freeze! = @_root.freeze
 
 	# Add a routes
 	#
@@ -124,6 +103,6 @@ class Lennarb
 	#
 	def add_route(path, http_method, block)
 		parts = SplitPath[path]
-		@root.add_route(parts, http_method, block)
+		@_root.add_route(parts, http_method, block)
 	end
 end
