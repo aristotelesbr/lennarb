@@ -12,7 +12,7 @@ require 'rack'
 
 # Base class for Lennarb
 #
-require_relative 'lennarb/application_core'
+require_relative 'lennarb/application/base'
 require_relative 'lennarb/request'
 require_relative 'lennarb/response'
 require_relative 'lennarb/route_node'
@@ -26,7 +26,7 @@ class Lennarb
 	# @attribute [r] root
 	# @returns [RouteNode]
 	#
-	attr_reader :root
+	attr_reader :_root
 
 	# Initialize the application
 	#
@@ -35,7 +35,7 @@ class Lennarb
 	# @returns [Lennarb]
 	#
 	def initialize
-		@root = RouteNode.new
+		@_root = RouteNode.new
 		yield self if block_given?
 	end
 
@@ -58,7 +58,7 @@ class Lennarb
 		http_method = env[Rack::REQUEST_METHOD].to_sym
 		parts       = SplitPath[env[Rack::PATH_INFO]]
 
-		block, params = @root.match_route(parts, http_method)
+		block, params = @_root.match_route(parts, http_method)
 		return [404, { 'content-type' => 'text/plain' }, ['Not Found']] unless block
 
 		@res = Response.new
@@ -74,7 +74,7 @@ class Lennarb
 	#
 	# @returns [void]
 	#
-	def freeze! = @root.freeze
+	def freeze! = @_root.freeze
 
 	# Add a routes
 	#
@@ -103,6 +103,6 @@ class Lennarb
 	#
 	def add_route(path, http_method, block)
 		parts = SplitPath[path]
-		@root.add_route(parts, http_method, block)
+		@_root.add_route(parts, http_method, block)
 	end
 end
