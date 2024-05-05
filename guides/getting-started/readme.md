@@ -79,13 +79,11 @@ class App < Lennarb::Application::Base
 		res.html 'Hello World'
 	end
 end
-
-run App.new
 ```
 
 ## Run!
 
-You can use `run!` method to run your app to use default configurations, like:
+If you use the `Lennarb::Application::Base` class, you can use the `run!` method to run your app:
 
 ```ruby
 # config.ru
@@ -101,18 +99,24 @@ end
 App.run!
 ```
 
+By default, the `run!` method does the following:
+
 - Freeze the app routes
 - Default middlewares:
-	- `Lennarb::Middlewares::Logger`
-	- `Lennarb::Middlewares::Static`
-	- `Lennarb::Middlewares::NotFound`
-	- `Lennarb::Middlewares::Lint`L
-	- `Lennarb::Middlewares::ShowExceptions`
-	- `Lennarb::Middlewares::MethodOverride`
+  - `Lennarb::Middlewares::Logger`
+  - `Lennarb::Middlewares::Static`
+  - `Lennarb::Middlewares::NotFound`
+  - `Lennarb::Middlewares::Lint`L
+  - `Lennarb::Middlewares::ShowExceptions`
+  - `Lennarb::Middlewares::MethodOverride`
 
 After that, you can run your app with the `rackup` command:
 
-## Callbacks
+```bash
+$ rackup
+```
+
+## Hooks
 
 You can use the `before` and `after` methods to define callbacks:
 
@@ -182,15 +186,50 @@ end
 run App.run!
 ```
 
-## Custom 404 page
+## Not Found
 
-If you are using `run!` method, you can use the custom 404 page just creating a `404.html` file in the `public` folder.
+You can use the `render_not_found` method to define a custom 404 page in the hooks context:
 
-## Custom 500 page
+```ruby
+require 'lennarb'
 
-TODO
+class App < Lennarb::Application::Base
+	before do |context|
+		render_not_found if context['PATH_INFO'] == '/not_found'
+	end
+end
+```
 
-## Run your app
+You can pass your custom 404 page:
+
+```ruby
+before do |context|
+
+	HTML = <<~HTML
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<title>404 Not Found</title>
+		</head>
+		<body>
+			<h1>404 Not Found</h1>
+		</body>
+	</html>
+	HTML
+
+	render_not_found HTML if context['PATH_INFO'] == '/not_found'
+end
+```
+
+Lastly, you can create a custom 404 page and put in the `public` folder:
+
+```sh
+touch public/404.html
+```
+
+Now the default 404 page is your custom 404 page.
+
+After that, you can run your app with the `rackup` command:
 
 ```bash
 $ rackup
