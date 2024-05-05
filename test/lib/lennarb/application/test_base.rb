@@ -11,6 +11,14 @@ class Lennarb
 			include Rack::Test::Methods
 
 			class MyApp < Lennarb::Application::Base
+				before do |context|
+					context['x-before-hook'] = 'Before Hook'
+				end
+
+				after do |context|
+					context['x-after-hook'] = 'After Hook'
+				end
+
 				get '/' do |_req, res|
 					res.status = 200
 					res.html('GET Response')
@@ -22,20 +30,69 @@ class Lennarb
 				end
 			end
 
-			def app
-				MyApp
-			end
+			def app = MyApp.run!
 
 			def test_get
 				get '/'
-				assert last_response.ok?
+
+				assert_predicate last_response, :ok?
 				assert_equal 'GET Response', last_response.body
 			end
 
 			def test_post
 				post '/'
-				assert last_response.created?
+
+				assert_predicate last_response, :created?
 				assert_equal 'POST Response', last_response.body
+			end
+
+			def test_before_hooks
+				get '/'
+
+				assert_predicate last_response, :ok?
+				assert_equal 'Before Hook', last_request.env['x-before-hook']
+			end
+
+			def test_after_hooks
+				get '/'
+
+				assert_predicate last_response, :ok?
+				assert_equal 'After Hook', last_request.env['x-after-hook']
+			end
+
+			def test_enviroment
+				ENV['LENNARB_ENV'] = 'test'
+
+				assert_predicate MyApp, :test?
+
+				ENV['LENNARB_ENV'] = 'production'
+
+				assert_predicate MyApp, :production?
+
+				ENV['LENNARB_ENV'] = 'development'
+
+				assert_predicate MyApp, :development?
+			end
+
+			def test_render_not_found
+				get '/not-found'
+
+				assert_predicate last_response, :not_found?
+				assert_equal 'Not Found', last_response.body
+			end
+
+			class MockedMiddleware
+				def initialize(app)
+					@app = app
+				end
+
+				def call(env) = @app.call(env)
+			end
+
+			def test_middlewares
+				MyApp.use(MockedMiddleware)
+
+				assert_includes MyApp.middlewares, [Lennarb::Application::TestBase::MockedMiddleware, [], nil]
 			end
 		end
 	end
