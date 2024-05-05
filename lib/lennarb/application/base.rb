@@ -3,6 +3,8 @@
 # Released under the MIT License.
 # Copyright, 2023-2024, by Aristóteles Coutinho.
 
+require 'colorize'
+
 class Lennarb
 	module Application
 		class Base
@@ -91,33 +93,6 @@ class Lennarb
 				end
 			end
 
-			# Call the application
-			#
-			# @parameter [Hash] env
-			#
-			# @returns [Array] response
-			#
-			def self.call(env)
-				response =
-					catch(:halt) do
-						execute_hooks(@_before_hooks, env, :before)
-
-						res = @_route.call(env)
-
-						execute_hooks(@_after_hooks, env, :after)
-						res
-					end
-
-				case response
-				in [404 | 404, _, _] if html_request?(env) && File.exist?('public/404.html')
-					env['PATH_INFO'] = '/404.html'
-					Rack::Static.new(-> { response }, urls: ['/404.html'], root: 'public').call(env)
-				in [404 | 404, _, _] then response
-				else
-					response.is_a?(Array) ? response : response.finish
-				end
-			end
-
 			# Run the Application
 			#
 			# @returns [Base] self
@@ -144,34 +119,74 @@ class Lennarb
 				use Rack::ContentLength
 				use Rack::Static,
 								root: 'public',
-								urls: ['/404.html'],
+								urls: ['/404.html', '/500.html'],
 								header_rules: [
-									[200, %w[html], { 'content-type' => 'text/html; charset=utf-8' }]
+									[200, %w[html], { 'content-type' => 'text/html; charset=utf-8' }],
+									[400, %w[html], { 'content-type' => 'text/html; charset=utf-8' }],
+									[500, %w[html], { 'content-type' => 'text/html; charset=utf-8' }]
 								]
 
 				middlewares.each do |(middleware, args, block)|
 					stack.use(middleware, *args, &block)
 				end
 
-				stack.run @_route
+				stack.run ->(env) do
+					catch(:halt) do
+						begin
+							execute_hooks(@_before_hooks, env, :before)
+							res = @_route.call(env)
+							execute_hooks(@_after_hooks, env, :after)
+							res
+						rescue StandardError => e
+							render_error if production?
+
+							puts e.message.red
+							puts e.backtrace
+							raise e
+						end.then do |response|
+							case response
+							in [400..499, _, _] then render_not_found
+							else response
+							end
+						end
+					end
+				end
 
 				@_route.freeze!
 
-				@_route = stack.to_app.freeze
+				stack.to_app
+			end
 
-				self
+			def self.test? = ENV['RACK_ENV'] == 'test' || ENV['LENNARB_ENV'] == 'test'
+			def self.production? = ENV['RACK_ENV'] == 'production' || ENV['LENNARB_ENV'] == 'production'
+			def self.development? = ENV['RACK_ENV'] == 'development' || ENV['LENNARB_ENV'] == 'development'
+
+			# Render a not found
+			#
+			# @returns [void]
+			#
+			def self.render_not_found(content = nil)
+				default = File.exist?('public/404.html')
+				body = content || default || 'Not Found'
+				throw :halt, [404, { 'content-type' => 'text/html' }, [body]]
+			end
+
+			# Render an error
+			#
+			# @returns [void]
+			#
+			def self.render_error(content = nil)
+				default = File.exist?('public/500.html')
+				body = content || default || 'Internal Server Error'
+				throw :halt, [500, { 'content-type' => 'text/html' }, [body]]
 			end
 
 			# Redirect to a path
 			#
 			# @parameter [String] path
 			# @parameter [Integer] status default is 302
-			# @parameter [Hash] env (optional)
 			#
-			def self.redirect(path, status = 302, _env = nil)
-				response = Rack::Response.new([], status, 'location' => path)
-				throw :halt, response.finish
-			end
+			def self.redirect(path, status = 302) = throw :halt, [status, { 'location' => path }, []]
 
 			# Execute the hooks
 			#
