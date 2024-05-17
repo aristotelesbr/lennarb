@@ -90,6 +90,12 @@ class Lennarb
 	def delete(path, &block)  = add_route(path, :DELETE, block)
 	def options(path, &block) = add_route(path, :OPTIONS, block)
 
+	# Register a plugin
+	#
+	# @parameter [String | Symbol] plugin_name
+	#
+	# @returns [void]
+	#
 	def plugin(plugin_name)
 		plugin_module = Lennarb::Plugin.load(plugin_name)
 		extend plugin_module
