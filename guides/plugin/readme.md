@@ -51,6 +51,19 @@ Plugins.register(:my_custom_plugin, MyCustomPlugin)
 To load and use a plugin in your Lennarb application, call the plugin method in your application class.
 
 ```ruby
+Lennarb.new do |app|
+	app.plugin :my_custom_plugin
+
+	app.get '/custom' do |req, res|
+		res.status = 200
+		res.html(custom_method)
+	end
+end
+```
+
+And if you are using the `Lennarb::Application::Base` class, you can use the `plugin` method directly in your application class.
+
+```ruby
 class MyApp < Lennarb::Application::Base
   plugin :my_custom_plugin
 
