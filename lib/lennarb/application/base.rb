@@ -41,7 +41,7 @@ class Lennarb
 				subclass.instance_variable_set(:@_before_hooks, Lennarb::RouteNode.new)
 			end
 
-			def self.get(...)     = @_route.get(...)
+			def self.get(path, &block)     = @_route.get(path, &block)
 			def self.put(...)     = @_route.put(...)
 			def self.post(...)    = @_route.post(...)
 			def self.head(...)    = @_route.head(...)
@@ -107,24 +107,14 @@ class Lennarb
 			#  - Rack::MethodOverride
 			#  - Rack::Head
 			#  - Rack::ContentLength
-			#  - Rack::Static
 			#
 			def self.run!
 				stack = Rack::Builder.new
 
-				use Rack::ShowExceptions
-				use Rack::Lint
+				use Rack::ShowExceptions if test? || development?
 				use Rack::MethodOverride
 				use Rack::Head
 				use Rack::ContentLength
-				use Rack::Static,
-								root: 'public',
-								urls: ['/404.html', '/500.html'],
-								header_rules: [
-									[200, %w[html], { 'content-type' => 'text/html; charset=utf-8' }],
-									[400, %w[html], { 'content-type' => 'text/html; charset=utf-8' }],
-									[500, %w[html], { 'content-type' => 'text/html; charset=utf-8' }]
-								]
 
 				middlewares.each do |(middleware, args, block)|
 					stack.use(middleware, *args, &block)
@@ -143,11 +133,6 @@ class Lennarb
 							puts e.message.red
 							puts e.backtrace
 							raise e
-						end.then do |response|
-							case response
-							in [400..499, _, _] then render_not_found
-							else response
-							end
 						end
 					end
 				end
@@ -157,8 +142,8 @@ class Lennarb
 				stack.to_app
 			end
 
-			def self.test? = ENV['RACK_ENV'] == 'test' || ENV['LENNARB_ENV'] == 'test'
-			def self.production? = ENV['RACK_ENV'] == 'production' || ENV['LENNARB_ENV'] == 'production'
+			def self.test?        = ENV['RACK_ENV'] == 'test'        || ENV['LENNARB_ENV'] == 'test'
+			def self.production?  = ENV['RACK_ENV'] == 'production'  || ENV['LENNARB_ENV'] == 'production'
 			def self.development? = ENV['RACK_ENV'] == 'development' || ENV['LENNARB_ENV'] == 'development'
 
 			# Render a not found
@@ -246,7 +231,9 @@ class Lennarb
 			#
 			def self.html_request?(env) = env['HTTP_ACCEPT']&.include?('text/html')
 
-			private_class_method :execute_hooks, :execute_global_hooks, :execute_route_hooks, :parse_path, :html_request?
+			def self.plugin(plugin_name) = @_route.plugin(plugin_name)
+
+    	private_class_method :execute_hooks, :execute_global_hooks, :execute_route_hooks, :parse_path, :html_request?
 		end
 	end
 end
