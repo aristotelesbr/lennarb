@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.1] - 2024-05-17
+
+### Added
+
+- Add `Lennarb::Plugin` module to manage the plugins in the project. Now, the `Lennarb` class is the main class of the project.
+- Add `Lennarb::Plugin::Base` class to be the base class of the plugins in the project.
+- Add simple guide to use `Lenn` plugins. See [guides/plugins/readme.md](guides/plugins/readme.md) for more details.
+
 ## [0.4.4] - 2024-04-02
 
 ### Added

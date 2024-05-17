@@ -10,7 +10,15 @@ class Lennarb
 		class TestBase < Minitest::Test
 			include Rack::Test::Methods
 
+			module TestPlugin
+				def test_plugin_method = 'Plugin Method Executed'
+			end
+
+			Lennarb::Plugin.register(:test_plugin, TestPlugin)
+
 			class MyApp < Lennarb::Application::Base
+				plugin :test_plugin
+
 				before do |context|
 					context['x-before-hook'] = 'Before Hook'
 				end
@@ -27,6 +35,11 @@ class Lennarb
 				post '/' do |_req, res|
 					res.status = 201
 					res.html('POST Response')
+				end
+
+				get '/plugin' do |_req, res|
+					res.status = 200
+					res.html(test_plugin_method)
 				end
 			end
 
@@ -79,6 +92,13 @@ class Lennarb
 
 				assert_predicate last_response, :not_found?
 				assert_equal 'Not Found', last_response.body
+			end
+
+			def test_plugin_method_execution
+				get '/plugin'
+
+				assert_predicate last_response, :ok?
+				assert_equal 'Plugin Method Executed', last_response.body
 			end
 
 			class MockedMiddleware

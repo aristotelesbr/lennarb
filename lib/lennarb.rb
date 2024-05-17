@@ -3,8 +3,6 @@
 # Released under the MIT License.
 # Copyright, 2023-2024, by Aristóteles Coutinho.
 
-ENV['RACK_ENV'] ||= 'development'
-
 # Core extensions
 #
 require 'pathname'
@@ -13,6 +11,7 @@ require 'rack'
 # Base class for Lennarb
 #
 require_relative 'lennarb/application/base'
+require_relative 'lennarb/plugin'
 require_relative 'lennarb/request'
 require_relative 'lennarb/response'
 require_relative 'lennarb/route_node'
@@ -90,6 +89,17 @@ class Lennarb
 	def patch(path, &block)   = add_route(path, :PATCH, block)
 	def delete(path, &block)  = add_route(path, :DELETE, block)
 	def options(path, &block) = add_route(path, :OPTIONS, block)
+
+	# Register a plugin
+	#
+	# @parameter [String | Symbol] plugin_name
+	#
+	# @returns [void]
+	#
+	def plugin(plugin_name)
+		plugin_module = Lennarb::Plugin.load(plugin_name)
+		extend plugin_module
+	end
 
 	private
 
