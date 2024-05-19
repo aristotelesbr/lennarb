@@ -2,7 +2,7 @@ getting-started:
   order: 1
 performance:
   order: 2
-plung:
+plugin:
   order: 3
 response:
   order: 4
