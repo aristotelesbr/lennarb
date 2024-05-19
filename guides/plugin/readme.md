@@ -8,18 +8,18 @@ The Lennarb Plugin System allows you to extend the functionality of your Lennarb
 
 The plugin system is implemented using a module, `Lennarb::Plugin`, which centralizes the registration and loading of plugins.
 
-### Module: `Plugins`
+### Module: `Plugin`
 
 ```ruby
 class Lennarb
-	module Plugins
+	module Plugin
 		@plugins = {}
 
-		def self.register_plugin(name, mod)
+		def self.register(name, mod)
 			@plugins[name] = mod
 		end
 
-		def self.load_plugin(name)
+		def self.load(name)
 			@plugins[name] || raise("Plugin #{name} did not register itself correctly")
 		end
 
@@ -43,7 +43,7 @@ module MyCustomPlugin
   end
 end
 
-Plugins.register(:my_custom_plugin, MyCustomPlugin)
+Lennarb::Plugin.register(:my_custom_plugin, MyCustomPlugin)
 ```
 
 ### Load and Use a Plugin
