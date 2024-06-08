@@ -43,7 +43,7 @@ class Lennarb
 					subclass.instance_variable_set(:@_before_hooks, Lennarb::RouteNode.new)
 				end
 
-				def get(path, &) = @_route.get(path, &)
+				def get(...)     = @_route.get(...)
 				def put(...)     = @_route.put(...)
 				def post(...)    = @_route.post(...)
 				def head(...)    = @_route.head(...)
@@ -172,13 +172,21 @@ class Lennarb
 				#
 				def redirect(path, status = 302) = throw :halt, [status, { 'location' => path }, []]
 
-				# To use a plugin
+				# Include a plugin in the application
 				#
-				# @parameter [String | Symbol] plugin_name
+				# @parameter [String] plugin_name
+				# @parameter [Array] args
+				# @parameter [Block] block
 				#
 				# @returns [void]
 				#
-				def plugin(plugin_name) = @_route.plugin(plugin_name)
+				def plugin(plugin_name, *, &)
+					@_route.plugin(plugin_name, *, &)
+					plugin_module = @_route.class::Plugin.load(plugin_name)
+
+					include plugin_module::InstanceMethods if plugin_module.const_defined?(:InstanceMethods)
+					extend plugin_module::ClassMethods     if plugin_module.const_defined?(:ClassMethods)
+				end
 
 				private
 

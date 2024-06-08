@@ -27,6 +27,11 @@ class Lennarb
 	#
 	attr_reader :_root
 
+	# @attribute [r] applied_plugins
+	# @returns [Array]
+	#
+	attr_reader :_applied_plugins
+
 	# Initialize the application
 	#
 	# @yield { ... } The application
@@ -35,6 +40,7 @@ class Lennarb
 	#
 	def initialize
 		@_root = RouteNode.new
+		@_applied_plugins = []
 		yield self if block_given?
 	end
 
@@ -90,15 +96,23 @@ class Lennarb
 	def delete(path, &block)  = add_route(path, :DELETE, block)
 	def options(path, &block) = add_route(path, :OPTIONS, block)
 
-	# Register a plugin
+	# Add plugin to extend the router
 	#
-	# @parameter [String | Symbol] plugin_name
+	# @parameter [String] plugin_name
+	# @parameter [args]  *args
+	# @parameter [Block] block
 	#
 	# @returns [void]
 	#
-	def plugin(plugin_name)
-		plugin_module = Lennarb::Plugin.load(plugin_name)
-		extend plugin_module
+	def plugin(plugin_name, *, &)
+		return if @_applied_plugins.include?(plugin_name)
+
+		plugin_module = Plugin.load(plugin_name)
+		extend plugin_module::InstanceMethods         if defined?(plugin_module::InstanceMethods)
+		self.class.extend plugin_module::ClassMethods if defined?(plugin_module::ClassMethods)
+		plugin_module.setup(self.class, *, &)         if plugin_module.respond_to?(:setup)
+
+		@_applied_plugins << plugin_name
 	end
 
 	private

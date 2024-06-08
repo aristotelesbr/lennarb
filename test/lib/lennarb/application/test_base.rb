@@ -11,13 +11,26 @@ class Lennarb
 			include Rack::Test::Methods
 
 			module TestPlugin
-				def test_plugin_method = 'Plugin Method Executed'
+				module InstanceMethods
+					def test_plugin_method = 'Plugin Method Executed'
+				end
+
+				module ClassMethods
+					def test_plugin_class_method = 'Plugin Class Method Executed'
+				end
+
+				def self.setup(base_class, *_args)
+					base_class.include InstanceMethods
+					base_class.extend  ClassMethods
+				end
 			end
 
 			Lennarb::Plugin.register(:test_plugin, TestPlugin)
 
 			class MyApp < Lennarb::Application::Base
 				plugin :test_plugin
+
+				test_plugin_class_method
 
 				before do |context|
 					context['x-before-hook'] = 'Before Hook'
