@@ -41,5 +41,22 @@ class Lennarb
 			assert_nil block
 			assert_nil params
 		end
+
+		def test_different_variables_in_common_nested_routes
+			router = Lennarb::RouteNode.new
+			router.add_route(['foo', ':foo'], 'GET', proc { 'foo' })
+			router.add_route(%w[foo special], 'GET', proc { 'special' })
+			router.add_route(['foo', ':id', 'bar'], 'GET', proc { 'bar' })
+
+			_, params = router.match_route(%w[foo 23], 'GET')
+
+			assert_equal({ foo: '23' }, params)
+			_, params = router.match_route(%w[foo special], 'GET')
+
+			assert_empty(params)
+			_, params = router.match_route(%w[foo 24 bar], 'GET')
+
+			assert_equal({ id: '24' }, params)
+		end
 	end
 end
