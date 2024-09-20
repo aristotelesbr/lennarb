@@ -5,69 +5,59 @@
 
 class Lennarb
 	class RouteNode
-		attr_accessor :children, :blocks, :param_key
+		attr_accessor :static_children, :dynamic_children, :blocks, :param_key
 
-		# Initialize the route node
-		#
-		# @return [RouteNode]
-		#
 		def initialize
-			@children  = {}
-			@blocks    = {}
-			@param_key = nil
+			@blocks           = {}
+			@param_key        = nil
+			@static_children  = {}
+			@dynamic_children = []
 		end
 
-		# Add a route to the route node
-		#
-		# @parameter [Array] parts
-		# @parameter [String] http_method
-		# @parameter [Proc] block
-		#
-		# @return [void]
-		#
 		def add_route(parts, http_method, block)
 			current_node = self
 
 			parts.each do |part|
 				if part.start_with?(':')
-					key = :param
-					current_node.children[key] ||= RouteNode.new
-					current_node = current_node.children[key]
-					current_node.param_key = part[1..].to_sym
+					param_sym = part[1..].to_sym
+					dynamic_node = current_node.dynamic_children.find { |node| node.param_key == param_sym }
+					unless dynamic_node
+						dynamic_node = RouteNode.new
+						dynamic_node.param_key = param_sym
+						current_node.dynamic_children << dynamic_node
+					end
+					current_node = dynamic_node
 				else
-					key = part
-					current_node.children[key] ||= RouteNode.new
-					current_node = current_node.children[key]
+					current_node.static_children[part] ||= RouteNode.new
+					current_node = current_node.static_children[part]
 				end
 			end
 
 			current_node.blocks[http_method] = block
 		end
 
-		# Match a route to the route node
-		#
-		# @parameter [Array] parts
-		# @parameter [String] http_method
-		#
-		# @return [Array]
-		#
-		def match_route(parts, http_method)
-			current_node = self
-			params = {}
+		def match_route(parts, http_method, params: {})
+			if parts.empty?
+				return [blocks[http_method], params] if blocks[http_method]
+			else
+				part = parts.first
+				rest = parts[1..]
 
-			parts.each do |part|
-				return [nil, nil] unless current_node.children.key?(part) || current_node.children[:param]
+				if static_children.key?(part)
+					result_block, result_params = static_children[part].match_route(rest, http_method, params:)
+					return [result_block, result_params] if result_block
+				end
 
-				if current_node.children.key?(part)
-					current_node = current_node.children[part]
-				else
-					param_node = current_node.children[:param]
-					params[param_node.param_key] = part
-					current_node = param_node
+				dynamic_children.each do |dyn_node|
+					new_params = params.dup
+					new_params[dyn_node.param_key] = part
+					result_block, result_params = dyn_node.match_route(rest, http_method, params: new_params)
+
+					return [result_block, result_params] if result_block
 				end
 			end
 
-			[current_node.blocks[http_method], params]
+			[nil, nil]
 		end
 	end
 end
