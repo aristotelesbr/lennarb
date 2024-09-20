@@ -10,15 +10,15 @@ class Lennarb
 		def setup
 			@route_node = Lennarb::RouteNode.new
 
-			# Adicionando rotas de exemplo
 			@route_node.add_route(['posts'], 'GET', proc { 'List of posts' })
 			@route_node.add_route(['posts', ':id'], 'GET', proc { |id| "Post #{id}" })
 		end
 
 		def test_add_route
-			# Verificar se as rotas foram adicionadas corretamente
-			assert @route_node.children.key?('posts')
-			assert @route_node.children['posts'].children.key?(:param)
+			assert @route_node.static_children.key?('posts')
+			dynamic_node = @route_node.static_children['posts'].dynamic_children.find { |node| node.param_key == :id }
+
+			refute_nil dynamic_node
 		end
 
 		def test_match_valid_route
