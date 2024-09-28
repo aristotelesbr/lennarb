@@ -4,7 +4,7 @@
 # Copyright, 2023-2024, by Aristóteles Coutinho.
 
 class Lennarb
-	VERSION = '0.6.2'
+	VERSION = '1.0.0.beta'
 
 	public_constant :VERSION
 end
