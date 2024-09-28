@@ -7,6 +7,10 @@ class Lennarb
 	class RouteNode
 		attr_accessor :static_children, :dynamic_children, :blocks, :param_key
 
+		# Initializes the RouteNode class.
+		#
+		# @return [RouteNode]
+		#
 		def initialize
 			@blocks           = {}
 			@param_key        = nil
@@ -14,6 +18,14 @@ class Lennarb
 			@dynamic_children = []
 		end
 
+		# Add a route to the route node
+		#
+		# @parameter parts       [Array<String>] The parts of the route
+		# @parameter http_method [Symbol] The HTTP method of the route
+		# @parameter block       [Proc] The block to be executed when the route is matched
+		#
+		# @return [void]
+		#
 		def add_route(parts, http_method, block)
 			current_node = self
 
@@ -36,6 +48,14 @@ class Lennarb
 			current_node.blocks[http_method] = block
 		end
 
+		# Match a route in the route node
+		#
+		# @parameter parts       [Array<String>] The parts of the route
+		# @parameter http_method [Symbol] The HTTP method of the route
+		# @parameter params      [Hash] The parameters of the route
+		#
+		# @return [Array<Proc, Hash>]
+		#
 		def match_route(parts, http_method, params: {})
 			if parts.empty?
 				return [blocks[http_method], params] if blocks[http_method]
