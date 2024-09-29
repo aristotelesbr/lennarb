@@ -29,6 +29,7 @@ jobs:
         run: gem build lennarb.gemspec
       - name: Push gem to RubyGems
         env:
+          RUBYGEMS_HOST: "https://rubygems.org"
           RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
         run: |
           ls *.gem
