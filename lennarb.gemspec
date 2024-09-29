@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
 	spec.homepage = 'https://aristotelesbr.github.io/lennarb'
 
 	spec.metadata = {
-		'allowed_push_host' => 'https://rubygems.org/gems/lennarb',
+		'allowed_push_host' => 'https://rubygems.org',
 		'changelog_uri' => 'https://github.com/aristotelesbr/lennarb/blob/master/changelog.md',
 		'homepage_uri' => 'https://aristotelesbr.github.io/lennarb',
 		'rubygems_mfa_required' => 'true',
@@ -35,8 +35,8 @@ Gem::Specification.new do |spec|
 	spec.add_development_dependency 'covered', '~> 0.25.1'
 	spec.add_development_dependency 'minitest', '~> 5.20'
 	spec.add_development_dependency 'puma', '~> 6.4'
-	spec.add_development_dependency 'rake', '~> 13.1'
 	spec.add_development_dependency 'rack-test', '~> 2.1'
+	spec.add_development_dependency 'rake', '~> 13.1'
 	spec.add_development_dependency 'rubocop', '~> 1.59'
 	spec.add_development_dependency 'rubocop-minitest', '~> 0.33.0'
 end
