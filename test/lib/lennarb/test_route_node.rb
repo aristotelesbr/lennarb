@@ -16,7 +16,7 @@ class Lennarb
 
 		def test_add_route
 			assert @route_node.static_children.key?('posts')
-			dynamic_node = @route_node.static_children['posts'].dynamic_children.find { |node| node.param_key == :id }
+			dynamic_node = @route_node.static_children['posts'].dynamic_children[:id]
 
 			refute_nil dynamic_node
 		end
