@@ -10,15 +10,15 @@ class Lennarb
 		def setup
 			@route_node = Lennarb::RouteNode.new
 
-			# Adicionando rotas de exemplo
 			@route_node.add_route(['posts'], 'GET', proc { 'List of posts' })
 			@route_node.add_route(['posts', ':id'], 'GET', proc { |id| "Post #{id}" })
 		end
 
 		def test_add_route
-			# Verificar se as rotas foram adicionadas corretamente
-			assert @route_node.children.key?('posts')
-			assert @route_node.children['posts'].children.key?(:param)
+			assert @route_node.static_children.key?('posts')
+			dynamic_node = @route_node.static_children['posts'].dynamic_children[:id]
+
+			refute_nil dynamic_node
 		end
 
 		def test_match_valid_route
@@ -40,6 +40,23 @@ class Lennarb
 
 			assert_nil block
 			assert_nil params
+		end
+
+		def test_different_variables_in_common_nested_routes
+			router = Lennarb::RouteNode.new
+			router.add_route(['foo', ':foo'], 'GET', proc { 'foo' })
+			router.add_route(%w[foo special], 'GET', proc { 'special' })
+			router.add_route(['foo', ':id', 'bar'], 'GET', proc { 'bar' })
+
+			_, params = router.match_route(%w[foo 23], 'GET')
+
+			assert_equal({ foo: '23' }, params)
+			_, params = router.match_route(%w[foo special], 'GET')
+
+			assert_empty(params)
+			_, params = router.match_route(%w[foo 24 bar], 'GET')
+
+			assert_equal({ id: '24' }, params)
 		end
 	end
 end

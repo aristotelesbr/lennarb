@@ -18,6 +18,8 @@ gem 'rack', '~> 3.0', '>= 3.0.8'
 # Colorize is a Ruby gem used to color text in terminals.
 gem 'colorize', '~> 1.1'
 
+gem 'bigdecimal', '~> 3.1', '>= 3.1.8' if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.4.0')
+
 group :maintenance, optional: true do
 	# [https://rubygems.org/gems/bake-gem]
 	# Bake Gem is a Bake extension that helps you to create a new Ruby
@@ -71,3 +73,4 @@ group :development, :test do
 	# specified in standard Ruby syntax. Rake has the following features:
 	gem 'rake', '~> 13.1'
 end
+
