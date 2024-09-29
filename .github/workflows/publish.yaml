@@ -27,6 +27,11 @@ jobs:
         run: bundle install
       - name: Build gem
         run: gem build lennarb.gemspec
+      - name: Set up RubyGems credentials
+        run: |
+          mkdir -p ~/.gem
+          echo -e "---\n:rubygems_api_key: $RUBYGEMS_API_KEY" > ~/.gem/credentials
+          chmod 0600 ~/.gem/credentials
       - name: Push gem to RubyGems
         env:
           RUBYGEMS_HOST: "https://rubygems.org"
