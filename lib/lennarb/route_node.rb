@@ -7,13 +7,25 @@ class Lennarb
 	class RouteNode
 		attr_accessor :static_children, :dynamic_children, :blocks, :param_key
 
+		# Initializes the RouteNode class.
+		#
+		# @return [RouteNode]
+		#
 		def initialize
 			@blocks           = {}
 			@param_key        = nil
 			@static_children  = {}
-			@dynamic_children = {} # Substitui o array por um hash
+			@dynamic_children = {}
 		end
 
+		# Add a route to the route node
+		#
+		# @parameter parts       [Array<String>] The parts of the route
+		# @parameter http_method [Symbol] The HTTP method of the route
+		# @parameter block       [Proc] The block to be executed when the route is matched
+		#
+		# @return [void]
+		#
 		def add_route(parts, http_method, block)
 			current_node = self
 
@@ -45,8 +57,7 @@ class Lennarb
 					return [result_block, result_params] if result_block
 				end
 
-				# Agora usa um hash para encontrar rapidamente o nó dinâmico
-				dynamic_children.each do |_param_sym, dyn_node|
+				dynamic_children.each_value do |dyn_node|
 					new_params = params.dup
 					new_params[dyn_node.param_key] = part
 					result_block, result_params = dyn_node.match_route(rest, http_method, params: new_params)
