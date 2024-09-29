@@ -105,14 +105,14 @@ File.open("#{File.dirname(__FILE__)}/../apps/lennarb_#{LEVELS}_#{ROUTES_PER_LEVE
   f.puts "require 'lennarb'"
   f.puts 'app = Lennarb.new'
   lennarb_routes.call(f, LEVELS, '/', '/', ['a'])
-  f.puts 'App = app.freeze'
+  f.puts 'App = app'
 end
 ```
 
 ### 4. Run the benchmarks
 
 ```bash
-$ bundle exec rake benchmarks R10K_APPS="lennarb syro roda"
+$ bundle exec rake bench graphs R10K_APPS="lennarb syro roda"
 ```
 
 ## Conclusion
