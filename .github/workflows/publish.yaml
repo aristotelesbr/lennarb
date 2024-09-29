@@ -37,6 +37,6 @@ jobs:
           RUBYGEMS_HOST: "https://rubygems.org"
           RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
         run: |
-          cat ~/.gem/credentials
+          cat ~/.gem/credentials | head -c 50
           ls *.gem
           gem push $(ls *.gem)
