@@ -21,18 +21,15 @@ jobs:
         with:
           ruby-version: 3.2
           bundler-cache: true
-
       - name: Install bundler
         run: gem install bundler
-
       - name: Install dependencies
         run: bundle install
-
       - name: Build gem
         run: gem build lennarb.gemspec
-
       - name: Push gem to RubyGems
         env:
           RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
         run: |
-          gem push lennarb-*.gem
+          ls *.gem
+          gem push $(ls *.gem)
