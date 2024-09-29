@@ -8,12 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Ruby ${{ matrix.ruby }}
-    strategy:
-      matrix:
-        ruby:
-          - '3.2.2'
-
     steps:
       - uses: actions/checkout@v4
       - name: Set up Ruby
@@ -21,21 +15,29 @@ jobs:
         with:
           ruby-version: 3.2
           bundler-cache: true
+
       - name: Install bundler
         run: gem install bundler
+
       - name: Install dependencies
         run: bundle install
+
       - name: Build gem
         run: gem build lennarb.gemspec
+
       - name: Set up RubyGems credentials
+        env:
+          RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
         run: |
           mkdir -p ~/.gem
           echo -e "---\n:rubygems_api_key: $RUBYGEMS_API_KEY" > ~/.gem/credentials
           chmod 0600 ~/.gem/credentials
+
       - name: Push gem to RubyGems
         env:
           RUBYGEMS_HOST: "https://rubygems.org"
           RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
         run: |
-          ls *.gem
+          cat ~/.gem/credentials | head -c 50
           gem push $(ls *.gem)
+
