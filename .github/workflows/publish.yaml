@@ -32,13 +32,11 @@ jobs:
           mkdir -p ~/.gem
           echo -e "---\n:rubygems_api_key: $RUBYGEMS_API_KEY" > ~/.gem/credentials
           chmod 0600 ~/.gem/credentials
-          echo "=" * 20
-          cat ~/.gem/credentials
-          echo "=" * 20
       - name: Push gem to RubyGems
         env:
           RUBYGEMS_HOST: "https://rubygems.org"
           RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
         run: |
+          cat ~/.gem/credentials
           ls *.gem
           gem push $(ls *.gem)
