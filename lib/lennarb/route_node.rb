@@ -7,37 +7,22 @@ class Lennarb
 	class RouteNode
 		attr_accessor :static_children, :dynamic_children, :blocks, :param_key
 
-		# Initializes the RouteNode class.
-		#
-		# @return [RouteNode]
-		#
 		def initialize
 			@blocks           = {}
 			@param_key        = nil
 			@static_children  = {}
-			@dynamic_children = []
+			@dynamic_children = {} # Substitui o array por um hash
 		end
 
-		# Add a route to the route node
-		#
-		# @parameter parts       [Array<String>] The parts of the route
-		# @parameter http_method [Symbol] The HTTP method of the route
-		# @parameter block       [Proc] The block to be executed when the route is matched
-		#
-		# @return [void]
-		#
 		def add_route(parts, http_method, block)
 			current_node = self
 
 			parts.each do |part|
 				if part.start_with?(':')
 					param_sym = part[1..].to_sym
-					dynamic_node = current_node.dynamic_children.find { |node| node.param_key == param_sym }
-					unless dynamic_node
-						dynamic_node = RouteNode.new
-						dynamic_node.param_key = param_sym
-						current_node.dynamic_children << dynamic_node
-					end
+					current_node.dynamic_children[param_sym] ||= RouteNode.new
+					dynamic_node = current_node.dynamic_children[param_sym]
+					dynamic_node.param_key = param_sym
 					current_node = dynamic_node
 				else
 					current_node.static_children[part] ||= RouteNode.new
@@ -48,14 +33,6 @@ class Lennarb
 			current_node.blocks[http_method] = block
 		end
 
-		# Match a route in the route node
-		#
-		# @parameter parts       [Array<String>] The parts of the route
-		# @parameter http_method [Symbol] The HTTP method of the route
-		# @parameter params      [Hash] The parameters of the route
-		#
-		# @return [Array<Proc, Hash>]
-		#
 		def match_route(parts, http_method, params: {})
 			if parts.empty?
 				return [blocks[http_method], params] if blocks[http_method]
@@ -68,7 +45,8 @@ class Lennarb
 					return [result_block, result_params] if result_block
 				end
 
-				dynamic_children.each do |dyn_node|
+				# Agora usa um hash para encontrar rapidamente o nó dinâmico
+				dynamic_children.each do |_param_sym, dyn_node|
 					new_params = params.dup
 					new_params[dyn_node.param_key] = part
 					result_block, result_params = dyn_node.match_route(rest, http_method, params: new_params)
