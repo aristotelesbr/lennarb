@@ -6,7 +6,9 @@ Gem::Specification.new do |spec|
 	spec.name = 'lennarb'
 	spec.version = Lennarb::VERSION
 
-	spec.summary = 'A lightweight and experimental web framework for Ruby.'
+	spec.description = <<~DESC
+		Lennarb provides a lightweight yet robust solution for web routing in Ruby, focusing on performance and simplicity.
+	DESC
 	spec.authors = ['Aristóteles Coutinho']
 	spec.license = 'MIT'
 
