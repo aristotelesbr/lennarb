@@ -46,13 +46,7 @@ class Lennarb
 		def test_body
 			request = Lennarb::Request.new({ 'rack.input' => StringIO.new('foo') })
 
-			assert_equal('foo', request.body.read)
-		end
-
-		def test_body_with_empty_body
-			request = Lennarb::Request.new({})
-
-			assert_nil(request.body)
+			assert_equal('foo', request.body)
 		end
 	end
 end

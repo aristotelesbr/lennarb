@@ -4,6 +4,7 @@
 # Copyright, 2023-2024, by Aristóteles Coutinho.
 
 require 'test_helper'
+require 'json'
 
 class Lennarb
 	module Application
@@ -50,6 +51,18 @@ class Lennarb
 					res.html('POST Response')
 				end
 
+				post '/json' do |req, res|
+					begin
+						res.status = 201
+						JSON.parse(req.body)
+						res.json(req.body)
+					rescue JSON::ParserError
+						res.status = 500
+						result = { error: 'Invalid JSON body' }.to_json
+						res.json(result)
+					end
+				end
+
 				get '/plugin' do |_req, res|
 					res.status = 200
 					res.html(test_plugin_method)
@@ -70,6 +83,28 @@ class Lennarb
 
 				assert_predicate last_response, :created?
 				assert_equal 'POST Response', last_response.body
+			end
+
+			def test_post_with_valid_json_body
+        json_body = '{"key":"value"}'
+				headers = { 'CONTENT_TYPE' => 'application/json' }
+
+				post '/json', json_body, headers
+
+				assert_equal 201, last_response.status
+				body = JSON.parse(last_response.body)
+				assert_equal({ "key" => "value" }, body)
+			end
+
+			def test_post_with_invalid_json_body
+				json_body = '{"key":"value'
+
+				headers = { 'CONTENT_TYPE' => 'application/json' }
+
+				post '/json', json_body, headers
+
+				assert_equal 500, last_response.status
+				assert_equal({ "error" => "Invalid JSON body" }, JSON.parse(last_response.body))
 			end
 
 			def test_before_hooks

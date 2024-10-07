@@ -20,13 +20,20 @@ class Lennarb
 		# Get the request body
 		#
 		# @returns [String]
+    #
 		def params
 			@params ||= super.merge(@route_params)
 		end
 
+		# Read the body of the request
+		#
+		# @returns [String]
+		#
+		def body = @body ||= super.read
+
 		private
 
-		# Get the query string
+		# Get the query string parameters
 		#
 		# @returns [String]
 		#
