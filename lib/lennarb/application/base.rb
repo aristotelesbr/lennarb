@@ -32,9 +32,10 @@ class Lennarb
 			#
 			# @returns [Base]
 			#
-
 			class << self
 				def inherited(subclass)
+          super
+          _applications << subclass
 					subclass.instance_variable_set(:@_route, Lennarb.new)
 					subclass.instance_variable_set(:@_middlewares, [])
 					subclass.instance_variable_set(:@_global_after_hooks, [])
@@ -51,9 +52,23 @@ class Lennarb
 				def patch(...)   = @_route.patch(...)
 				def delete(...)  = @_route.delete(...)
 				def options(...) = @_route.options(...)
-
+          
 				# @returns [Array] middlewares
-				def middlewares = @_middlewares
+				#
+				def _middlewares = @_middlewares ||= []
+
+				# @returns [Array] applications
+				#
+				def _applications = @_applications ||= []
+
+				# Mount a controller
+				#
+				# @parameter [Class] controller
+				#
+				def mount(controller_class)
+					_applications << controller_class
+					puts "Mounted controller: #{controller_class}"
+				end
 
 				# Use a middleware
 				#
@@ -117,8 +132,24 @@ class Lennarb
 					use Rack::Head
 					use Rack::ContentLength
 
-					middlewares.each do |(middleware, args, block)|
+					_middlewares.each do |(middleware, args, block)|
 						stack.use(middleware, *args, &block)
+					end
+
+					_applications.each do |app|
+						app_route = app.instance_variable_get(:@_route)
+
+						app_after_hooks = app.instance_variable_get(:@_after_hooks) 
+						app_before_hooks = app.instance_variable_get(:@_before_hooks)
+						global_after_hooks = app.instance_variable_get(:@_global_after_hooks)
+						global_before_hooks = app.instance_variable_get(:@_global_before_hooks)
+
+						@_route.merge!(app_route)
+						@_before_hooks.merge!(app_before_hooks)
+						@_after_hooks.merge!(app_after_hooks)
+
+						@_global_before_hooks.concat(global_before_hooks)
+						@_global_after_hooks.concat(global_after_hooks)
 					end
 
 					stack.run ->(env) do
@@ -137,7 +168,6 @@ class Lennarb
 					end
 
 					@_route.freeze!
-
 					stack.to_app
 				end
 

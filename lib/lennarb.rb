@@ -115,6 +115,18 @@ class Lennarb
 		@_applied_plugins << plugin_name
 	end
 
+	# Merge the other RouteNode into the current one
+	#
+	# @parameter other [RouteNode] The other RouteNode to merge into the current one
+	#
+	# @return [void]
+	#
+	def merge!(other)
+		raise "Expected a Lennarb instance, got #{other.class}" unless other.is_a?(Lennarb)
+
+		@_root.merge!(other._root)
+  end
+
 	private
 
 	# Add a route
