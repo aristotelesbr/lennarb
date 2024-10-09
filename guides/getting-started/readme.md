@@ -44,7 +44,7 @@ end
 run app
 ```
 
-## Use `Lennarb::Application::Base` class
+## How to use `Lennarb::Application::Base` class
 
 You can also use the `Lennarb::Application::Base` class to define your app:
 
@@ -115,6 +115,55 @@ After that, you can run your app with the `rackup` command:
 ```bash
 $ rackup
 ```
+
+## Mount route controllers
+
+You can use the `mount` method to mount route controllers:
+
+Create a route controller, in this example, we'll create a `UsersController`, and define your routes:
+
+```ruby
+# ../whatwever/users.rb
+
+require 'lennarb'
+
+class UsersController < Lennarb::Application::Base
+	get '/users' do |req, res|
+		res.html 'List of users'
+	end
+end
+```
+
+Now, you can use the `mount` method to mount the `UsersController` on your app:
+
+```ruby
+# config.ru
+
+require 'lennarb'
+require_relative './whatwever/users'
+
+class Application < Lennarb::Application::Base
+	mount UsersController
+end
+```
+
+Completed! You can now execute your application using distinct controllers.
+
+🚨 **IMPORTANT:** The `mount` method does not modify the hooks of the mounted controller. This means that the hooks of the mounted controller will not be executed in the context of the main application.
+
+```ruby
+# ../whatwever/users.rb
+
+require 'lennarb'
+
+class UsersController < Lennarb::Application::Base
+	before do |req, res|
+		puts 'UsersController before' # This will be executed in global context
+	end
+end
+```
+
+We recommend you to use the `before` and `after` methods to define callbacks in the main application or specific routes. Ex. `before('/users')` will be executed only in the `UsersController` routes.
 
 ## Hooks
 
