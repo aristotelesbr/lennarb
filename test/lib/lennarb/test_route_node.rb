@@ -58,5 +58,22 @@ class Lennarb
 
 			assert_equal({ id: '24' }, params)
 		end
+
+		def test_merge
+			router = Lennarb::RouteNode.new
+			router.add_route(['posts'], 'GET', proc { 'List of posts' })
+			router.add_route(['posts', ':id'], 'GET', proc { |id| "Post #{id}" })
+
+			router.merge!(router)
+		end
+
+		def test_merge_variables_in_different_routes
+			router = Lennarb::RouteNode.new
+			router.add_route(['posts'], 'GET', proc { 'List of posts' })
+			router.add_route(['posts', ':id'], 'GET', proc { |id| "Post #{id}" })
+			router.add_route(['posts', ':id', 'comments'], 'GET', proc { |id| "Comments of post #{id}" })
+
+			router.merge!(router)
+		end
 	end
 end
