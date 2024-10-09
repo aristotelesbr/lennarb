@@ -68,5 +68,17 @@ class Lennarb
 
 			[nil, nil]
 		end
+
+		# Merge the other RouteNode into the current one
+		#
+		# @parameter other [RouteNode] The other RouteNode to merge into the current one
+		#
+		# @return [void]
+		#
+		def merge!(other)
+			self.static_children.merge!(other.static_children)
+			self.dynamic_children.merge!(other.dynamic_children)
+			self.blocks.merge!(other.blocks)
+		end
 	end
 end

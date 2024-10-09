@@ -28,7 +28,39 @@ class Lennarb
 
 			Lennarb::Plugin.register(:test_plugin, TestPlugin)
 
+      class UsersController < Lennarb::Application::Base
+        plugin :test_plugin
+
+        before do |req, res|
+          req['x-users-controller-before-hook'] = 'Users Controller Before Hook'
+        end
+
+        after do |req, res|
+          req['x-users-controller-after-hook'] = 'Users Controller After Hook'
+        end
+
+        get '/users/test' do |_req, res|
+          res.status = 200
+          res.html('Users Controller Response')
+        end
+
+        get '/users/plugin' do |_req, res|
+          res.status = 200
+          res.html(test_plugin_method)
+        end
+      end
+
+      class PostsController < Lennarb::Application::Base
+        get '/posts/test' do |_req, res|
+          res.status = 200
+          res.html('Posts Controller Response')
+        end
+      end
+
 			class MyApp < Lennarb::Application::Base
+        mount UsersController
+        mount PostsController
+
 				plugin :test_plugin
 
 				test_plugin_class_method
@@ -70,6 +102,20 @@ class Lennarb
 			end
 
 			def app = MyApp.run!
+
+      def test_users_controller
+        get '/users/test'
+
+        assert_predicate last_response, :ok?
+        assert_equal 'Users Controller Response', last_response.body
+      end
+      
+			def test_posts_controller
+				get '/posts/test'
+
+				assert_predicate last_response, :ok?
+        assert_equal 'Posts Controller Response', last_response.body
+      end
 
 			def test_get
 				get '/'
@@ -121,6 +167,22 @@ class Lennarb
 				assert_equal 'After Hook', last_request.env['x-after-hook']
 			end
 
+			def test_mount_hooks_must_be_executed
+				get '/users/test'
+
+				assert_equal 'Before Hook', last_request.env['x-before-hook']
+				assert_equal 'After Hook', last_request.env['x-after-hook']
+				assert_equal 'Users Controller Before Hook', last_request.env['x-users-controller-before-hook']
+				assert_equal 'Users Controller After Hook', last_request.env['x-users-controller-after-hook']
+			end
+
+			def test_mount_routes_with_plugins_must_be_executed
+				get '/users/plugin'
+
+				assert_predicate last_response, :ok?
+				assert_equal 'Plugin Method Executed', last_response.body
+			end
+
 			def test_enviroment
 				ENV['LENNARB_ENV'] = 'test'
 
@@ -160,7 +222,7 @@ class Lennarb
 			def test_middlewares
 				MyApp.use(MockedMiddleware)
 
-				assert_includes MyApp.middlewares, [Lennarb::Application::TestBase::MockedMiddleware, [], nil]
+				assert_includes MyApp._middlewares, [Lennarb::Application::TestBase::MockedMiddleware, [], nil]
 			end
 		end
 	end
