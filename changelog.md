@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2024-11-21
+
+### Added
+
+- Add `Lennarb::Plugin` module to manage the plugins in the project. Now, the `Lennarb` class is the main class of the project.
+
+- Automatically loads plugins from the default directory
+
+- Supports custom plugin directories via `LENNARB_PLUGINS_PATH`
+
+- Configurable through environment variables
+
+### Changed
+
+- Change the `finish` method from `Lennarb` class to call `halt(@res.finish)` method to finish the response.
+
+### Removed
+
+- Remove `Lennarb::ApplicationBase` class from the project. Now, the `Lennarb` class is the main class of the project.
+
 ## [0.6.1] - 2024-05-17
 
 ### Added
