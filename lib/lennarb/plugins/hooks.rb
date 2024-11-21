@@ -46,22 +46,17 @@ class Lennarb
 
             path = env[Rack::PATH_INFO]
 
-            # Execute global before hooks first
             execute_hooks(self.class.instance_variable_get(:@_before_hooks), '*', req, res)
 
-            # Execute path-specific before hooks
             execute_matching_hooks(self.class.instance_variable_get(:@_before_hooks), path, req, res)
 
-            # Call the original route handler
             status, headers, body = super
             res.status = status
             headers.each { |k, v| res[k] = v }
             body.each { |chunk| res.write(chunk) }
 
-            # Execute path-specific after hooks
             execute_matching_hooks(self.class.instance_variable_get(:@_after_hooks), path, req, res)
 
-            # Execute global after hooks
             execute_hooks(self.class.instance_variable_get(:@_after_hooks), '*', req, res)
 
             res.finish
@@ -84,7 +79,7 @@ class Lennarb
           return unless hooks
 
           hooks.each do |pattern, pattern_hooks|
-            next if pattern == '*' # Skip global hooks as they're handled separately
+            next if pattern == '*'
 
             next unless matches_pattern?(pattern, current_path)
 

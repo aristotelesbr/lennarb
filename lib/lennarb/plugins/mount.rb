@@ -54,9 +54,9 @@ class Lennarb
         def handle_error(error)
           case error
           when ArgumentError
-            [400, { 'Content-Type' => 'text/plain' }, ["Bad Request: #{error.message}"]]
+            [400, { 'content-type' => 'text/plain' }, ["Bad Request: #{error.message}"]]
           else
-            [500, { 'Content-Type' => 'text/plain' }, ['Internal Server Error']]
+            [500, { 'content-type' => 'text/plain' }, ['Internal Server Error']]
           end
         end
       end
