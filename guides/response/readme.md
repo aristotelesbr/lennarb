@@ -68,7 +68,7 @@ You can set headers using the `res.header` method:
 # app.rb
 
 app.get '/' do |req, res|
-	res.headers['Content-Type'] = 'text/plain'
+	res['Content-Type'] = 'text/plain'
 	res.write 'Hello World'
 end
 ```
@@ -89,7 +89,7 @@ You can redirect the client using the `res.redirect` method:
 # app.ruby
 
 app.get '/' do |req, res|
-  # Stuff code here... 
+  # Stuff code here...
 	res.redirect '/hello'
 end
 ```
