@@ -32,7 +32,7 @@ end
 But you can also set your own content type:
 
 ```ruby
-res.headers['Content-Type'] = 'text/markdown'
+res['content-type'] = 'text/markdown'
 res.write '# Hello World'
 ```
 
@@ -55,21 +55,9 @@ JSON example:
 
 app.post '/posts' do |req, res|
 	req.params # => { name: 'Lenna' }
+	name = req.params[:name]
 
 	res.write({ data: { name: } }.to_json) # This will write to the response body
-end
-```
-
-## Headers
-
-You can set headers using the `res.header` method:
-
-```ruby
-# app.rb
-
-app.get '/' do |req, res|
-	res['Content-Type'] = 'text/plain'
-	res.write 'Hello World'
 end
 ```
 
