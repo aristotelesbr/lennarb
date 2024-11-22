@@ -1,299 +1,286 @@
-# Getting Started
+# Getting Started with Lennarb
 
-This guide show you how to use the `lennarb`
+## Overview
+Lennarb is a lightweight, Rack-based web framework for Ruby that emphasizes simplicity and flexibility. It provides a clean DSL for routing, middleware support, and various ways to structure your web applications.
 
-## Instalation
+## Installation
 
-Add the gem to your project:
-
-```bash
-$ gem add lennarb
+Add Lennarb to your project's Gemfile:
+```ruby
+gem 'lennarb'
 ```
 
-## Usage
+Or install it directly via RubyGems:
+```bash
+$ gem install lennarb
+```
 
-A basic app looks like this:
+## Quick Start
+
+### Basic Application
+Create a new file named `config.ru`:
 
 ```ruby
-# config.ru
-
 require 'lennarb'
 
-app = Lenna.new
-
-app.get '/' do |req, res|
-	res.html 'Hello World'
+app = Lennarb.new do |app|
+  app.get '/' do |req, res|
+    res.status = 200
+    res.html('<h1>Welcome to Lennarb!</h1>')
+  end
 end
 
 run app
 ```
 
-You can also use a block to define the app:
+Start the server:
+```bash
+$ rackup
+```
+
+Your application will be available at `http://localhost:9292`.
+
+## Application Structure
+
+### Class-Based Applications
+For larger applications, you can use a class-based structure:
 
 ```ruby
+class MyApp < Lennarb
+  # Routes
+  get '/' do |req, res|
+    res.status = 200
+    res.html('<h1>Welcome to MyApp!</h1>')
+  end
+  
+  post '/users' do |req, res|
+    user = create_user(req.params)
+    res.status = 201
+    res.json(user.to_json)
+  end
+end
+
 # config.ru
+run MyApp.freeze!
+```
 
-require 'lennarb'
+### Instance-Based Applications
+For simpler applications or prototypes:
 
-app = Lenna.new do |app|
-	app.get '/' do |req, res|
-		res.html 'Hello World'
-	end
+```ruby
+app = Lennarb.new do |l|
+  l.get '/hello/:name' do |req, res|
+    name = req.params[:name]
+    res.status = 200
+    res.text("Hello, #{name}!")
+  end
 end
 
 run app
 ```
 
-## How to use `Lennarb::Application::Base` class
+## Routing
 
-You can also use the `Lennarb::Application::Base` class to define your app:
+### Available HTTP Methods
+Lennarb supports all standard HTTP methods:
+- `get(path, &block)`
+- `post(path, &block)`
+- `put(path, &block)`
+- `patch(path, &block)`
+- `delete(path, &block)`
+- `head(path, &block)`
+- `options(path, &block)`
+
+### Route Parameters
+Routes can include dynamic parameters:
 
 ```ruby
-# config.ru
-
-require 'lennarb'
-
-class App < Lennarb::Application::Base
+class API < Lennarb
+  get '/users/:id' do |req, res|
+    user_id = req.params[:id]
+    user = User.find(user_id)
+    
+    res.status = 200
+    res.json(user.to_json)
+  end
 end
 ```
 
-## Define routes
-
-When you use the `Lennarb::Application::Base` class, you can use the following methods:
-
-- `get`
-- `post`
-- `put`
-- `delete`
-- `patch`
-- `head`
-- `options`
+### Response Helpers
+Lennarb provides convenient response helpers:
 
 ```ruby
-# config.ru
+class App < Lennarb
+  get '/html' do |req, res|
+    res.html('<p>HTML Response</p>')
+  end
 
-require 'lennarb'
+  get '/json' do |req, res|
+    res.json({ message: 'JSON Response' })
+  end
 
-class App < Lennarb::Application::Base
-	get '/' do |req, res|
-		res.html 'Hello World'
-	end
+  get '/text' do |req, res|
+    res.text('Plain Text Response')
+  end
+
+  get '/redirect' do |req, res|
+    res.redirect('/new-location')
+  end
 end
 ```
 
-## Run!
+## Middleware Support
 
-If you use the `Lennarb::Application::Base` class, you can use the `run!` method to run your app:
+The plugin system is compatible with Rack middleware. To add middleware using the `use` method:
+
+```ruby
+class App < Lennarb
+  # Built-in Rack middleware
+  use Rack::Logger
+  use Rack::Session::Cookie, secret: 'your_secret'
+  
+  # Custom middleware
+  use MyCustomMiddleware, option1: 'value1'
+  
+  get '/' do |req, res|
+    # Access middleware features
+    logger = env['rack.logger']
+    logger.info 'Processing request...'
+    
+    res.status = 200
+    res.text('Hello World!')
+  end
+end
+```
+
+## Application Lifecycle
+
+### Initialization
+```ruby
+class App < Lennarb
+  # Configuration code here
+  
+  def initialize
+    super
+    # Custom initialization code
+  end
+end
+```
+
+### Freezing the Application
+Call `freeze!` to finalize your application configuration:
 
 ```ruby
 # config.ru
-
-require 'lennarb'
-
-class App < Lennarb::Application::Base
-	get '/' do |req, res|
-		res.html 'Hello World'
-	end
-end
-
-App.run!
+app = MyApp.freeze!
+run app
 ```
 
-By default, the `run!` method does the following:
+After freezing:
+- No new routes can be added
+- No new middleware can be added
+- The application becomes thread-safe
 
-- Freeze the app routes
-- Default middlewares:
-  - `Lennarb::Middlewares::Logger`
-  - `Lennarb::Middlewares::Static`
-  - `Lennarb::Middlewares::NotFound`
-  - `Lennarb::Middlewares::Lint`L
-  - `Lennarb::Middlewares::ShowExceptions`
-  - `Lennarb::Middlewares::MethodOverride`
+## Development vs Production
 
-After that, you can run your app with the `rackup` command:
+### Development
+```ruby
+# config.ru
+require './app'
 
+if ENV['RACK_ENV'] == 'development'
+  use Rack::Reloader
+  use Rack::ShowExceptions
+end
+
+run App.freeze!
+```
+
+### Production
+```ruby
+# config.ru
+require './app'
+
+if ENV['RACK_ENV'] == 'production'
+  use Rack::CommonLogger
+  use Rack::Runtime
+end
+
+run App.freeze!
+```
+
+## Best Practices
+
+1. **Route Organization**
+   ```ruby
+   class App < Lennarb
+     # Group related routes together
+     # API routes
+     get '/api/users' do |req, res|
+       # Handle API request
+     end
+     
+     # Web routes
+     get '/web/dashboard' do |req, res|
+       # Handle web request
+     end
+   end
+   ```
+
+2. **Error Handling**
+   ```ruby
+   class App < Lennarb
+     get '/protected' do |req, res|
+       raise AuthenticationError unless authenticated?(req)
+       res.text('Secret content')
+     rescue AuthenticationError
+       res.status = 401
+       res.json({ error: 'Unauthorized' })
+     end
+   end
+   ```
+
+3. **Modular Design**
+   ```ruby
+   # Split large applications into modules
+   class AdminApp < Lennarb
+     # Admin-specific routes
+   end
+
+   class MainApp < Lennarb
+     plugin :mount
+     mount AdminApp, at: '/admin'
+   end
+   ```
+
+## Running Your Application
+
+### Basic Usage
 ```bash
 $ rackup
 ```
 
-## Mount route controllers
-
-You can use the `mount` method to mount route controllers:
-
-Create a route controller, in this example, we'll create a `UsersController`, and define your routes:
-
-```ruby
-# ../whatwever/users.rb
-
-require 'lennarb'
-
-class UsersController < Lennarb::Application::Base
-	get '/users' do |req, res|
-		res.html 'List of users'
-	end
-end
-```
-
-Now, you can use the `mount` method to mount the `UsersController` on your app:
-
-```ruby
-# config.ru
-
-require 'lennarb'
-require_relative './whatwever/users'
-
-class Application < Lennarb::Application::Base
-	mount UsersController
-end
-```
-
-Completed! You can now execute your application using distinct controllers.
-
-🚨 **IMPORTANT:** The `mount` method does not modify the hooks of the mounted controller. This means that the hooks of the mounted controller will not be executed in the context of the main application.
-
-```ruby
-# ../whatwever/users.rb
-
-require 'lennarb'
-
-class UsersController < Lennarb::Application::Base
-	before do |req, res|
-		puts 'UsersController before' # This will be executed in global context
-	end
-end
-```
-
-We recommend you to use the `before` and `after` methods to define callbacks in the main application or specific routes. Ex. `before('/users')` will be executed only in the `UsersController` routes.
-
-## Hooks
-
-You can use the `before` and `after` methods to define callbacks:
-
-```ruby
-# config.run
-
-require 'lennarb'
-
-class App < Lennarb::Application::Base
-	before do |req, res|
-		puts 'Before'
-	end
-
-	get '/' do |req, res|
-		res.html 'Hello World'
-	end
-
-	after do |req, res|
-		puts 'After'
-	end
-end
-
-run App.run!
-```
-
-You can also use the `before` and `after` methods to define callbacks for specific routes:
-
-```ruby
-# config.ru
-
-require 'lennarb'
-
-class App < Lennarb::Application::Base
-	before '/about' do |req, res|
-		puts 'Before about'
-	end
-
-	get '/about' do |req, res|
-		res.html 'About'
-	end
-
-	after '/about' do |req, res|
-		puts 'After about'
-	end
-end
-```
-
-## Middlewares
-
-You can use the `use` method to add middlewares:
-
-```ruby
-
-# config.ru
-
-require 'lennarb'
-
-class App < Lennarb::Application::Base
-	use Lennarb::Middlewares::Logger
-	use Lennarb::Middlewares::Static
-
-	get '/' do |req, res|
-		res.html 'Hello World'
-	end
-end
-
-run App.run!
-```
-
-## Not Found
-
-You can use the `render_not_found` method to define a custom 404 page in the hooks context:
-
-```ruby
-require 'lennarb'
-
-class App < Lennarb::Application::Base
-	before do |context|
-		render_not_found if context['PATH_INFO'] == '/not_found'
-	end
-end
-```
-
-You can pass your custom 404 page:
-
-```ruby
-before do |context|
-
-	HTML = <<~HTML
-	<!DOCTYPE html>
-	<html>
-		<head>
-			<title>404 Not Found</title>
-		</head>
-		<body>
-			<h1>404 Not Found</h1>
-		</body>
-	</html>
-	HTML
-
-	render_not_found HTML if context['PATH_INFO'] == '/not_found'
-end
-```
-
-Lastly, you can create a custom 404 page and put in the `public` folder:
-
-```sh
-touch public/404.html
-```
-
-Now the default 404 page is your custom 404 page.
-
-After that, you can run your app with the `rackup` command:
-
+### With Environment Configuration
 ```bash
-$ rackup
-
-Puma starting in single mode...
-* Puma version: 6.4.0 (ruby 3.2.2-p53) ("The Eagle of Durango")
-*  Min threads: 0
-*  Max threads: 5
-*  Environment: development
-*          PID: 94360
-* Listening on http://127.0.0.1:9292
-* Listening on http://[::1]:9292
-Use Ctrl-C to stop
-^C- Gracefully stopping, waiting for requests to finish
-=== puma shutdown: 2023-12-19 08:54:26 -0300 ===
+$ RACK_ENV=production rackup -p 3000
 ```
+
+### With Custom Config File
+```bash
+$ rackup custom_config.ru
+```
+
+## Next Steps
+
+- Explore the [Plugin System](plugins.md) for extending functionality
+- Learn about [Middleware Integration](middleware.md)
+- Check out [Advanced Routing](routing.md)
+- Read the [API Documentation](api.md)
+
+## Support
+
+For help and bug reports, please visit:
+- GitHub Issues: [lennarb/issues](https://github.com/your-repo/lennarb/issues)
+- Documentation: [lennarb.github.io](https://your-docs-site/lennarb)
 
 Done! Now you can run your app!
