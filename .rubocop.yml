@@ -14,12 +14,6 @@ Naming/RescuedExceptionsVariableName:
 Layout/LineLength:
   Max: 120
 
-Layout/IndentationStyle:
-  EnforcedStyle: tabs
-
-Layout/IndentationWidth:
-  Width: 1
-
 Layout/MultilineMethodCallIndentation:
   Enabled: false
 

@@ -1,7 +1,6 @@
 # MIT License
 
-Copyright, 2023-2024, by Aristóteles Coutinho.  
-Copyright, 2023, by aristotelesbr.  
+Copyright (c) 2023-2025 Aristótels Coutinho
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
