@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2025-02-09
+
+### Changed
+
+- The `freeze!` method was removed from the `Lennarb` class. Use `initializer!` to build and freeze the application.
+
+```rb
+# app.rb
+
+require 'lennarb'
+
+MyApp = Lennarb.new do |router|
+  router.get '/hello' do |req, res|
+    res.html('Hello World')
+  end
+end
+
+MyApp.initializer!
+
+run MyApp
+```
+
+### Remove
+
+- Removes bake scripts from the project. Use `rack'` to run tasks.
+- Removes `plugin` module and basic plugins from the project. Now, the `Lennarb` class is the main class of the project.
+- Removes unnecessary tests.
+- Removes `.rubocop.yml` file from the project. Now, the project uses the default configuration of the `standard` gem.
+
+### Added
+
+- Add `simplecov` gem to generate the test coverage report.
+- Add `m` gem to run the tests.
+
 ## [1.3.0] - 2024-11-21
 
 ### Added
@@ -78,16 +112,15 @@ That permits to create a new application with the `Lennarb::ApplicationBase` cla
 require 'lennarb'
 
 class MyApp < Lennarb::ApplicationBase
-	get '/hello' do |req, res|
-		res.html('Hello World')
-	end
+ get '/hello' do |req, res|
+  res.html('Hello World')
+ end
 end
 ```
 
 ### Removed
 
 - Remove `Lennarb::Application` module from the project. Now, the `Lennarb` class is the main class of the project.
-
 
 ## [0.4.0] - 2024-07-02
 
@@ -105,9 +138,9 @@ require 'lennarb'
 class MyApp
   include Lennarb::ApplicationBase
 
-	get '/hello' do |req, res|
-		res.html('Hello World')
-	end
+ get '/hello' do |req, res|
+  res.html('Hello World')
+ end
 end
 ```
 

@@ -1,14 +1,13 @@
 #!/usr/bin/env ruby
-# frozen_string_literal: true
 
 # Released under the MIT License.
-# Copyright, 2023, by Aristóteles Coutinho.
+# Copyright, 2023-2025, by Aristóteles Coutinho.
 
 # Require the main file
 #
 # @private `Since v0.1`
 #
-require 'lennarb'
+require "lennarb"
 
 # Show the version
 #

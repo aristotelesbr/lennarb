@@ -6,4 +6,7 @@
 /docs
 .DS_Store
 *.gem
-
+*.rbc
+.git
+.ruby-lsp
+coverage/

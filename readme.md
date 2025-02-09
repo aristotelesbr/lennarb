@@ -36,13 +36,13 @@ Plese see [Performance](https://aristotelesbr.github.io/lennarb/guides/performan
 
 ## Usage
 
-  - [Getting Started](https://aristotelesbr.github.io/lennarb/guides/getting-started/index) - This guide covers getting up and running with **Lennarb**.
+- [Getting Started](https://aristotelesbr.github.io/lennarb/guides/getting-started/index) - This guide covers getting up and running with **Lennarb**.
 
-  - [Performance](https://aristotelesbr.github.io/lennarb/guides/performance/index.html) - The **Lennarb** is very fast. The following benchmarks were performed on a MacBook Pro (Retina, 13-inch, Early 2013) with 2,7 GHz Intel Core i7 and 8 GB 1867 MHz DDR3. Based on [jeremyevans/r10k](https://github.com/jeremyevans/r10k) using the following [template build](static/r10k/build/lennarb.rb).
+- [Performance](https://aristotelesbr.github.io/lennarb/guides/performance/index.html) - The **Lennarb** is very fast. The following benchmarks were performed on a MacBook Pro (Retina, 13-inch, Early 2013) with 2,7 GHz Intel Core i7 and 8 GB 1867 MHz DDR3. Based on [jeremyevans/r10k](https://github.com/jeremyevans/r10k) using the following [template build](static/r10k/build/lennarb.rb).
 
-  - [Plugin](https://aristotelesbr.github.io/lennarb/guides/plugin/index.html) - You can create your plugins to extend the functionality of the framework.
+- [Plugin](https://aristotelesbr.github.io/lennarb/guides/plugin/index.html) - You can create your plugins to extend the functionality of the framework.
 
-  - [Response](https://aristotelesbr.github.io/lennarb/guides/response/index.html) - This is the response guide.
+- [Response](https://aristotelesbr.github.io/lennarb/guides/response/index.html) - This is the response guide.
     The `res` object is used to send a response to the client. The Lennarb use a custom response object to send responses to the client. The `res` object is an instance of `Lennarb::Response`.
 
 ### Developer Certificate of Origin

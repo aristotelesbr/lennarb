@@ -1,8 +1,3 @@
-# frozen_string_literal: true
-
-# Released under the MIT License.
-# Copyright, 2023-2024, by Aristóteles Coutinho.
-
 class Lennarb
   class Response
     # @!attribute [rw] status
@@ -27,27 +22,25 @@ class Lennarb
 
     # Constants
     #
-    LOCATION = 'location'
+    LOCATION = "location"
     private_constant :LOCATION
 
-    CONTENT_TYPE = 'content-type'
+    CONTENT_TYPE = "content-type"
     private_constant :CONTENT_TYPE
 
-    CONTENT_LENGTH = 'content-length'
+    CONTENT_LENGTH = "content-length"
     private_constant :CONTENT_LENGTH
 
-    ContentType = { HTML: 'text/html', TEXT: 'text/plain', JSON: 'application/json' }.freeze
-    private_constant :ContentType
-
+    ContentType = {HTML: "text/html", TEXT: "text/plain", JSON: "application/json"}.freeze
     # Initialize the response object
     #
     # @returns [Response]
     #
     def initialize
-      @status  = 404
+      @status = 404
       @headers = {}
-      @body    = []
-      @length  = 0
+      @body = []
+      @length = 0
     end
 
     # Set the response header

@@ -54,15 +54,15 @@ See the graphs in the `benchmarks` directory of the lennarb project.
 ### 1. Install the router gem you want to test
 
 ```bash
-$ gem install lennarb
-$ gem install syro
-$ gem install roda
+gem install lennarb
+gem install syro
+gem install roda
 ```
 
 ### 2. Clone the jeremyevans/r10k repository
 
 ```bash
-$ git clone https://github.com/jeremyevans/r10k
+git clone https://github.com/jeremyevans/r10k
 ```
 
 ### 3. Create a new file in the `r10k` directory
@@ -70,7 +70,7 @@ $ git clone https://github.com/jeremyevans/r10k
 In the `r10k` directory, create a new file called `lennarb.rb` into `builders` directory with the code below:
 
 ```bash
-$ touch r10k/builders/lennarb.rb
+touch r10k/builders/lennarb.rb
 ```
 
 Put the code below into `lennarb.rb` file:
@@ -112,7 +112,7 @@ end
 ### 4. Run the benchmarks
 
 ```bash
-$ bundle exec rake bench graphs R10K_APPS="lennarb syro roda"
+bundle exec rake bench graphs R10K_APPS="lennarb syro roda"
 ```
 
 ## Conclusion
