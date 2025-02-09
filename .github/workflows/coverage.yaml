@@ -21,7 +21,7 @@ jobs:
           - macos
 
         ruby:
-          - '3.3'
+          - '3.4'
 
     steps:
       - uses: actions/checkout@v4
@@ -32,7 +32,7 @@ jobs:
 
       - name: Run tests
         timeout-minutes: 5
-        run: bundle exec bake test
+        run: bundle exec rake
 
       - uses: actions/upload-artifact@v3
         with:
@@ -47,7 +47,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3'
+          ruby-version: '3.4'
           bundler-cache: true
 
       - uses: actions/download-artifact@v3
