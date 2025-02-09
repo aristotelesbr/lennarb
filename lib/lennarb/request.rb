@@ -1,8 +1,3 @@
-# frozen_string_literal: true
-
-# Released under the MIT License.
-# Copyright, 2023-2024, by Aristóteles Coutinho.
-
 class Lennarb
   class Request < Rack::Request
     # The environment variables of the request
@@ -33,7 +28,7 @@ class Lennarb
     #
     # @returns [String]
     #
-    def path = @path ||= super.split('?').first
+    def path = @path ||= super.split("?").first
 
     # Read the body of the request
     #
@@ -52,18 +47,26 @@ class Lennarb
     # Get the headers of the request
     #
     def headers
-      @headers ||= env.select { |key, _| key.start_with?('HTTP_') }
+      @headers ||= env.select { |key, _| key.start_with?("HTTP_") }
     end
 
-    def ip             = ip_address
-    def secure?        = scheme == 'https'
-    def user_agent     = headers['HTTP_USER_AGENT']
-    def accept         = headers['HTTP_ACCEPT']
-    def referer        = headers['HTTP_REFERER']
-    def host           = headers['HTTP_HOST']
-    def content_length = headers['HTTP_CONTENT_LENGTH']
-    def content_type   = headers['HTTP_CONTENT_TYPE']
-    def xhr?           = headers['HTTP_X_REQUESTED_WITH']&.casecmp('XMLHttpRequest')&.zero?
+    def ip = ip_address
+
+    def secure? = scheme == "https"
+
+    def user_agent = headers["HTTP_USER_AGENT"]
+
+    def accept = headers["HTTP_ACCEPT"]
+
+    def referer = headers["HTTP_REFERER"]
+
+    def host = headers["HTTP_HOST"]
+
+    def content_length = headers["HTTP_CONTENT_LENGTH"]
+
+    def content_type = headers["HTTP_CONTENT_TYPE"]
+
+    def xhr? = headers["HTTP_X_REQUESTED_WITH"]&.casecmp("XMLHttpRequest")&.zero?
 
     def []=(key, value)
       env[key] = value
@@ -76,8 +79,8 @@ class Lennarb
     private
 
     def ip_address
-      forwarded_for = headers['HTTP_X_FORWARDED_FOR']
-      forwarded_for ? forwarded_for.split(',').first.strip : env['REMOTE_ADDR']
+      forwarded_for = headers["HTTP_X_FORWARDED_FOR"]
+      forwarded_for ? forwarded_for.split(",").first.strip : env["REMOTE_ADDR"]
     end
   end
 end

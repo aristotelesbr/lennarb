@@ -1,16 +1,11 @@
-# frozen_string_literal: true
-
-# Released under the MIT License.
-# Copyright, 2023-2024, by Aristóteles Coutinho.
-
 class Lennarb
   class RouteNode
     attr_accessor :static_children, :dynamic_children, :blocks, :param_key
 
     def initialize
-      @blocks           = {}
-      @param_key        = nil
-      @static_children  = {}
+      @blocks = {}
+      @param_key = nil
+      @static_children = {}
       @dynamic_children = {}
     end
 
@@ -18,7 +13,7 @@ class Lennarb
       current_node = self
 
       parts.each do |part|
-        if part.start_with?(':')
+        if part.start_with?(":")
           param_sym = part[1..].to_sym
           current_node.dynamic_children[param_sym] ||= RouteNode.new
           dynamic_node = current_node.dynamic_children[param_sym]
