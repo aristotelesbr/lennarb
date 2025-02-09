@@ -2,7 +2,7 @@
 
 ## Overview
 
-Lennarb is a lightweight, Rack-based web framework for Ruby that emphasizes simplicity and flexibility. It provides a clean DSL for routing, middleware support, and various ways to structure your web applications.
+Lennarb is a minimalist, thread-safe Rack-based web framework for Ruby that focuses on simplicity and performance. It provides a clean routing DSL and straightforward request/response handling.
 
 ## Installation
 
@@ -15,7 +15,7 @@ gem 'lennarb'
 Or install it directly via RubyGems:
 
 ```bash
-$ gem install lennarb
+gem install lennarb
 ```
 
 ## Quick Start
@@ -34,275 +34,168 @@ app = Lennarb.new do |app|
   end
 end
 
+app.initializer!
 run app
 ```
 
 Start the server:
 
 ```bash
-$ rackup
+rackup
 ```
 
 Your application will be available at `http://localhost:9292`.
 
-## Application Structure
+## Core Concepts
 
-### Class-Based Applications
+### Request Handling
 
-For larger applications, you can use a class-based structure:
+Each route handler receives two arguments:
 
-```ruby
-class MyApp < Lennarb
-  # Routes
-  get '/' do |req, res|
-    res.status = 200
-    res.html('<h1>Welcome to MyApp!</h1>')
-  end
+- `req`: A Request object wrapping the Rack environment
+- `res`: A Response object for building the HTTP response
 
-  post '/users' do |req, res|
-    user = create_user(req.params)
-    res.status = 201
-    res.json(user.to_json)
-  end
+### Response Types
+
+Lennarb provides three main response helpers:
+
+```rb
+app.get '/text' do |req, res|
+  res.text('Plain text response')
 end
 
-# config.ru
-run MyApp.freeze!
+app.get '/html' do |req, res|
+  res.html('<h1>HTML response</h1>')
+end
+
+app.get '/json' do |req, res|
+  res.json('{"message": "JSON response"}')
+end
 ```
 
-### Instance-Based Applications
+### Redirects
 
-For simpler applications or prototypes:
+```ruby
+app.get '/redirect' do |req, res|
+  res.redirect('/new-location', 302) # 302
+end
+```
+
+Routes are defined using HTTP method helpers:
 
 ```ruby
 app = Lennarb.new do |l|
-  l.get '/hello/:name' do |req, res|
-    name = req.params[:name]
-    res.status = 200
-    res.text("Hello, #{name}!")
+  # Basic route
+  l.get '/' do |req, res|
+    res.html('Home page')
+  end
+
+  # Route with parameters
+  l.get '/users/:id' do |req, res|
+    user_id = req.params[:id]
+    res.json("{\"id\": #{user_id}}")
   end
 end
-
-run app
 ```
-
-## Routing
-
-### Available HTTP Methods
-
-Lennarb supports all standard HTTP methods:
-
-- `get(path, &block)`
-- `post(path, &block)`
-- `put(path, &block)`
-- `patch(path, &block)`
-- `delete(path, &block)`
-- `head(path, &block)`
-- `options(path, &block)`
 
 ### Route Parameters
 
-Routes can include dynamic parameters:
+Parameters from dynamic route segments are available in `req.params`:
 
 ```ruby
-class API < Lennarb
-  get '/users/:id' do |req, res|
-    user_id = req.params[:id]
-    user = User.find(user_id)
-
-    res.status = 200
-    res.json(user.to_json)
-  end
+app.get '/hello/:name' do |req, res|
+  name = req.params[:name]
+  res.text("Hello, #{name}!")
 end
 ```
 
-### Response Helpers
+## Thread Safety
 
-Lennarb provides convenient response helpers:
+Lennarb is thread-safe by design:
 
-```ruby
-class App < Lennarb
-  get '/html' do |req, res|
-    res.html('<p>HTML Response</p>')
-  end
-
-  get '/json' do |req, res|
-    res.json({ message: 'JSON Response' })
-  end
-
-  get '/text' do |req, res|
-    res.text('Plain Text Response')
-  end
-
-  get '/redirect' do |req, res|
-    res.redirect('/new-location')
-  end
-end
-```
-
-## Middleware Support
-
-The plugin system is compatible with Rack middleware. To add middleware using the `use` method:
-
-```ruby
-class App < Lennarb
-  # Built-in Rack middleware
-  use Rack::Logger
-  use Rack::Session::Cookie, secret: 'your_secret'
-
-  # Custom middleware
-  use MyCustomMiddleware, option1: 'value1'
-
-  get '/' do |req, res|
-    # Access middleware features
-    logger = env['rack.logger']
-    logger.info 'Processing request...'
-
-    res.status = 200
-    res.text('Hello World!')
-  end
-end
-```
+- All request processing is synchronized using a mutex
+- The router tree is frozen after initialization
+- Response objects are created per-request
 
 ## Application Lifecycle
 
 ### Initialization
 
 ```ruby
-class App < Lennarb
-  # Configuration code here
+app = Lennarb.new do |l|
+  # Define routes and configuration
+end
 
-  def initialize
-    super
-    # Custom initialization code
-  end
+# Initialize and freeze the application
+app.initializer!
+```
+
+The `initializer!` method:
+
+- Loads environment-specific dependencies
+- Freezes the route tree
+- Freezes the Rack application
+
+### Environment
+
+Lennarb uses the `LENNA_ENV` environment variable (defaults to "development"):
+
+```bash
+LENNA_ENV=production rackup
+```
+
+## Error Handling
+
+Lennarb provides basic error handling:
+
+```ruby
+app.get '/api' do |req, res|
+  # Errors are caught and return 500 with error message
+  raise "Something went wrong"
 end
 ```
 
-### Freezing the Application
+Default error responses:
 
-Call `freeze!` to finalize your application configuration:
-
-```ruby
-# config.ru
-app = MyApp.freeze!
-run app
-```
-
-After freezing:
-
-- No new routes can be added
-- No new middleware can be added
-- The application becomes thread-safe
-
-## Development vs Production
-
-### Development
-
-```ruby
-# config.ru
-require './app'
-
-if ENV['RACK_ENV'] == 'development'
-  use Rack::Reloader
-  use Rack::ShowExceptions
-end
-
-run App.freeze!
-```
-
-### Production
-
-```ruby
-# config.ru
-require './app'
-
-if ENV['RACK_ENV'] == 'production'
-  use Rack::CommonLogger
-  use Rack::Runtime
-end
-
-run App.freeze!
-```
+- 404 for unmatched routes
+- 500 for application errors
 
 ## Best Practices
 
-1. **Route Organization**
+1. **Always call initializer!**
 
    ```ruby
-   class App < Lennarb
-     # Group related routes together
-     # API routes
-     get '/api/users' do |req, res|
-       # Handle API request
-     end
+   app = Lennarb.new { |l| ... }
+   app.initializer!
+   run app
+   ```
 
-     # Web routes
-     get '/web/dashboard' do |req, res|
-       # Handle web request
-     end
+2. **Set response status**
+
+   ```ruby
+   app.get '/api' do |req, res|
+     res.status = 200
+     res.json('{"status": "ok"}')
    end
    ```
 
-2. **Error Handling**
+3. **Use appropriate response types**
 
    ```ruby
-   class App < Lennarb
-     get '/protected' do |req, res|
-       raise AuthenticationError unless authenticated?(req)
-       res.text('Secret content')
-     rescue AuthenticationError
-       res.status = 401
-       res.json({ error: 'Unauthorized' })
-     end
-   end
+   # HTML for web pages
+   res.html('<h1>Web Page</h1>')
+
+   # JSON for APIs
+   res.json('{"data": "value"}')
+
+   # Text for simple responses
+   res.text('Hello')
    ```
-
-3. **Modular Design**
-
-   ```ruby
-   # Split large applications into modules
-   class AdminApp < Lennarb
-     # Admin-specific routes
-   end
-
-   class MainApp < Lennarb
-     plugin :mount
-     mount AdminApp, at: '/admin'
-   end
-   ```
-
-## Running Your Application
-
-### Basic Usage
-
-```bash
-$ rackup
-```
-
-### With Environment Configuration
-
-```bash
-$ RACK_ENV=production rackup -p 3000
-```
-
-### With Custom Config File
-
-```bash
-$ rackup custom_config.ru
-```
-
-## Next Steps
-
-- Explore the Plugin System for extending functionality
-- Learn about Middleware Integration
-- Check out Advanced Routing
 
 ## Support
 
 For help and bug reports, please visit:
 
-- GitHub Issues: [lennarb/issues](https://github.com/your-repo/lennarb/issues)
-- Documentation: [lennarb.github.io](https://your-docs-site/lennarb)
+- GitHub Issues: [lennarb/issues](https://github.com/aristotelesbr/lennarb/issues)
 
-Done! Now you can run your app!
+Now you can run your app!

@@ -11,7 +11,7 @@ You can use the `res` object to send a response to the client.
 # app.rb
 
 app.get '/' do |req, res|
-	res.html 'Hello World'
+ res.html 'Hello World'
 end
 ```
 
@@ -23,9 +23,9 @@ Lenna supports the following content types:
 # app.rb
 
 app.get '/' do |req, res|
-	res.html 'Hello World'
-	res.json '{"message": "Hello World"}'
-	res.text 'Hello World'
+ res.html 'Hello World'
+ res.json '{"message": "Hello World"}'
+ res.text 'Hello World'
 end
 ```
 
@@ -44,7 +44,7 @@ You can use the `res.write` method to write to the response body:
 # app.rb
 
 app.get '/' do |req, res|
-	res.write 'Hello World'
+ res.write 'Hello World'
 end
 ```
 
@@ -54,10 +54,10 @@ JSON example:
 # app.rb
 
 app.post '/posts' do |req, res|
-	req.params # => { name: 'Lenna' }
-	name = req.params[:name]
+ req.params # => { name: 'Lenna' }
+ name = req.params[:name]
 
-	res.write({ data: { name: } }.to_json) # This will write to the response body
+ res.write({ data: { name: } }.to_json) # This will write to the response body
 end
 ```
 
@@ -78,6 +78,6 @@ You can redirect the client using the `res.redirect` method:
 
 app.get '/' do |req, res|
   # Stuff code here...
-	res.redirect '/hello'
+ res.redirect '/hello'
 end
 ```
