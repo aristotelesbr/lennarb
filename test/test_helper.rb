@@ -1,17 +1,20 @@
-# frozen_string_literal: true
-
 # Released under the MIT License.
 # Copyright, 2023-2024, by Aristóteles Coutinho.
 
-ENV['RACK_ENV'] = 'test'
+require "simplecov"
+SimpleCov.start
 
-$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
-require 'lennarb'
+require "bundler/setup"
+require "lennarb"
+require "rack/test"
 
-# Require test helpers
-#
-require 'minitest/autorun'
+require "minitest/autorun"
 
-# Require Rack::test
-#
-require 'rack/test'
+Dir["#{__dir__}/support/**/*.rb"].each do |file|
+  require file
+end
+
+module Minitest
+  class Test
+  end
+end
