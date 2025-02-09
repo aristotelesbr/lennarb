@@ -1,8 +1,19 @@
-# Lennarb
+<div align="center">
+  <picture>
+    <img alt="Lennarb" src="logo/lennarb.png" width="250">
+  </picture>
 
-Lennarb is a lightweight, fast, and modular web framework for Ruby based on Rack. The **Lennarb** supports Ruby (MRI) 3.0+
+---
 
-**Basic Usage**
+A lightweight, fast, and modular web framework for Ruby based on Rack. The **Lennarb** supports Ruby (MRI) 3.4+
+
+[![Tests](https://github.com/aristotelesbr/lennarb/workflows/rubyby-tests/badge.svg)](https://github.com/aristotelesbr/lennarb)
+[![Gem](https://img.shields.io/gem/v/lennarb.svg)](https://rubygems.org/gems/lennarb)
+[![Gem](https://img.shields.io/gem/dt/lennarb.svg)](https://rubygems.org/gems/lennarb)
+[![MIT License](https://img.shields.io/:License-MIT-blue.svg)](https://tldrlegal.com/license/mit-license)
+</div>
+
+## Basic Usage
 
 ```ruby
 require "lennarb"

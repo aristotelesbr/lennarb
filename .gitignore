@@ -3,6 +3,7 @@
 /gems.locked
 /.covered.db
 /external
+/docs
 .DS_Store
 *.gem
 *.rbc
