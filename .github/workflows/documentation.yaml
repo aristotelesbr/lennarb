@@ -40,7 +40,7 @@ jobs:
         run: bundle exec bake utopia:project:static --force no
 
       - name: Upload documentation artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v4
         with:
           path: docs
 
