@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		
+			<title>Performance</title>
+		
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		
+		<link rel="icon" type="image/png" href="../../_static/icon.png"/>
+		<link rel="stylesheet" href="../../_static/site.css" type="text/css" media="screen"/>
+		
+		<script src="../../_components/jquery/jquery.min.js"></script>
+		<script src="../../_components/jquery-syntax/jquery.syntax.min.js"></script>
+		<script src="../../_components/mermaid/mermaid.min.js"></script>
+		
+		<script src="../../_static/links.js"></script>
+		
+		<script type="text/javascript">
+		//
+			jQuery(function($) {
+				$.syntax();
+			});
+			
+			let isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+			let config = {theme: 'light'};
+			if (isDarkMode) config.theme = 'dark';
+			else config.theme = 'forest';
+			mermaid.initialize(config);
+		//
+		</script>
+	</head>
+
+	<body>
+		<header> › <a class="link" href="../../index.html">Lennarb</a> › 
+<a class="link" href="../index.html">Guides</a> › <a href="index.html">Performance</a> </header>
+		
+		<main>
+			
+	<h1>Performance</h1>
+	
+	<p>The <strong>Lennarb</strong> is very fast. The following benchmarks were performed on a MacBook Pro (Retina, 13-inch, Early 2013) with 2,7 GHz Intel Core i7 and 8 GB 1867 MHz DDR3. Based on <a href="https://github.com/jeremyevans/r10k">jeremyevans/r10k</a> using the following. All tests are performed using the <strong>Ruby 3.3.0</strong></p>
+<section id="benchmark-results"><h2>Benchmark results</h2>
+<p>This document contains the benchmarks comparing <strong>Lennarb</strong> with other routers based on Rack. Metrics evaluated include Requests per Second, Initial memory usage and Startup time.</p>
+</section><section id="1.-requests-per-second-(rps)"><h3>1. Requests per Second (RPS)</h3>
+<p><img src="https://raw.githubusercontent.com/aristotelesbr/lennarb/main/benchmark/rps.png" alt="RPS"/></p>
+<table>
+<thead>
+<tr>
+<th>Position</th>
+<th>Application</th>
+<th>10 RPS</th>
+<th>100 RPS</th>
+<th>1.000 RPS</th>
+<th>10.000 RPS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Lenna</td>
+<td>126.252,36</td>
+<td>108.086,55</td>
+<td>87.111,91</td>
+<td>68.460,64</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Roda</td>
+<td>123.360,37</td>
+<td>88.380,56</td>
+<td>66.990,77</td>
+<td>48.108,29</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Syro</td>
+<td>114.105,38</td>
+<td>80.909,39</td>
+<td>61.415,86</td>
+<td>46.639,81</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Hanami-API</td>
+<td>68.089,18</td>
+<td>52.851,88</td>
+<td>40.801,78</td>
+<td>27.996,00</td>
+</tr>
+</tbody>
+</table>
+<p>This table ranks the routers by the number of requests they can process per second. Higher numbers indicate better performance.</p>
+</section><section id="2.-initial-memory-usage-(in-kb)"><h3>2. Initial memory usage (in KB)</h3>
+<p><img src="https://raw.githubusercontent.com/aristotelesbr/lennarb/main/benchmark/memory.png" alt="Memory"/></p>
+<table>
+<thead>
+<tr>
+<th>Position</th>
+<th>Application</th>
+<th>10 KB</th>
+<th>100 KB</th>
+<th>1.000 KB</th>
+<th>10.000 KB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Syro</td>
+<td>12,160</td>
+<td>12,544</td>
+<td>16,460</td>
+<td>49,692</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Lenna</td>
+<td>14,464</td>
+<td>14,720</td>
+<td>18,232</td>
+<td>56,812</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Roda</td>
+<td>15,104</td>
+<td>15,104</td>
+<td>18,220</td>
+<td>49,900</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Hanami-API</td>
+<td>15,744</td>
+<td>16,128</td>
+<td>20,888</td>
+<td>64,824</td>
+</tr>
+</tbody>
+</table>
+<p>This table shows the initial memory usage in KB. Lower values indicate lower memory consumption.</p>
+</section><section id="3.-startup-time-(in-seconds)"><h3>3. Startup time (in seconds)</h3>
+<p><img src="https://raw.githubusercontent.com/aristotelesbr/lennarb/main/benchmark/runtime_with_startup.png" alt="Startup"/></p>
+<table>
+<thead>
+<tr>
+<th>Position</th>
+<th>Application</th>
+<th>10 seg</th>
+<th>100 seg</th>
+<th>1.000 seg</th>
+<th>10.000 seg</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Syro</td>
+<td>0.274</td>
+<td>0.347</td>
+<td>0.455</td>
+<td>0.997</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Lenna</td>
+<td>0.289</td>
+<td>0.312</td>
+<td>0.393</td>
+<td>0.914</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Roda</td>
+<td>0.294</td>
+<td>0.378</td>
+<td>0.467</td>
+<td>0.918</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Hanami-API</td>
+<td>0.445</td>
+<td>0.550</td>
+<td>0.808</td>
+<td>3.074</td>
+</tr>
+</tbody>
+</table>
+<p>This table shows the startup time in seconds. Lower values indicate faster startup times.</p>
+</section><section id="graphs"><h2>Graphs</h2>
+<p>See the graphs in the <code>benchmarks</code> directory of the lennarb project.</p>
+</section><section id="steps-to-run-the-benchmarks"><h2>Steps to run the benchmarks</h2>
+</section><section id="1.-install-the-router-gem-you-want-to-test"><h3>1. Install the router gem you want to test</h3>
+<pre><code class="language-bash">gem install lennarb
+gem install syro
+gem install roda
+</code></pre>
+</section><section id="2.-clone-the-jeremyevans/r10k-repository"><h3>2. Clone the jeremyevans/r10k repository</h3>
+<pre><code class="language-bash">git clone https://github.com/jeremyevans/r10k
+</code></pre>
+</section><section id="3.-create-a-new-file-in-the-r10k-directory"><h3>3. Create a new file in the <code>r10k</code> directory</h3>
+<p>In the <code>r10k</code> directory, create a new file called <code>lennarb.rb</code> into <code>builders</code> directory with the code below:</p>
+<pre><code class="language-bash">touch r10k/builders/lennarb.rb
+</code></pre>
+<p>Put the code below into <code>lennarb.rb</code> file:</p>
+<pre><code class="language-rb"># frozen_string_literal: true
+
+# Released under the MIT License.
+# Copyright, 2024, by Aristóteles Coutinho.
+
+lennarb_routes =
+  lambda do |f, level, prefix, calc_path, lvars|
+    base = BASE_ROUTE.dup
+    ROUTES_PER_LEVEL.times do
+      route = &quot;#{prefix}#{base}&quot;
+      if level == 1
+        params = lvars.map { |lvar| &quot;\#{req.params[:#{lvar}]}&quot; }
+.join('-')
+        f.puts &quot;  app.get '#{route}/:#{lvars.last}' do |req, res|&quot;
+        f.puts &quot;    body = \&quot;#{calc_path[1..]}#{base}-#{params}\&quot;&quot;
+        f.puts '    res.html body'
+        f.puts '  end'
+      else
+       lennarb_routes.call(f, level - 1, &quot;#{route}/:#{lvars.last}/&quot;, &quot;#{calc_path}#{base}/&quot;, lvars + [lvars.last.succ])
+      end
+      base.succ!
+    end
+  end
+
+File.open(&quot;#{File.dirname(__FILE__)}/../apps/lennarb_#{LEVELS}_#{ROUTES_PER_LEVEL}.rb&quot;, 'wb') do |f|
+  f.puts '# frozen_string_literal: true'
+  f.puts &quot;require 'lennarb'&quot;
+  f.puts 'app = Lennarb.new'
+  lennarb_routes.call(f, LEVELS, '/', '/', ['a'])
+  f.puts 'App = app'
+end
+</code></pre>
+</section><section id="4.-run-the-benchmarks"><h3>4. Run the benchmarks</h3>
+<pre><code class="language-bash">bundle exec rake bench graphs R10K_APPS=&quot;lennarb syro roda&quot;
+</code></pre>
+</section><section id="conclusion"><h2>Conclusion</h2>
+<p>These numbers are just a small reference, <strong>Lennarb</strong> is not a framework, it is a router. In my opinion, <strong>Roda</strong> is the best router for Ruby because it has many interesting features, such as a middleware manager, and very good development performance.</p>
+</section>
+				
+			<footer>Documentation generated by <a href="https://github.com/socketry/utopia-project">Utopia::Project</a>.</footer>
+		</main>
+	</body>
+</html>

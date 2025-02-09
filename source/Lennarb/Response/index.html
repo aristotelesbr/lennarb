@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		
+			<title>Lennarb::Response</title>
+		
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		
+		<link rel="icon" type="image/png" href="../../../_static/icon.png"/>
+		<link rel="stylesheet" href="../../../_static/site.css" type="text/css" media="screen"/>
+		
+		<script src="../../../_components/jquery/jquery.min.js"></script>
+		<script src="../../../_components/jquery-syntax/jquery.syntax.min.js"></script>
+		<script src="../../../_components/mermaid/mermaid.min.js"></script>
+		
+		<script src="../../../_static/links.js"></script>
+		
+		<script type="text/javascript">
+		//
+			jQuery(function($) {
+				$.syntax();
+			});
+			
+			let isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+			let config = {theme: 'light'};
+			if (isDarkMode) config.theme = 'dark';
+			else config.theme = 'forest';
+			mermaid.initialize(config);
+		//
+		</script>
+	</head>
+
+	<body>
+		<header> › <a class="link" href="../../../index.html">Lennarb</a> › 
+<a class="link" href="../../index.html">Source</a> › <a href="../index.html">Lennarb</a>  › <a href="index.html">Response</a> </header>
+		
+		<main>
+			
+
+	<h1>
+		<code class="language-ruby">class Response</code>
+	</h1>
+	
+		
+	<section>
+		<h2>Definitions</h2>
+		
+		<section id="Lennarb::Response#status"><h3><code class="language-ruby">attr_accessor :status</code></h3><details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>returns</strong>　<code class="language-ruby">Integer</code></dt></dl>
+</details>
+</section><section id="Lennarb::Response#body"><h3><code class="language-ruby">attr_reader :body</code></h3><details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>returns</strong>　<code class="language-ruby">Array</code></dt></dl>
+</details>
+</section><section id="Lennarb::Response#headers"><h3><code class="language-ruby">attr_reader :headers</code></h3><details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>returns</strong>　<code class="language-ruby">Hash</code></dt></dl>
+</details>
+</section><section id="Lennarb::Response#length"><h3><code class="language-ruby">attr_reader :length</code></h3><details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>returns</strong>　<code class="language-ruby">Integer</code></dt></dl>
+</details>
+</section><section id="Lennarb::Response::LOCATION"><h3><code class="language-ruby">LOCATION = &quot;location&quot;</code></h3><p>Constants</p>
+</section><section id="Lennarb::Response#initialize"><h3><code class="language-ruby">def initialize</code></h3><p>Initialize the response object</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>returns</strong>　<code class="language-ruby"><a href="index.html" title="Lennarb::Response">Response</a></code></dt></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def initialize
+  @status = 404
+  @headers = {}
+  @body = []
+  @length = 0
+end</code></pre>
+					</details></section><section id="Lennarb::Response#[]"><h3><code class="language-ruby">def [](key)</code></h3><p>Set the response header</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>returns</strong>　<code class="language-ruby">String</code></dt><dd><p>value</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def [](key)
+  @headers[key]
+end</code></pre>
+					</details></section><section id="Lennarb::Response#[]="><h3><code class="language-ruby">def []=(key, value)</code></h3><p>Get the response header</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>returns</strong>　<code class="language-ruby">String</code></dt><dd><p>value</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def []=(key, value)
+  @headers[key] = value
+end</code></pre>
+					</details></section><section id="Lennarb::Response#write"><h3><code class="language-ruby">def write(str)</code></h3><p>Write to the response body</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>returns</strong>　<code class="language-ruby">String</code></dt><dd><p>str</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def write(str)
+  str = str.to_s
+  @length += str.bytesize
+  @headers[CONTENT_LENGTH] = @length.to_s
+  @body &lt;&lt; str
+end</code></pre>
+					</details></section><section id="Lennarb::Response#text"><h3><code class="language-ruby">def text(str)</code></h3><p>Set the response type to text</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>returns</strong>　<code class="language-ruby">String</code></dt><dd><p>str</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def text(str)
+  @headers[CONTENT_TYPE] = ContentType[:TEXT]
+  write(str)
+end</code></pre>
+					</details></section><section id="Lennarb::Response#html"><h3><code class="language-ruby">def html(str)</code></h3><p>Set the response type to html</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>returns</strong>　<code class="language-ruby">String</code></dt><dd><p>str</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def html(str)
+  @headers[CONTENT_TYPE] = ContentType[:HTML]
+  write(str)
+end</code></pre>
+					</details></section><section id="Lennarb::Response#json"><h3><code class="language-ruby">def json(str)</code></h3><p>Set the response type to json</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>returns</strong>　<code class="language-ruby">String</code></dt><dd><p>str</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def json(str)
+  @headers[CONTENT_TYPE] = ContentType[:JSON]
+  write(str)
+end</code></pre>
+					</details></section><section id="Lennarb::Response#redirect"><h3><code class="language-ruby">def redirect(path, status = 302)</code></h3><p>Redirect the response</p>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def redirect(path, status = 302)
+  @headers[LOCATION] = path
+  @status = status
+
+  throw :halt, finish
+end</code></pre>
+					</details></section><section id="Lennarb::Response#finish"><h3><code class="language-ruby">def finish</code></h3><p>Finish the response</p>
+<details open>
+	<summary><h4>Signature</h4></summary>
+	<dl><dt>
+					<strong>returns</strong>　<code class="language-ruby">Array</code></dt><dd><p>response</p>
+</dd></dl>
+</details>
+<details>
+						<summary><h4>Implementation</h4></summary>
+						<pre><code class="language-ruby">def finish
+  [@status, @headers, @body]
+end</code></pre>
+					</details></section>	</section>
+	
+
+				
+			<footer>Documentation generated by <a href="https://github.com/socketry/utopia-project">Utopia::Project</a>.</footer>
+		</main>
+	</body>
+</html>
+

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		
+			<title>Getting Started with Lennarb</title>
+		
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		
+		<link rel="icon" type="image/png" href="../../_static/icon.png"/>
+		<link rel="stylesheet" href="../../_static/site.css" type="text/css" media="screen"/>
+		
+		<script src="../../_components/jquery/jquery.min.js"></script>
+		<script src="../../_components/jquery-syntax/jquery.syntax.min.js"></script>
+		<script src="../../_components/mermaid/mermaid.min.js"></script>
+		
+		<script src="../../_static/links.js"></script>
+		
+		<script type="text/javascript">
+		//
+			jQuery(function($) {
+				$.syntax();
+			});
+			
+			let isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+			let config = {theme: 'light'};
+			if (isDarkMode) config.theme = 'dark';
+			else config.theme = 'forest';
+			mermaid.initialize(config);
+		//
+		</script>
+	</head>
+
+	<body>
+		<header> › <a class="link" href="../../index.html">Lennarb</a> › 
+<a class="link" href="../index.html">Guides</a> › <a href="index.html">Getting Started with Lennarb</a> </header>
+		
+		<main>
+			
+	<h1>Getting Started with Lennarb</h1>
+	
+	<section id="overview"><h2>Overview</h2>
+<p>Lennarb is a minimalist, thread-safe Rack-based web framework for Ruby that focuses on simplicity and performance. It provides a clean routing DSL and straightforward request/response handling.</p>
+</section><section id="installation"><h2>Installation</h2>
+<p>Add Lennarb to your project's Gemfile:</p>
+<pre><code class="language-ruby">gem 'lennarb'
+</code></pre>
+<p>Or install it directly via RubyGems:</p>
+<pre><code class="language-bash">gem install lennarb
+</code></pre>
+</section><section id="quick-start"><h2>Quick Start</h2>
+</section><section id="basic-application"><h3>Basic Application</h3>
+<p>Create a new file named <code>config.ru</code>:</p>
+<pre><code class="language-ruby">require 'lennarb'
+
+app = Lennarb.new do |app|
+  app.get '/' do |req, res|
+    res.status = 200
+    res.html('&lt;h1&gt;Welcome to Lennarb!&lt;/h1&gt;')
+  end
+end
+
+app.initializer!
+run app
+</code></pre>
+<p>Start the server:</p>
+<pre><code class="language-bash">rackup
+</code></pre>
+<p>Your application will be available at <code>http://localhost:9292</code>.</p>
+</section><section id="core-concepts"><h2>Core Concepts</h2>
+</section><section id="request-handling"><h3>Request Handling</h3>
+<p>Each route handler receives two arguments:</p>
+<ul>
+<li><code>req</code>: A Request object wrapping the Rack environment</li>
+<li><code>res</code>: A Response object for building the HTTP response</li>
+</ul>
+</section><section id="response-types"><h3>Response Types</h3>
+<p>Lennarb provides three main response helpers:</p>
+<pre><code class="language-rb">app.get '/text' do |req, res|
+  res.text('Plain text response')
+end
+
+app.get '/html' do |req, res|
+  res.html('&lt;h1&gt;HTML response&lt;/h1&gt;')
+end
+
+app.get '/json' do |req, res|
+  res.json('{&quot;message&quot;: &quot;JSON response&quot;}')
+end
+</code></pre>
+</section><section id="redirects"><h3>Redirects</h3>
+<pre><code class="language-ruby">app.get '/redirect' do |req, res|
+  res.redirect('/new-location', 302) # 302
+end
+</code></pre>
+<p>Routes are defined using HTTP method helpers:</p>
+<pre><code class="language-ruby">app = Lennarb.new do |l|
+  # Basic route
+  l.get '/' do |req, res|
+    res.html('Home page')
+  end
+
+  # Route with parameters
+  l.get '/users/:id' do |req, res|
+    user_id = req.params[:id]
+    res.json(&quot;{\&quot;id\&quot;: #{user_id}}&quot;)
+  end
+end
+</code></pre>
+</section><section id="route-parameters"><h3>Route Parameters</h3>
+<p>Parameters from dynamic route segments are available in <code>req.params</code>:</p>
+<pre><code class="language-ruby">app.get '/hello/:name' do |req, res|
+  name = req.params[:name]
+  res.text(&quot;Hello, #{name}!&quot;)
+end
+</code></pre>
+</section><section id="thread-safety"><h2>Thread Safety</h2>
+<p>Lennarb is thread-safe by design:</p>
+<ul>
+<li>All request processing is synchronized using a mutex</li>
+<li>The router tree is frozen after initialization</li>
+<li>Response objects are created per-request</li>
+</ul>
+</section><section id="application-lifecycle"><h2>Application Lifecycle</h2>
+</section><section id="initialization"><h3>Initialization</h3>
+<pre><code class="language-ruby">app = Lennarb.new do |l|
+  # Define routes and configuration
+end
+
+# Initialize and freeze the application
+app.initializer!
+</code></pre>
+<p>The <code>initializer!</code> method:</p>
+<ul>
+<li>Loads environment-specific dependencies</li>
+<li>Freezes the route tree</li>
+<li>Freezes the Rack application</li>
+</ul>
+</section><section id="environment"><h3>Environment</h3>
+<p>Lennarb uses the <code>LENNA_ENV</code> environment variable (defaults to &quot;development&quot;):</p>
+<pre><code class="language-bash">LENNA_ENV=production rackup
+</code></pre>
+</section><section id="error-handling"><h2>Error Handling</h2>
+<p>Lennarb provides basic error handling:</p>
+<pre><code class="language-ruby">app.get '/api' do |req, res|
+  # Errors are caught and return 500 with error message
+  raise &quot;Something went wrong&quot;
+end
+</code></pre>
+<p>Default error responses:</p>
+<ul>
+<li>404 for unmatched routes</li>
+<li>500 for application errors</li>
+</ul>
+</section><section id="best-practices"><h2>Best Practices</h2>
+<ol>
+<li>
+<p><strong>Always call initializer!</strong></p>
+<pre><code class="language-ruby">app = Lennarb.new { |l| ... }
+app.initializer!
+run app
+</code></pre>
+</li>
+<li>
+<p><strong>Set response status</strong></p>
+<pre><code class="language-ruby">app.get '/api' do |req, res|
+  res.status = 200
+  res.json('{&quot;status&quot;: &quot;ok&quot;}')
+end
+</code></pre>
+</li>
+<li>
+<p><strong>Use appropriate response types</strong></p>
+<pre><code class="language-ruby"># HTML for web pages
+res.html('&lt;h1&gt;Web Page&lt;/h1&gt;')
+
+# JSON for APIs
+res.json('{&quot;data&quot;: &quot;value&quot;}')
+
+# Text for simple responses
+res.text('Hello')
+</code></pre>
+</li>
+</ol>
+</section><section id="support"><h2>Support</h2>
+<p>For help and bug reports, please visit:</p>
+<ul>
+<li>GitHub Issues: <a href="https://github.com/aristotelesbr/lennarb/issues">lennarb/issues</a></li>
+</ul>
+<p>Now you can run your app!</p>
+</section>
+				
+			<footer>Documentation generated by <a href="https://github.com/socketry/utopia-project">Utopia::Project</a>.</footer>
+		</main>
+	</body>
+</html>
