@@ -35,7 +35,7 @@ jobs:
         timeout-minutes: 5
         run: bundle exec rake
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: coverage-${{matrix.os}}-${{matrix.ruby}}
           path: .covered.db
@@ -51,7 +51,7 @@ jobs:
           ruby-version: '3.4'
           bundler-cache: true
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
 
       - name: Validate coverage
         timeout-minutes: 5
