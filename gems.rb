@@ -4,6 +4,12 @@ source "https://rubygems.org"
 gemspec
 
 group :maintenance, optional: true do
+  # [https://rubygems.org/gems/bake]
+  # Bake is a Ruby library that helps you to create a new project.
+  gem "bake"
+  # [https://rubygems.org/gems/covered]
+  # Covered is a Ruby library that helps you to test your project.
+  gem "covered"
   # [https://rubygems.org/gems/bake-gem]
   # Bake Gem is a Bake extension that helps you to create a new Ruby
   # gem.

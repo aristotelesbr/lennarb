@@ -8,6 +8,7 @@ permissions:
 env:
   CONSOLE_OUTPUT: XTerm
   COVERAGE: PartialSummary
+  BUNDLE_WITH: maintenance
 
 jobs:
   test:
