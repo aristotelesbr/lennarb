@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `Lennarb::Environment` module to manage the environment variables in the project. Now, the `Lennarb` class is the main class of the project.
+- Add `Lennarb::Config` module to manage the configuration in the project. Now, the `Lennarb` class is the main class of the project.
+- Add `Lennarb::App` class.
+
+### Changed
+
+- Convert the `Lennarb` class to a module. Now, the `App` class is the main class of the project.
+
 ## [1.4.0] - 2025-02-09
 
 ### Changed
