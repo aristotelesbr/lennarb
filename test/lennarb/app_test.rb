@@ -1,47 +1,54 @@
 require "test_helper"
 
 class AppTest < Minitest::Test
-  include Rack::Test::Methods
-
-  def app = SampleApp.initializer!
-
-  def test_root_path
-    get "/"
-
-    assert_equal 200, last_response.status
-    assert_equal "Root path", last_response.body
-    assert_equal "text/html", last_response.headers["content-type"]
+  setup do
+    Lennarb::ENV_NAMES.each { ENV.delete(it) }
   end
 
-  def test_get_request
-    get "/hello"
+  test "uses ZEE_ENV as the env value" do
+    ENV["APP_ENV"] = "production"
 
-    assert_equal 200, last_response.status
-    assert_equal "{\"message\":\"Hello World\"}", last_response.body
-    assert_equal "application/json", last_response.headers["content-type"]
+    assert Lennarb::App.new.env.production?
   end
 
-  def test_not_found
-    get "/nonexistent"
+  test "uses APP_ENV as the env value" do
+    ENV["LENNA_ENV"] = "production"
 
-    assert_equal 404, last_response.status
-    assert_equal "Not Found", last_response.body
+    assert Lennarb::App.new.env.production?
   end
 
-  def test_method_not_allowed
-    post "/hello"
+  test "uses RACK_ENV as the env value" do
+    ENV["RACK_ENV"] = "production"
 
-    assert_equal 404, last_response.status
+    assert Lennarb::App.new.env.production?
   end
 
-  def test_internal_server_error
-    SampleApp.get "/error" do
-      raise StandardError
+  test "sets config" do
+    app = Lennarb::App.new do
+      config do
+        optional :one, string, "one"
+      end
+
+      config do
+        optional :two, string, "two"
+      end
     end
 
-    get "/error"
+    assert_equal "one", app.config.one
+    assert_equal "two", app.config.two
+  end
 
-    assert_equal 500, last_response.status
-    assert_equal "Internal Server Error - StandardError", last_response.body
+  test "prevents app from being initialized twice" do
+    app = Lennarb::App.new
+    app.initialize!
+
+    assert_raises(Lennarb::App::AlreadyInitializedError) { app.initialize! }
+  end
+
+  test "prevents app from having the environment set after initialization" do
+    app = Lennarb::App.new
+    app.initialize!
+
+    assert_raises(Lennarb::App::AlreadyInitializedError) { app.env = :test }
   end
 end

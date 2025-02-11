@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Lennarb
+module Lennarb
   class RouteNodeTest < Minitest::Test
     def setup
       @route_node = Lennarb::RouteNode.new
