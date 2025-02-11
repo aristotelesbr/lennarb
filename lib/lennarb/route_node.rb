@@ -1,4 +1,4 @@
-class Lennarb
+module Lennarb
   class RouteNode
     attr_accessor :static_children, :dynamic_children, :blocks, :param_key
 

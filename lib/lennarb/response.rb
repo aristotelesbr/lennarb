@@ -1,4 +1,4 @@
-class Lennarb
+module Lennarb
   class Response
     # @!attribute [rw] status
     #  @returns [Integer]

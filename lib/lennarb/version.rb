@@ -1,5 +1,3 @@
-class Lennarb
-  VERSION = "1.4.0"
-
-  public_constant :VERSION
+module Lennarb
+  VERSION = "1.4.1"
 end
