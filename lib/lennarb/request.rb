@@ -1,4 +1,4 @@
-class Lennarb
+module Lennarb
   class Request < Rack::Request
     # The environment variables of the request
     #
