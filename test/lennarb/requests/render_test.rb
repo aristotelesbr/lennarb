@@ -42,6 +42,6 @@ class RenderTest < Minitest::Test
     get "/error"
 
     assert_equal 500, last_response.status
-    assert_equal "Internal Server Error - StandardError", last_response.body
+    assert_equal "Internal Server Error", last_response.body
   end
 end
