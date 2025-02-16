@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Convert the `Lennarb` class to a module. Now, the `App` class is the main class of the project.
+- Move the request process to `Lennarb::RequestHandler` class.
 
 ## [1.4.0] - 2025-02-09
 
