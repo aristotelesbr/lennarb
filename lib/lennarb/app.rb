@@ -93,11 +93,9 @@ module Lennarb
 
     # The Rack app.
     #
-    # @returns [Rack::Builder]
-    #
     def app
       @app ||= begin
-        request_handler = ->(env = self) { process_request(env) }
+        request_handler = RequestHandler.new(self)
 
         Rack::Builder.app do
           run request_handler
@@ -150,27 +148,9 @@ module Lennarb
     #    res.json(message: "Hello World")
     #  end
     #
-    def add_route(path, http_method, block)
+    private def add_route(path, http_method, block)
       parts = path.split("/").reject(&:empty?)
       routes.add_route(parts, http_method, block)
-    end
-
-    private def process_request(env)
-      http_method = env[Rack::REQUEST_METHOD].to_sym
-      parts = env[Rack::PATH_INFO].split("/").reject(&:empty?)
-
-      block, params = routes.match_route(parts, http_method)
-      return [404, {"content-type" => Response::ContentType[:TEXT]}, ["Not Found"]] unless block
-
-      res = Response.new
-      req = Request.new(env, params)
-
-      catch(:halt) do
-        instance_exec(req, res, &block)
-        res.finish
-      end
-    rescue => e
-      [500, {"content-type" => Response::ContentType[:TEXT]}, ["Internal Server Error - #{e.message}"]]
     end
 
     # Compute the current environment.
