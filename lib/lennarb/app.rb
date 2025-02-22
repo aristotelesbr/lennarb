@@ -28,21 +28,8 @@ module Lennarb
       instance_eval(&) if block_given?
     end
 
-    # Define a route for the given HTTP method.
-    #
-    # @parameter [String] path
-    # @parameter [Proc] block to be executed when the route is matched
-    # @parameter [Symbol] the HTTP method
-    #
-    # @returns [void]
-    #
-    HTTP_METHODS.each do |http_method|
-      define_method(http_method.downcase) do |path, &block|
-        add_route(path, http_method, block)
-      end
-    end
-
     # Set the current environment. See {Lennarb::Environment} for more details.
+    #
     # @parameter [Hash] env
     #
     def env=(env)
@@ -86,7 +73,7 @@ module Lennarb
     # @returns [Lennarb::RouteNode]
     #
     def routes(&)
-      @routes ||= RouteNode.new
+      @routes ||= Routes.new
       @routes.instance_eval(&) if block_given?
       @routes
     end
@@ -118,8 +105,6 @@ module Lennarb
 
       @initialized = true
 
-      Bundler.require(env.to_sym)
-
       app.freeze
       routes.freeze
     end
@@ -133,24 +118,6 @@ module Lennarb
         env[RACK_LENNA_APP] = self
         Dir.chdir(root) { return app.call(env) }
       end
-    end
-
-    # Add a route to the app.
-    #
-    # @parameter [String] path
-    # @parameter [Symbol] http_method, use uppercase symbols
-    # @parameter [Proc] block, the block to be executed when the route is matched.
-    #
-    # @returns [void]
-    #
-    # @example:
-    #   routes.add_route("/hello", :GET) |req, res|
-    #    res.json(message: "Hello World")
-    #  end
-    #
-    private def add_route(path, http_method, block)
-      parts = path.split("/").reject(&:empty?)
-      routes.add_route(parts, http_method, block)
     end
 
     # Compute the current environment.

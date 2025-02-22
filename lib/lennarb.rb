@@ -13,6 +13,7 @@ module Lennarb
   require_relative "lennarb/request"
   require_relative "lennarb/response"
   require_relative "lennarb/route_node"
+  require_relative "lennarb/routes"
   require_relative "lennarb/config"
   require_relative "lennarb/app"
 end
