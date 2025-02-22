@@ -1,5 +1,7 @@
 module Lennarb
   class RequestHandler
+    Lennarb::Error = Class.new(StandardError)
+
     attr_reader :app
 
     def initialize(app)
@@ -15,16 +17,16 @@ module Lennarb
         return [404, {"content-type" => Response::ContentType[:TEXT]}, ["Not Found"]]
       end
 
-      res = Response.new
       req = Request.new(env, params)
+      res = Response.new
 
       catch(:halt) do
-        instance_exec(req, res, &block)
+        block.call(req, res)
         res.finish
+     rescue Lennarb::Error
+       # Log the error
+       [500, {"content-type" => Response::ContentType[:TEXT]}, ["Internal Server Error"]]
       end
-    rescue
-      # TODO: Log the error
-      [500, {"content-type" => Response::ContentType[:TEXT]}, ["Internal Server Error"]]
     end
   end
 end
