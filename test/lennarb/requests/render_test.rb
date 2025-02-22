@@ -35,8 +35,8 @@ class RenderTest < Minitest::Test
   end
 
   test "GET /error" do
-    SampleApp.get "/error" do
-      raise StandardError
+    SampleApp.routes.get "/error" do |_, _|
+      raise Lennarb::Error
     end
 
     get "/error"
