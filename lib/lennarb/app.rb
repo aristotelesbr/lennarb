@@ -3,7 +3,7 @@ module Lennarb
     # This error is raised whenever the app is initialized more than once.
     AlreadyInitializedError = Class.new(StandardError)
 
-    # The routes directory of the app.
+    # The root app directory of the app.
     #
     # @returns [Pathname]
     #
@@ -36,6 +36,36 @@ module Lennarb
       raise AlreadyInitializedError if initialized?
 
       @env = Environment.new(env)
+    end
+
+    # Mount an app at a specific path.
+    #
+    # @parameter [Lennarb::App] The controller to mount.
+    #
+    # @parameter [String] The path to mount the app.
+    #
+    # @returns [void]
+    #
+    # @example
+    #
+    #   class PostController
+    #     include Lennarb::Routes
+    #
+    #     # GET /posts
+    #     get "/" do |req, res|
+    #       # ...
+    #     end
+    #   end
+    #
+    #  MyApp = Lennarb::App.new do
+    #    routes do
+    #      mount PostController, at: "/posts"
+    #    end
+    #
+    def mount(controller)
+      raise ArgumentError, "Controller must respond to :routes" unless controller.respond_to?(:routes)
+
+      controllers << controller
     end
 
     # Define the app's configuration. See {Lennarb::Config}.
@@ -90,6 +120,13 @@ module Lennarb
       end
     end
 
+    # Store mounted app's
+    #
+    def controllers
+      @controllers ||= []
+    end
+    alias_method :mounted_apps, :controllers
+
     # Check if the app is initialized.
     #
     # @returns [Boolean]
@@ -102,6 +139,10 @@ module Lennarb
     #
     def initialize!
       raise AlreadyInitializedError if initialized?
+
+      controllers.each do
+        routes.store.merge!(it.routes.store)
+      end
 
       @initialized = true
 
