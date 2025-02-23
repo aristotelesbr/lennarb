@@ -110,7 +110,7 @@ class RotesTest < Minitest::Test
   test "sets route segment constraint" do
     routes = Lennarb::Routes.new do
       get "/foo/:id" do |req, res|
-        res.halt(404) unless res.params[:id] =~ /^\d+$/
+        res.halt(404) unless /^\d+$/.match?(res.params[:id])
       end
     end
 
