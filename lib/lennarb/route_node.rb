@@ -1,5 +1,6 @@
 module Lennarb
   class RouteNode
+    DuplicateRouteError = Class.new(StandardError)
     attr_accessor :static_children, :dynamic_children, :blocks, :param_key
 
     def initialize
@@ -9,6 +10,14 @@ module Lennarb
       @dynamic_children = {}
     end
 
+    # Add a route to the route node.
+    #
+    # @param parts [Array<String>] The parts of the route.
+    # @param http_method [String] The HTTP method.
+    # @param block [Proc] The block to be executed when the route is matched.
+    #
+    # @returns [void]
+    #
     def add_route(parts, http_method, block)
       current_node = self
 
@@ -28,6 +37,14 @@ module Lennarb
       current_node.blocks[http_method] = block
     end
 
+    # Match a route.
+    #
+    # @param parts [Array<String>] The parts of the route.
+    # @param http_method [String] The HTTP method.
+    # @param params [Hash] The parameters of the route.
+    #
+    # @returns [Array<Proc, Hash>]
+    #
     def match_route(parts, http_method, params: {})
       if parts.empty?
         return [blocks[http_method], params] if blocks[http_method]
@@ -52,10 +69,35 @@ module Lennarb
       [nil, nil]
     end
 
+    # Merge another route node into this one.
+    #
+    # @param other [RouteNode] The other route node.
+    #
+    # @returns [void|DuplicateRouteError]
+    #
     def merge!(other)
-      static_children.merge!(other.static_children)
-      dynamic_children.merge!(other.dynamic_children)
-      blocks.merge!(other.blocks)
+      other.blocks.each do |http_method, block|
+        if @blocks[http_method]
+          raise DuplicateRouteError, "Duplicate route for HTTP method: #{http_method}"
+        end
+        @blocks[http_method] = block
+      end
+
+      other.static_children.each do |path, node|
+        if @static_children[path]
+          @static_children[path].merge!(node)
+        else
+          @static_children[path] = node
+        end
+      end
+
+      other.dynamic_children.each do |param, node|
+        if @dynamic_children[param]
+          @dynamic_children[param].merge!(node)
+        else
+          @dynamic_children[param] = node
+        end
+      end
     end
   end
 end
