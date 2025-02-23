@@ -24,9 +24,9 @@ class RotesTest < Minitest::Test
       end
     end
 
-    route = routes.match_route(["foo"], :GET)
+    block, _ = routes.match_route(["foo"], :GET)
 
-    refute_nil(route)
+    refute_nil(block)
   end
 
   test "defines POST route" do
@@ -37,9 +37,9 @@ class RotesTest < Minitest::Test
       end
     end
 
-    route = routes.match_route(["foo"], :POST)
+    block, _ = routes.match_route(["foo"], :POST)
 
-    refute_nil(route)
+    refute_nil(block)
   end
 
   test "defines PATCH route" do
@@ -50,9 +50,9 @@ class RotesTest < Minitest::Test
       end
     end
 
-    route = routes.match_route(["foo", "123"], :PATCH)
+    block, _ = routes.match_route(["foo", "123"], :PATCH)
 
-    refute_nil(route)
+    refute_nil(block)
   end
 
   test "defines PUT route" do
@@ -63,9 +63,9 @@ class RotesTest < Minitest::Test
       end
     end
 
-    route = routes.match_route(["foo", "123"], :PUT)
+    block, _ = routes.match_route(["foo", "123"], :PUT)
 
-    refute_nil(route)
+    refute_nil(block)
   end
 
   test "defines DELETE route" do
@@ -76,9 +76,9 @@ class RotesTest < Minitest::Test
       end
     end
 
-    route = routes.match_route(["foo", "123"], :DELETE)
+    block, _ = routes.match_route(["foo", "123"], :DELETE)
 
-    refute_nil(route)
+    refute_nil(block)
   end
 
   test "defines OPTIONS route" do
@@ -89,9 +89,9 @@ class RotesTest < Minitest::Test
       end
     end
 
-    route = routes.match_route(["foo", "123"], :OPTIONS)
+    block, _ = routes.match_route(["foo", "123"], :OPTIONS)
 
-    refute_nil(route)
+    refute_nil(block)
   end
 
   test "defines HEAD route" do
@@ -102,9 +102,9 @@ class RotesTest < Minitest::Test
       end
     end
 
-    route = routes.match_route(["foo", "123"], :HEAD)
+    block, _ = routes.match_route(["foo", "123"], :HEAD)
 
-    refute_nil(route)
+    refute_nil(block)
   end
 
   test "sets route segment constraint" do
@@ -120,5 +120,18 @@ class RotesTest < Minitest::Test
     assert_pattern do
       route => [Proc, { id: "123" }]
     end
+  end
+
+  test "add root route" do
+    route = Lennarb::Routes.new do
+      root do |req, res|
+        res.status = 200
+        res.text("Hello, World!")
+      end
+    end
+
+    block, _ = route.match_route([], :GET)
+
+    refute_nil(block)
   end
 end
