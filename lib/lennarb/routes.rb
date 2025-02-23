@@ -65,6 +65,8 @@ module Lennarb
           routes.send(http_method.downcase, path, &block)
         end
       end
+
+      def root(&) = routes.root(&)
     end
   end
 end
