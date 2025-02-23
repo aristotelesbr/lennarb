@@ -14,7 +14,7 @@ module Lennarb
       block, params = app.routes.match_route(parts, http_method)
 
       unless block
-        return [404, {"content-type" => Response::ContentType[:TEXT]}, ["Not Found"]]
+        return [404, {"content-type" => CONTENT_TYPE[:TEXT]}, ["Not Found"]]
       end
 
       req = Request.new(env, params)
@@ -25,7 +25,7 @@ module Lennarb
         res.finish
       rescue
         # Log the error
-        [500, {"content-type" => Response::ContentType[:TEXT]}, ["Internal Server Error"]]
+        [500, {"content-type" => CONTENT_TYPE[:TEXT]}, ["Internal Server Error"]]
       end
     end
   end

@@ -6,4 +6,3 @@ class PostsController
     res.text("posts")
   end
 end
-

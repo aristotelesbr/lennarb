@@ -31,7 +31,6 @@ module Lennarb
     CONTENT_LENGTH = "content-length"
     private_constant :CONTENT_LENGTH
 
-    ContentType = {HTML: "text/html", TEXT: "text/plain", JSON: "application/json"}.freeze
     # Initialize the response object
     #
     # @returns [Response]
@@ -84,7 +83,7 @@ module Lennarb
     # @returns [String] str
     #
     def text(str)
-      @headers[CONTENT_TYPE] = ContentType[:TEXT]
+      @headers[CONTENT_TYPE] = Lennarb::CONTENT_TYPE[:TEXT]
       write(str)
     end
 
@@ -95,7 +94,7 @@ module Lennarb
     # @returns [String] str
     #
     def html(str)
-      @headers[CONTENT_TYPE] = ContentType[:HTML]
+      @headers[CONTENT_TYPE] = Lennarb::CONTENT_TYPE[:HTML]
       write(str)
     end
 
@@ -106,7 +105,7 @@ module Lennarb
     # @returns [String] str
     #
     def json(str)
-      @headers[CONTENT_TYPE] = ContentType[:JSON]
+      @headers[CONTENT_TYPE] = Lennarb::CONTENT_TYPE[:JSON]
       write(str)
     end
 
