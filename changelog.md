@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.1] - 2025-02-23
+
 ### Added
 
 - Add support to mount routes. Now, you can centralize the routes in a single file and mount them in the main application. Ex.
