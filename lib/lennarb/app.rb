@@ -40,32 +40,31 @@ module Lennarb
 
     # Mount an app at a specific path.
     #
-    # @parameter [Lennarb::App] The controller to mount.
-    #
-    # @parameter [String] The path to mount the app.
+    # @parameter [Object] The controller|app to mount.
     #
     # @returns [void]
     #
     # @example
     #
     #   class PostController
-    #     include Lennarb::Routes
+    #     extend Lennarb::Routes::Mixin
     #
-    #     # GET /posts
-    #     get "/" do |req, res|
-    #       # ...
+    #     get "/post/:id" do |req, res|
+    #       res.text("Post ##{req.params[:id]}")
     #     end
     #   end
     #
     #  MyApp = Lennarb::App.new do
     #    routes do
-    #      mount PostController, at: "/posts"
+    #      mount PostController
     #    end
     #
-    def mount(controller)
-      raise ArgumentError, "Controller must respond to :routes" unless controller.respond_to?(:routes)
+    def mount(*controllers)
+      controllers.each do |controller|
+        raise ArgumentError, "Controller must respond to :routes" unless controller.respond_to?(:routes)
 
-      controllers << controller
+        self.controllers << controller
+      end
     end
 
     # Define the app's configuration. See {Lennarb::Config}.
