@@ -11,6 +11,7 @@ A lightweight, fast, and modular web framework for Ruby based on Rack. The **Len
 [![Gem](https://img.shields.io/gem/v/lennarb.svg)](https://rubygems.org/gems/lennarb)
 [![Gem](https://img.shields.io/gem/dt/lennarb.svg)](https://rubygems.org/gems/lennarb)
 [![MIT License](https://img.shields.io/:License-MIT-blue.svg)](https://tldrlegal.com/license/mit-license)
+
 </div>
 
 ## Basic Usage
@@ -18,10 +19,12 @@ A lightweight, fast, and modular web framework for Ruby based on Rack. The **Len
 ```ruby
 require "lennarb"
 
-Lennarb.new do |router|
-  router.get("/hello/:name") do |req, res|
-    name = req.params[:name]
-    res.html("Hello, #{name}!")
+Lennarb::App.new do
+  routes do
+    get("/hello/:name") do |req, res|
+      name = req.params[:name]
+      res.html("Hello, #{name}!")
+    end
   end
 end
 ```
@@ -43,7 +46,7 @@ See all [graphs](https://github.com/aristotelesbr/lennarb/blob/main/benchmark)
 
 This table ranks the routers by the number of requests they can process per second. Higher numbers indicate better performance.
 
-Plese see [Performance](https://aristotelesbr.github.io/lennarb/guides/performance/index.html) for more information.
+Please see [Performance](https://aristotelesbr.github.io/lennarb/guides/performance/index.html) for more information.
 
 ## Usage
 
@@ -51,10 +54,10 @@ Plese see [Performance](https://aristotelesbr.github.io/lennarb/guides/performan
 
 - [Performance](https://aristotelesbr.github.io/lennarb/guides/performance/index.html) - The **Lennarb** is very fast. The following benchmarks were performed on a MacBook Pro (Retina, 13-inch, Early 2013) with 2,7 GHz Intel Core i7 and 8 GB 1867 MHz DDR3. Based on [jeremyevans/r10k](https://github.com/jeremyevans/r10k) using the following [template build](static/r10k/build/lennarb.rb).
 
-- [Plugin](https://aristotelesbr.github.io/lennarb/guides/plugin/index.html) - You can create your plugins to extend the functionality of the framework.
+- [Request]() - TODO
 
 - [Response](https://aristotelesbr.github.io/lennarb/guides/response/index.html) - This is the response guide.
-    The `res` object is used to send a response to the client. The Lennarb use a custom response object to send responses to the client. The `res` object is an instance of `Lennarb::Response`.
+  The `res` object is used to send a response to the client. The Lennarb use a custom response object to send responses to the client. The `res` object is an instance of `Lennarb::Response`.
 
 ### Developer Certificate of Origin
 
