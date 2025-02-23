@@ -9,14 +9,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add support to mount routes. Now, you can centralize the routes in a single file and mount them in the main application. Ex.
+
+```rb
+class PostsController
+  extend Lennarb::Routes::Mixin
+
+  get '/posts' do |req, res|
+    res.html('Posts')
+  end
+end
+
+SampleApp = Lennarb.new do |router|
+  mount PostsController
+end
+```
+
+The `mount` method will add the routes from the `PostsController` class to the main application. You can use the `mount` method with multiple classes, ex. `mount PostsController, CommentsController`.
+
 - Add `Lennarb::Environment` module to manage the environment variables in the project. Now, the `Lennarb` class is the main class of the project.
 - Add `Lennarb::Config` module to manage the configuration in the project. Now, the `Lennarb` class is the main class of the project.
 - Add `Lennarb::App` class.
+- Lint the code with `standard` gem on the CI/CD pipeline.
 
 ### Changed
 
 - Convert the `Lennarb` class to a module. Now, the `App` class is the main class of the project.
 - Move the request process to `Lennarb::RequestHandler` class.
+- Improve the method `merge!` from `Lennarb::RouterNode` to prevent the duplication of the routes.
+
+### Fixed
+
+- Software design issues.
 
 ## [1.4.0] - 2025-02-09
 
@@ -188,6 +212,7 @@ end
 - Add `console` gem to print the logs in the console.
 
 - Add CLI module to:
+
   - Create a new project with `lennarb new` command.
   - Run the server with `lennarb server` command.
 
