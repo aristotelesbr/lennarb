@@ -7,7 +7,7 @@
 
 A lightweight, fast, and modular web framework for Ruby based on Rack. The **Lennarb** supports Ruby (MRI) 3.4+
 
-[![Tests](https://github.com/aristotelesbr/lennarb/workflows/rubyby-tests/badge.svg)](https://github.com/aristotelesbr/lennarb)
+[![Test](https://github.com/aristotelesbr/lennarb/actions/workflows/test.yaml/badge.svg)](https://github.com/aristotelesbr/lennarb/actions/workflows/test.yaml)
 [![Gem](https://img.shields.io/gem/v/lennarb.svg)](https://rubygems.org/gems/lennarb)
 [![Gem](https://img.shields.io/gem/dt/lennarb.svg)](https://rubygems.org/gems/lennarb)
 [![MIT License](https://img.shields.io/:License-MIT-blue.svg)](https://tldrlegal.com/license/mit-license)
