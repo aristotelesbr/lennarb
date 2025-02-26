@@ -8,7 +8,7 @@ module Lennarb
     attr_reader :name
 
     # Initialize the environment.
-    # @parame  name [String, Symbol] The name of the environment.
+    #  @parameter name [String, Symbol] The name of the environment.
     #
     def initialize(name)
       @name = name.to_sym

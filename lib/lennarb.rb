@@ -1,8 +1,9 @@
 # Core extensions
 #
-require "pathname"
-require "rack"
 require "bundler"
+require "rack"
+require "json"
+require "pathname"
 require "superconfig"
 
 module Lennarb

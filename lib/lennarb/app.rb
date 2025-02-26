@@ -21,7 +21,6 @@ module Lennarb
     attr_reader :env
 
     def initialize(&)
-      @_mutex ||= Mutex.new
       @initialized = false
       self.root = Pathname.pwd
       self.env = compute_env
@@ -154,10 +153,8 @@ module Lennarb
     # @parameter [Hash] env
     #
     def call(env)
-      @_mutex.synchronize do
-        env[RACK_LENNA_APP] = self
-        Dir.chdir(root) { return app.call(env) }
-      end
+      env[RACK_LENNA_APP] = self
+      Dir.chdir(root) { return app.call(env) }
     end
 
     # Compute the current environment.

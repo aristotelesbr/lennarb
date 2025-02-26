@@ -2,16 +2,16 @@ require "test_helper"
 
 module Lennarb
   class TestResponse < Minitest::Test
-    def test_default_instance_variables
+    test "default instance variables" do
       response = Lennarb::Response.new
 
-      assert_equal 404, response.status
+      assert_equal 200, response.status
       assert_empty(response.headers)
       assert_empty response.body
       assert_equal 0, response.length
     end
 
-    def test_set_and_get_response_header
+    test "set and get response header" do
       response = Lennarb::Response.new
 
       response["location"] = "/"
@@ -19,7 +19,7 @@ module Lennarb
       assert_equal "/", response["location"]
     end
 
-    def test_write_to_response_body
+    test "write to response body" do
       response = Lennarb::Response.new
 
       response.write("Hello World!")
@@ -27,7 +27,7 @@ module Lennarb
       assert_equal "Hello World!", response.body.first
     end
 
-    def test_set_response_status
+    test "set response status" do
       response = Lennarb::Response.new
 
       response.status = 200
@@ -35,7 +35,7 @@ module Lennarb
       assert_equal 200, response.status
     end
 
-    def test_set_response_content_type
+    test "set response content type" do
       response = Lennarb::Response.new
 
       response["content-type"] = "text/html"
@@ -43,7 +43,7 @@ module Lennarb
       assert_equal "text/html", response["content-type"]
     end
 
-    def test_set_response_content_length
+    test "set response content length" do
       response = Lennarb::Response.new
 
       response["content-length"] = 12
@@ -51,7 +51,7 @@ module Lennarb
       assert_equal 12, response["content-length"]
     end
 
-    def test_finish_response
+    test "finish response" do
       response = Lennarb::Response.new
       response["content-type"] = "text/plain"
 

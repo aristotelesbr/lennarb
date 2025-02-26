@@ -20,6 +20,11 @@ A lightweight, fast, and modular web framework for Ruby based on Rack. The **Len
 require "lennarb"
 
 Lennarb::App.new do
+  config do
+    optional :env, string, "prodcution"
+    optional :port, int, 9292
+  end
+
   routes do
     get("/hello/:name") do |req, res|
       name = req.params[:name]

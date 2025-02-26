@@ -3,13 +3,11 @@ SampleApp = Lennarb::App.new do
 
   routes do
     get "/" do |req, res|
-      res.status = 200
       res.html("Root path")
     end
 
     get "/hello" do |req, res|
-      res.status = 200
-      res.json({message: "Hello World"}.to_json)
+      res.json({message: "Hello World"})
     end
   end
 end

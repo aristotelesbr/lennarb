@@ -36,7 +36,7 @@ module Lennarb
     # @returns [Response]
     #
     def initialize
-      @status = 404
+      @status = 200
       @headers = {}
       @body = []
       @length = 0
@@ -105,8 +105,13 @@ module Lennarb
     # @returns [String] str
     #
     def json(str)
+      json_str = JSON.generate(str)
       @headers[CONTENT_TYPE] = Lennarb::CONTENT_TYPE[:JSON]
-      write(str)
+      write(json_str)
+    rescue JSON::GeneratorError => e
+      @status = 500
+      @headers[CONTENT_TYPE] = Lennarb::CONTENT_TYPE[:TEXT]
+      write("JSON generation error: #{e.message}")
     end
 
     # Redirect the response

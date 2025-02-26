@@ -10,7 +10,6 @@ module Lennarb
     #
     def initialize(&)
       @store = RouteNode.new
-      @constraints = []
       instance_eval(&) if block_given?
     end
 

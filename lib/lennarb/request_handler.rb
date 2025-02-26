@@ -23,9 +23,8 @@ module Lennarb
       catch(:halt) do
         block.call(req, res)
         res.finish
-      rescue
-        # Log the error
-        [500, {"content-type" => CONTENT_TYPE[:TEXT]}, ["Internal Server Error"]]
+      rescue Lennarb::Error => error
+        [500, {"content-type" => CONTENT_TYPE[:TEXT]}, ["Internal Server Error (#{error.message})"]]
       end
     end
   end
