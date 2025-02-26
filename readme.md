@@ -38,8 +38,6 @@ end
 
 ### 1. Requests per Second (RPS)
 
-![RPS](https://raw.githubusercontent.com/aristotelesbr/lennarb/main/benchmark/rps.png)
-
 See all [graphs](https://github.com/aristotelesbr/lennarb/blob/main/benchmark)
 
 | Position | Application | 10 RPS     | 100 RPS    | 1.000 RPS | 10.000 RPS |
