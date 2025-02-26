@@ -3,7 +3,7 @@ module Lennarb
     # This error is raised whenever the app is initialized more than once.
     AlreadyInitializedError = Class.new(StandardError)
 
-    # The routes directory of the app.
+    # The root app directory of the app.
     #
     # @returns [Pathname]
     #
@@ -21,34 +21,49 @@ module Lennarb
     attr_reader :env
 
     def initialize(&)
-      @_mutex ||= Mutex.new
       @initialized = false
       self.root = Pathname.pwd
       self.env = compute_env
       instance_eval(&) if block_given?
     end
 
-    # Define a route for the given HTTP method.
-    #
-    # @parameter [String] path
-    # @parameter [Proc] block to be executed when the route is matched
-    # @parameter [Symbol] the HTTP method
-    #
-    # @returns [void]
-    #
-    HTTP_METHODS.each do |http_method|
-      define_method(http_method.downcase) do |path, &block|
-        add_route(path, http_method, block)
-      end
-    end
-
     # Set the current environment. See {Lennarb::Environment} for more details.
+    #
     # @parameter [Hash] env
     #
     def env=(env)
       raise AlreadyInitializedError if initialized?
 
       @env = Environment.new(env)
+    end
+
+    # Mount an app at a specific path.
+    #
+    # @parameter [Object] The controller|app to mount.
+    #
+    # @returns [void]
+    #
+    # @example
+    #
+    #   class PostController
+    #     extend Lennarb::Routes::Mixin
+    #
+    #     get "/post/:id" do |req, res|
+    #       res.text("Post ##{req.params[:id]}")
+    #     end
+    #   end
+    #
+    #  MyApp = Lennarb::App.new do
+    #    routes do
+    #      mount PostController
+    #    end
+    #
+    def mount(*controllers)
+      controllers.each do |controller|
+        raise ArgumentError, "Controller must respond to :routes" unless controller.respond_to?(:routes)
+
+        self.controllers << controller
+      end
     end
 
     # Define the app's configuration. See {Lennarb::Config}.
@@ -86,24 +101,29 @@ module Lennarb
     # @returns [Lennarb::RouteNode]
     #
     def routes(&)
-      @routes ||= RouteNode.new
+      @routes ||= Routes.new
       @routes.instance_eval(&) if block_given?
       @routes
     end
 
     # The Rack app.
     #
-    # @returns [Rack::Builder]
-    #
     def app
       @app ||= begin
-        request_handler = ->(env = self) { process_request(env) }
+        request_handler = RequestHandler.new(self)
 
         Rack::Builder.app do
           run request_handler
         end
       end
     end
+
+    # Store mounted app's
+    #
+    def controllers
+      @controllers ||= []
+    end
+    alias_method :mounted_apps, :controllers
 
     # Check if the app is initialized.
     #
@@ -118,9 +138,11 @@ module Lennarb
     def initialize!
       raise AlreadyInitializedError if initialized?
 
-      @initialized = true
+      controllers.each do
+        routes.store.merge!(it.routes.store)
+      end
 
-      Bundler.require(env.to_sym)
+      @initialized = true
 
       app.freeze
       routes.freeze
@@ -131,46 +153,8 @@ module Lennarb
     # @parameter [Hash] env
     #
     def call(env)
-      @_mutex.synchronize do
-        env[RACK_LENNA_APP] = self
-        Dir.chdir(root) { return app.call(env) }
-      end
-    end
-
-    # Add a route to the app.
-    #
-    # @parameter [String] path
-    # @parameter [Symbol] http_method, use uppercase symbols
-    # @parameter [Proc] block, the block to be executed when the route is matched.
-    #
-    # @returns [void]
-    #
-    # @example:
-    #   routes.add_route("/hello", :GET) |req, res|
-    #    res.json(message: "Hello World")
-    #  end
-    #
-    def add_route(path, http_method, block)
-      parts = path.split("/").reject(&:empty?)
-      routes.add_route(parts, http_method, block)
-    end
-
-    private def process_request(env)
-      http_method = env[Rack::REQUEST_METHOD].to_sym
-      parts = env[Rack::PATH_INFO].split("/").reject(&:empty?)
-
-      block, params = routes.match_route(parts, http_method)
-      return [404, {"content-type" => Response::ContentType[:TEXT]}, ["Not Found"]] unless block
-
-      res = Response.new
-      req = Request.new(env, params)
-
-      catch(:halt) do
-        instance_exec(req, res, &block)
-        res.finish
-      end
-    rescue => e
-      [500, {"content-type" => Response::ContentType[:TEXT]}, ["Internal Server Error - #{e.message}"]]
+      env[RACK_LENNA_APP] = self
+      Dir.chdir(root) { return app.call(env) }
     end
 
     # Compute the current environment.

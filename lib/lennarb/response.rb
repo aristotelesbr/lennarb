@@ -31,13 +31,12 @@ module Lennarb
     CONTENT_LENGTH = "content-length"
     private_constant :CONTENT_LENGTH
 
-    ContentType = {HTML: "text/html", TEXT: "text/plain", JSON: "application/json"}.freeze
     # Initialize the response object
     #
     # @returns [Response]
     #
     def initialize
-      @status = 404
+      @status = 200
       @headers = {}
       @body = []
       @length = 0
@@ -84,7 +83,7 @@ module Lennarb
     # @returns [String] str
     #
     def text(str)
-      @headers[CONTENT_TYPE] = ContentType[:TEXT]
+      @headers[CONTENT_TYPE] = Lennarb::CONTENT_TYPE[:TEXT]
       write(str)
     end
 
@@ -95,7 +94,7 @@ module Lennarb
     # @returns [String] str
     #
     def html(str)
-      @headers[CONTENT_TYPE] = ContentType[:HTML]
+      @headers[CONTENT_TYPE] = Lennarb::CONTENT_TYPE[:HTML]
       write(str)
     end
 
@@ -106,8 +105,13 @@ module Lennarb
     # @returns [String] str
     #
     def json(str)
-      @headers[CONTENT_TYPE] = ContentType[:JSON]
-      write(str)
+      json_str = JSON.generate(str)
+      @headers[CONTENT_TYPE] = Lennarb::CONTENT_TYPE[:JSON]
+      write(json_str)
+    rescue JSON::GeneratorError => e
+      @status = 500
+      @headers[CONTENT_TYPE] = Lennarb::CONTENT_TYPE[:TEXT]
+      write("JSON generation error: #{e.message}")
     end
 
     # Redirect the response

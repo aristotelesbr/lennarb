@@ -27,15 +27,17 @@ Create a new file named `config.ru`:
 ```ruby
 require 'lennarb'
 
-app = Lennarb.new do |app|
-  app.get '/' do |req, res|
-    res.status = 200
-    res.html('<h1>Welcome to Lennarb!</h1>')
+MyApp = Lennarb::App.new do
+  routes
+    get '/' do |req, res|
+      res.status = 200
+      res.html('<h1>Welcome to Lennarb!</h1>')
+    end
   end
 end
 
-app.initializer!
-run app
+MyApp.initialize!
+run App
 ```
 
 Start the server:
@@ -84,16 +86,16 @@ end
 Routes are defined using HTTP method helpers:
 
 ```ruby
-app = Lennarb.new do |l|
-  # Basic route
-  l.get '/' do |req, res|
-    res.html('Home page')
-  end
+Lennarb::App.new do
+  routes do
+    get '/' do |req, res|
+      res.html('Home page')
+    end
 
-  # Route with parameters
-  l.get '/users/:id' do |req, res|
-    user_id = req.params[:id]
-    res.json("{\"id\": #{user_id}}")
+    get '/users/:id' do |req, res|
+      user_id = req.params[:id]
+      res.json("{\"id\": #{user_id}}")
+    end
   end
 end
 ```
@@ -103,7 +105,7 @@ end
 Parameters from dynamic route segments are available in `req.params`:
 
 ```ruby
-app.get '/hello/:name' do |req, res|
+get '/hello/:name' do |req, res|
   name = req.params[:name]
   res.text("Hello, #{name}!")
 end
@@ -117,20 +119,26 @@ Lennarb is thread-safe by design:
 - The router tree is frozen after initialization
 - Response objects are created per-request
 
-## Application Lifecycle
+## Application Life-cycle
 
 ### Initialization
 
 ```ruby
-app = Lennarb.new do |l|
-  # Define routes and configuration
+Myapp = Lennarb::App.new do
+  # Define routes
+  routes do
+  end
+
+  # Define Configurations
+  config do
+  end
 end
 
 # Initialize and freeze the application
-app.initializer!
+MyApp.initialize!
 ```
 
-The `initializer!` method:
+The `initialize!` method:
 
 - Loads environment-specific dependencies
 - Freezes the route tree
@@ -139,6 +147,12 @@ The `initializer!` method:
 ### Environment
 
 Lennarb uses the `LENNA_ENV` environment variable (defaults to "development"):
+
+It can be set using the following environment variables:
+
+- `LENNA_ENV`
+- `APP_ENV`
+- `RACK_ENV`
 
 ```bash
 LENNA_ENV=production rackup
@@ -149,7 +163,7 @@ LENNA_ENV=production rackup
 Lennarb provides basic error handling:
 
 ```ruby
-app.get '/api' do |req, res|
+get '/api' do |req, res|
   # Errors are caught and return 500 with error message
   raise "Something went wrong"
 end
@@ -162,18 +176,18 @@ Default error responses:
 
 ## Best Practices
 
-1. **Always call initializer!**
+1. **Always call initialize!**
 
    ```ruby
-   app = Lennarb.new { |l| ... }
-   app.initializer!
+   app = Lennarb::App.new
+   app.initialize!
    run app
    ```
 
 2. **Set response status**
 
    ```ruby
-   app.get '/api' do |req, res|
+   get '/api' do |req, res|
      res.status = 200
      res.json('{"status": "ok"}')
    end

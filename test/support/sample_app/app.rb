@@ -1,13 +1,14 @@
-SampleApp = Lennarb::App.new do |router|
+SampleApp = Lennarb::App.new do
   self.root = Pathname(__dir__)
 
-  router.get "/" do |req, res|
-    res.status = 200
-    res.html("Root path")
-  end
-  router.get "hello" do |req, res|
-    res.status = 200
-    res.json({message: "Hello World"}.to_json)
+  routes do
+    get "/" do |req, res|
+      res.html("Root path")
+    end
+
+    get "/hello" do |req, res|
+      res.json({message: "Hello World"})
+    end
   end
 end
 

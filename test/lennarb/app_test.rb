@@ -38,6 +38,26 @@ class AppTest < Minitest::Test
     assert_equal "two", app.config.two
   end
 
+  test "mounts controller" do
+    app = Lennarb::App.new do
+      mount PostsController
+    end
+
+    assert_includes app.mounted_apps, PostsController
+  end
+
+  test "match routes by controller" do
+    app = Lennarb::App.new do
+      mount PostsController
+    end
+
+    app.initialize!
+
+    block, _ = app.routes.match_route(["posts"], :GET)
+
+    refute_nil(block)
+  end
+
   test "prevents app from being initialized twice" do
     app = Lennarb::App.new
     app.initialize!

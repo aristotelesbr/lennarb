@@ -35,13 +35,13 @@ class RenderTest < Minitest::Test
   end
 
   test "GET /error" do
-    SampleApp.get "/error" do
-      raise StandardError
+    SampleApp.routes.get "/error" do |_, _|
+      raise Lennarb::Error
     end
 
     get "/error"
 
     assert_equal 500, last_response.status
-    assert_equal "Internal Server Error - StandardError", last_response.body
+    assert_equal "Internal Server Error (Lennarb::Error)", last_response.body
   end
 end
