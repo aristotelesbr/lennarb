@@ -51,7 +51,7 @@ Lennarb offers two implementation approaches to suit different needs:
 - **Lennarb::App**: Minimalist approach for complete control
 - **Lennarb::Application**: Extended version with common components
 
-See the [documentation](https://aristotelesbr.github.io/lennarb/guides/getting-started/index) for details on each implementation.
+See the [documentation](https://aristotelesbr.github.io/lennarb/) for details on each implementation.
 
 ## Installation
 
@@ -139,7 +139,7 @@ res.redirect("/new-location")
 ```
 
 For more examples and full documentation, see:
-[Complete Lennarb Documentation](https://aristotelesbr.github.io/lennarb/guides/getting-started/index)
+[Complete Lennarb Documentation](https://aristotelesbr.github.io/lennarb/)
 
 ## Contributing
 
