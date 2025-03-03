@@ -21,8 +21,6 @@
   </a>
 </div>
 
-</div>
-
 ## Table of Contents
 
 - [Features](#features)
