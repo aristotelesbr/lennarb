@@ -1,8 +1,8 @@
 --no-private 
 --verbose
 --debug
---output-dir tmp/doc
---readme readme.md 'lib/**/*.rb' - CHANGELOG.md CODE_OF_CONDUCT.md LICENSE.md CONTRIBUTING.md
+--readme readme.md 'lib/**/*.rb' - CHANGELOG.md CODE_OF_CONDUCT.md LICENSE.md CONTRIBUTING.md logo/lennarb.svg
 --exclude /test/
+--asset logo:logo
 
 

@@ -1,6 +1,6 @@
 <div align="center">
   <picture>
-    <img alt="Lennarb" src="logo/lennarb.svg" width="250">
+    <img alt="Lennarb" src="./logo/lennarb.svg" width="250">
   </picture>
 
 ---
