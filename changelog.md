@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+# Added
+
+- Add `Lennarb::Application` class to be the base class of the "standard" implementation of the Lennarb framework.
+- Add middleware support to Lennarb::App class.
+- Add `middleware` support to the `Lennarb::Application` with default middlewares.
+- Add files to centralize the errors of the project.
+
+# Changed
+
+- Lennarb Logo
+
 ## [1.4.1] - 2025-02-23
 
 ### Added
