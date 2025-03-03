@@ -1,16 +1,25 @@
 <div align="center">
   <picture>
-    <img alt="Lennarb" src="./logo/lennarb.svg" width="250">
+    <img alt="Lennarb" src="https://raw.githubusercontent.com/aristotelesbr/lennarb/refs/heads/main/logo/lennarb.svg" width="250">
   </picture>
 
----
+  <hr>
 
-A lightweight, fast, and modular web framework for Ruby based on Rack. **Lennarb** supports Ruby (MRI) 3.4+
+  <p>A lightweight, fast, and modular web framework for Ruby based on Rack. <strong>Lennarb</strong> supports Ruby (MRI) 3.4+</p>
 
-[![Test](https://github.com/aristotelesbr/lennarb/actions/workflows/test.yaml/badge.svg)](https://github.com/aristotelesbr/lennarb/actions/workflows/test.yaml)
-[![Gem](https://img.shields.io/gem/v/lennarb.svg)](https://rubygems.org/gems/lennarb)
-[![Gem](https://img.shields.io/gem/dt/lennarb.svg)](https://rubygems.org/gems/lennarb)
-[![MIT License](https://img.shields.io/:License-MIT-blue.svg)](https://tldrlegal.com/license/mit-license)
+  <a href="https://github.com/aristotelesbr/lennarb/actions/workflows/test.yaml">
+    <img src="https://github.com/aristotelesbr/lennarb/actions/workflows/test.yaml/badge.svg" alt="Test">
+  </a>
+  <a href="https://rubygems.org/gems/lennarb">
+    <img src="https://img.shields.io/gem/v/lennarb.svg" alt="Gem">
+  </a>
+  <a href="https://rubygems.org/gems/lennarb">
+    <img src="https://img.shields.io/gem/dt/lennarb.svg" alt="Gem">
+  </a>
+  <a href="https://tldrlegal.com/license/mit-license">
+    <img src="https://img.shields.io/:License-MIT-blue.svg" alt="MIT License">
+  </a>
+</div>
 
 </div>
 
