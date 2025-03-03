@@ -5,14 +5,14 @@ class AppTest < Minitest::Test
     Lennarb::ENV_NAMES.each { ENV.delete(it) }
   end
 
-  test "uses ZEE_ENV as the env value" do
-    ENV["APP_ENV"] = "production"
+  test "uses LENNA_ENV as the env value" do
+    ENV["LENNA_ENV"] = "production"
 
     assert Lennarb::App.new.env.production?
   end
 
   test "uses APP_ENV as the env value" do
-    ENV["LENNA_ENV"] = "production"
+    ENV["APP_ENV"] = "production"
 
     assert Lennarb::App.new.env.production?
   end
@@ -56,6 +56,20 @@ class AppTest < Minitest::Test
     block, _ = app.routes.match_route(["posts"], :GET)
 
     refute_nil(block)
+  end
+
+  test "sets default middleware stack" do
+    ENV["LENNA_ENV"] = "development"
+    app = Lennarb::App.new
+    stack = app.middleware.to_a.map(&:first)
+
+    assert_equal 0, stack.size
+  end
+
+  test "must be respond to routes" do
+    app = Lennarb::App.new
+
+    assert_respond_to app, :routes
   end
 
   test "prevents app from being initialized twice" do
