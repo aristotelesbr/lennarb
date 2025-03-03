@@ -66,6 +66,16 @@ module Lennarb
       end
     end
 
+    # Define the app's middleware stack. See {Lennarb::Middleware::Stack} for more details.
+    #
+    # @returns [Lennarb::MiddlewareStack]
+    #
+    def middleware(&)
+      @middleware ||= MiddlewareStack.new(self)
+      @middleware.instance_eval(&) if block_given?
+      @middleware
+    end
+
     # Define the app's configuration. See {Lennarb::Config}.
     #
     # @returns [Lennarb::Config]
@@ -112,7 +122,11 @@ module Lennarb
       @app ||= begin
         request_handler = RequestHandler.new(self)
 
+        stack = middleware.to_a
+
         Rack::Builder.app do
+          stack.each { |middleware, args, block| use(middleware, *args, &block) }
+
           run request_handler
         end
       end
@@ -138,12 +152,20 @@ module Lennarb
     def initialize!
       raise AlreadyInitializedError if initialized?
 
-      controllers.each do
-        routes.store.merge!(it.routes.store)
+      if controllers.any?
+        controllers.each do
+          routes.store.merge!(it.routes.store)
+        end
       end
 
       @initialized = true
+    end
 
+    # Freeze the app.
+    #
+    # @returns [void]
+    #
+    def freeze!
       app.freeze
       routes.freeze
     end
