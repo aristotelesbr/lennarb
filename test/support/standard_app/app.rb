@@ -1,4 +1,4 @@
-SampleApp = Lennarb::App.new do
+StandardApp = Lennarb::Application.new do
   self.root = Pathname(__dir__)
 
   routes do
@@ -12,4 +12,4 @@ SampleApp = Lennarb::App.new do
   end
 end
 
-SampleApp.initialize!
+StandardApp.initialize!
