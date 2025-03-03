@@ -3,9 +3,6 @@ module Lennarb
   # It uses {https://rubygems.org/gems/superconfig SuperConfig} to define the
   # configuration.
   class Config < SuperConfig::Base
-    MissingEnvironmentVariable = Class.new(StandardError)
-    MissingCallable = Class.new(StandardError)
-
     undef_method :credential
 
     def initialize(**)

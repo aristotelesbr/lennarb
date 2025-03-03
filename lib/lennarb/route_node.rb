@@ -1,8 +1,20 @@
 module Lennarb
+  # RouteNode is key to the routing system. It is a tree structure that
+  # represents the routes of the application.
+  #
+  # @example
+  #   node = RouteNode.new
+  #   node.add_route(["foo", "bar"], :GET, -> {})
+  #
+  # @note RouteNode use a trie data structure to store the routes and match them.
+  #
   class RouteNode
-    DuplicateRouteError = Class.new(StandardError)
     attr_accessor :static_children, :dynamic_children, :blocks, :param_key
 
+    # Initialize the route node.
+    #
+    # @retrn [RouteNode]
+    #
     def initialize
       @blocks = {}
       @param_key = nil
@@ -16,7 +28,7 @@ module Lennarb
     # @param http_method [String] The HTTP method.
     # @param block [Proc] The block to be executed when the route is matched.
     #
-    # @returns [void]
+    # @retrn [void]
     #
     def add_route(parts, http_method, block)
       current_node = self
@@ -43,7 +55,7 @@ module Lennarb
     # @param http_method [String] The HTTP method.
     # @param params [Hash] The parameters of the route.
     #
-    # @returns [Array<Proc, Hash>]
+    # @retrn [Array<Proc, Hash>]
     #
     def match_route(parts, http_method, params: {})
       if parts.empty?
@@ -73,12 +85,12 @@ module Lennarb
     #
     # @param other [RouteNode] The other route node.
     #
-    # @returns [void|DuplicateRouteError]
+    # @retrn [void|DuplicateRouteError]
     #
     def merge!(other)
       other.blocks.each do |http_method, block|
         if @blocks[http_method]
-          raise DuplicateRouteError, "Duplicate route for HTTP method: #{http_method}"
+          raise Lennarb::DuplicateRouteError, "Duplicate route for HTTP method: #{http_method}"
         end
         @blocks[http_method] = block
       end
