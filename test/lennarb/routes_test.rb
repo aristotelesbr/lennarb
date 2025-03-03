@@ -4,8 +4,6 @@ class RotesTest < Minitest::Test
   test "defines root route" do
     routes = Lennarb::Routes.new do
       root do |req, res|
-        res.status = 200
-        res.text("Hello, World!")
       end
     end
 
@@ -19,8 +17,6 @@ class RotesTest < Minitest::Test
   test "defines GET route" do
     routes = Lennarb::Routes.new do
       get "/foo" do |req, res|
-        res.status = 200
-        res.text("Hello, World!")
       end
     end
 
@@ -32,8 +28,6 @@ class RotesTest < Minitest::Test
   test "defines POST route" do
     routes = Lennarb::Routes.new do
       post "/foo" do |req, res|
-        res.status = 200
-        res.text("Hello, World!")
       end
     end
 
@@ -45,8 +39,6 @@ class RotesTest < Minitest::Test
   test "defines PATCH route" do
     routes = Lennarb::Routes.new do
       patch "/foo/:id" do |req, res|
-        res.status = 200
-        res.text("Hello, World!")
       end
     end
 
@@ -58,8 +50,6 @@ class RotesTest < Minitest::Test
   test "defines PUT route" do
     routes = Lennarb::Routes.new do
       put "/foo/:id" do |req, res|
-        res.status = 200
-        res.text("Hello, World!")
       end
     end
 
@@ -71,8 +61,6 @@ class RotesTest < Minitest::Test
   test "defines DELETE route" do
     routes = Lennarb::Routes.new do
       delete "/foo/:id" do |req, res|
-        res.status = 200
-        res.text("Hello, World!")
       end
     end
 
@@ -84,8 +72,6 @@ class RotesTest < Minitest::Test
   test "defines OPTIONS route" do
     routes = Lennarb::Routes.new do
       options "/foo/:id" do |req, res|
-        res.status = 200
-        res.text("Hello, World!")
       end
     end
 
@@ -97,8 +83,6 @@ class RotesTest < Minitest::Test
   test "defines HEAD route" do
     routes = Lennarb::Routes.new do
       head "/foo/:id" do |req, res|
-        res.status = 200
-        res.text("Hello, World!")
       end
     end
 
@@ -110,7 +94,6 @@ class RotesTest < Minitest::Test
   test "sets route segment constraint" do
     routes = Lennarb::Routes.new do
       get "/foo/:id" do |req, res|
-        res.halt(404) unless /^\d+$/.match?(res.params[:id])
       end
     end
 
@@ -125,8 +108,6 @@ class RotesTest < Minitest::Test
   test "add root route" do
     route = Lennarb::Routes.new do
       root do |req, res|
-        res.status = 200
-        res.text("Hello, World!")
       end
     end
 

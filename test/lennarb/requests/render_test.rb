@@ -3,7 +3,7 @@ require "test_helper"
 class RenderTest < Minitest::Test
   include Rack::Test::Methods
 
-  def app = SampleApp
+  def app = LiteApp
 
   test "GET root path" do
     get "/"
@@ -35,7 +35,7 @@ class RenderTest < Minitest::Test
   end
 
   test "GET /error" do
-    SampleApp.routes.get "/error" do |_, _|
+    LiteApp.routes.get "/error" do |_, _|
       raise Lennarb::Error
     end
 
