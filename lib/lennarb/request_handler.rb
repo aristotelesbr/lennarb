@@ -1,7 +1,5 @@
 module Lennarb
   class RequestHandler
-    Lennarb::Error = Class.new(StandardError)
-
     attr_reader :app
 
     def initialize(app)
