@@ -93,7 +93,7 @@ module Lennarb
       router_one.add_route(["posts"], "GET", proc { "List posts" })
       router_two.add_route(["posts"], "GET", proc { "List posts" })
 
-      assert_raises(Lennarb::RouteNode::DuplicateRouteError) do
+      assert_raises(Lennarb::DuplicateRouteError) do
         router_one.merge!(router_two)
       end
     end
@@ -104,7 +104,7 @@ module Lennarb
       router_one.add_route(["posts", ":id"], "GET", proc { "Show post" })
       router_two.add_route(["posts", ":id"], "GET", proc { "Show post" })
 
-      assert_raises(Lennarb::RouteNode::DuplicateRouteError) do
+      assert_raises(Lennarb::DuplicateRouteError) do
         router_one.merge!(router_two)
       end
     end

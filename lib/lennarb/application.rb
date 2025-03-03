@@ -1,14 +1,16 @@
 module Lennarb
+  # The Standar version to build web applications.
+  #
   class Application < App
+    # @see {Lennarb::App#initialize}
     def initialize!
       super
-
       freeze!
     end
 
     # The middleware stack.
     #
-    # @returns [Lennarb::Middleware::Stack]
+    # @return[Lennarb::Middleware::Stack]
     #
     def middleware
       @middleware = default_middleware_stack
@@ -35,7 +37,7 @@ module Lennarb
 
     # Call the app.
     #
-    # @parameter [Hash] env
+    # @param[Hash] env
     #
     def call(env)
       env[RACK_LENNA_BASE] = self
@@ -44,7 +46,7 @@ module Lennarb
 
     # Call the app.
     #
-    # @parameter [Hash] env
+    # @param[Hash] env
     #
     # def call(env)
     #   env[RACK_LENNA_APP] = self
@@ -61,7 +63,7 @@ module Lennarb
     # - Lennarb::Middleware::LennaHeader
     # - Rack::ShowExceptions (only in development)
     #
-    # @returns [Array]
+    # @return[Array]
     #
     def default_middleware_stack
       MiddlewareStack.new.tap do |middleware|

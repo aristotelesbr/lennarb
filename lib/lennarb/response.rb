@@ -1,22 +1,24 @@
 module Lennarb
+  # Response object
+  #
   class Response
     # @!attribute [rw] status
-    #  @returns [Integer]
+    # @return [Integer]
     #
     attr_accessor :status
 
     # @!attribute [r] body
-    #  @returns [Array]
+    # @retrn [Array]
     #
     attr_reader :body
 
     # @!attribute [r] headers
-    #  @returns [Hash]
+    # @retrn [Hash]
     #
     attr_reader :headers
 
     # @!attribute [r] length
-    #  @returns [Integer]
+    # @retrn [Integer]
     #
     attr_reader :length
 
@@ -33,7 +35,7 @@ module Lennarb
 
     # Initialize the response object
     #
-    # @returns [Response]
+    # @retrn [Response]
     #
     def initialize
       @status = 200
@@ -44,9 +46,9 @@ module Lennarb
 
     # Set the response header
     #
-    # @parameter [String] key
+    # @param [String] key
     #
-    # @returns [String] value
+    # @retrn [String] value
     #
     def [](key)
       @headers[key]
@@ -54,10 +56,10 @@ module Lennarb
 
     # Get the response header
     #
-    # @parameter [String] key
-    # @parameter [String] value
+    # @param [String] key
+    # @param [String] value
     #
-    # @returns [String] value
+    # @retrn [String] value
     #
     def []=(key, value)
       @headers[key] = value
@@ -65,9 +67,9 @@ module Lennarb
 
     # Write to the response body
     #
-    # @parameter [String] str
+    # @param [String] str
     #
-    # @returns [String] str
+    # @retrn [String] str
     #
     def write(str)
       str = str.to_s
@@ -78,9 +80,9 @@ module Lennarb
 
     # Set the response type to text
     #
-    # @parameter [String] str
+    # @param [String] str
     #
-    # @returns [String] str
+    # @retrn [String] str
     #
     def text(str)
       @headers[CONTENT_TYPE] = Lennarb::CONTENT_TYPE[:TEXT]
@@ -89,9 +91,9 @@ module Lennarb
 
     # Set the response type to html
     #
-    # @parameter [String] str
+    # @param [String] str
     #
-    # @returns [String] str
+    # @retrn [String] str
     #
     def html(str)
       @headers[CONTENT_TYPE] = Lennarb::CONTENT_TYPE[:HTML]
@@ -100,9 +102,9 @@ module Lennarb
 
     # Set the response type to json
     #
-    # @parameter [String] str
+    # @param [String] str
     #
-    # @returns [String] str
+    # @retrn [String] str
     #
     def json(str)
       json_str = JSON.generate(str)
@@ -116,8 +118,8 @@ module Lennarb
 
     # Redirect the response
     #
-    # @parameter [String] path
-    # @parameter [Integer] status, default: 302
+    # @param [String] path
+    # @param [Integer] status, default: 302
     #
     def redirect(path, status = 302)
       @headers[LOCATION] = path
@@ -128,7 +130,7 @@ module Lennarb
 
     # Finish the response
     #
-    # @returns [Array] response
+    # @retrn [Array] response
     #
     def finish
       [@status, @headers, @body]
