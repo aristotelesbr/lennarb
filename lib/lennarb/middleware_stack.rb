@@ -1,10 +1,12 @@
 module Lennarb
+  # Basic middleware stack implementation.
+  #
   class MiddlewareStack
     attr_reader :app
 
     # The app's middleware stack.
     #
-    # @parameter [Rack::Builder] app
+    # @param [Rack::Builder] app
     #
     def initialize(app = nil)
       @app = app
@@ -13,11 +15,11 @@ module Lennarb
 
     # Insert a middleware in the stack.
     #
-    # @parameter [Class] middleware
-    # @parameter [Array] args
-    # @parameter [Proc] block
+    # @param [Class] middleware
+    # @param [Array] args
+    # @param [Proc] block
     #
-    # @returns [void]
+    # @retrn [void]
     #
     def use(middleware, *args, &block)
       @store << [middleware, args, block]
@@ -25,11 +27,11 @@ module Lennarb
 
     # Add a middleware to the beginning of the stack.
     #
-    # @parameter [Class] middleware
-    # @parameter [Array] args
-    # @parameter [Proc] block
+    # @param [Class] middleware
+    # @param [Array] args
+    # @param [Proc] block
     #
-    # @returns [void]
+    # @retrn [void]
     #
     def unshift(middleware, *args, &block)
       @store.unshift([middleware, args, block])
@@ -37,7 +39,7 @@ module Lennarb
 
     # Clear the middleware stack.
     #
-    # @returns [void]
+    # @retrn [void]
     #
     def clear
       @store.clear
@@ -45,7 +47,7 @@ module Lennarb
 
     # Convert the middleware stack to an array.
     #
-    # @returns [Array]
+    # @retrn [Array]
     #
     def to_a
       @store

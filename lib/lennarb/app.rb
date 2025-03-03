@@ -1,11 +1,13 @@
 module Lennarb
+  # Lite implementation of app.
+  #
   class App
     # This error is raised whenever the app is initialized more than once.
     AlreadyInitializedError = Class.new(StandardError)
 
     # The root app directory of the app.
     #
-    # @returns [Pathname]
+    # @return[Pathname]
     #
     attr_accessor :root
 
@@ -16,7 +18,7 @@ module Lennarb
     # - `APP_ENV`
     # - `RACK_ENV`
     #
-    # @returns [Lennarb::Environment]
+    # @return[Lennarb::Environment]
     #
     attr_reader :env
 
@@ -29,7 +31,7 @@ module Lennarb
 
     # Set the current environment. See {Lennarb::Environment} for more details.
     #
-    # @parameter [Hash] env
+    # @param[Hash] env
     #
     def env=(env)
       raise AlreadyInitializedError if initialized?
@@ -39,9 +41,9 @@ module Lennarb
 
     # Mount an app at a specific path.
     #
-    # @parameter [Object] The controller|app to mount.
+    # @param[Object] The controller|app to mount.
     #
-    # @returns [void]
+    # @return[void]
     #
     # @example
     #
@@ -68,7 +70,7 @@ module Lennarb
 
     # Define the app's middleware stack. See {Lennarb::Middleware::Stack} for more details.
     #
-    # @returns [Lennarb::MiddlewareStack]
+    # @return[Lennarb::MiddlewareStack]
     #
     def middleware(&)
       @middleware ||= MiddlewareStack.new(self)
@@ -78,7 +80,7 @@ module Lennarb
 
     # Define the app's configuration. See {Lennarb::Config}.
     #
-    # @returns [Lennarb::Config]
+    # @return[Lennarb::Config]
     #
     # @example Run config on every environment
     #   app.config do
@@ -108,7 +110,7 @@ module Lennarb
 
     # Define the app's route. See {Lennarb::RouteNode} for more details.
     #
-    # @returns [Lennarb::RouteNode]
+    # @return[Lennarb::RouteNode]
     #
     def routes(&)
       @routes ||= Routes.new
@@ -141,13 +143,13 @@ module Lennarb
 
     # Check if the app is initialized.
     #
-    # @returns [Boolean]
+    # @return[Boolean]
     #
     def initialized? = @initialized
 
     # Initialize the app.
     #
-    # @returns [void]
+    # @return[void]
     #
     def initialize!
       raise AlreadyInitializedError if initialized?
@@ -163,7 +165,7 @@ module Lennarb
 
     # Freeze the app.
     #
-    # @returns [void]
+    # @return[void]
     #
     def freeze!
       app.freeze
@@ -172,7 +174,7 @@ module Lennarb
 
     # Call the app.
     #
-    # @parameter [Hash] env
+    # @param[Hash] env
     #
     def call(env)
       env[RACK_LENNA_APP] = self
@@ -181,7 +183,7 @@ module Lennarb
 
     # Compute the current environment.
     #
-    # @returns [String]
+    # @return[String]
     #
     # @private
     #

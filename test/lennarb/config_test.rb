@@ -16,7 +16,7 @@ class ConfigTest < Minitest::Test
   test "raises exception when mandatory key is missing" do
     config = Lennarb::Config.new(env: {})
 
-    assert_raises Lennarb::Config::MissingEnvironmentVariable do
+    assert_raises Lennarb::MissingEnvironmentVariable do
       config.instance_eval do
         mandatory :database_url, string
       end
@@ -26,7 +26,7 @@ class ConfigTest < Minitest::Test
   test "raises exception when property doesn't have callable" do
     config = Lennarb::Config.new(env: {})
 
-    assert_raises Lennarb::Config::MissingCallable do
+    assert_raises Lennarb::MissingCallable do
       config.instance_eval do
         property :foo
       end

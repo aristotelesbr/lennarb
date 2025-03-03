@@ -6,6 +6,13 @@ require "json"
 require "pathname"
 require "superconfig"
 
+# Lennarb is a lightweight Ruby web framework based on Rack that offers a high-performance solution for web development. Focused on simplicity, Lennarb delivers essential functionality without unnecessary complexity.
+# Available in two versions:
+#
+# Lennarb::App: Minimal version. Includes only the core components, such as request, response, and route handling.
+#
+# Lennarb::Application: Standard version. Include common features like middleware, request handler, and more.
+#
 module Lennarb
   require_relative "lennarb/constansts"
   require_relative "lennarb/environment"

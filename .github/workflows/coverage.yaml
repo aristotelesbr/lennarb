@@ -7,41 +7,11 @@ permissions:
 
 env:
   CONSOLE_OUTPUT: XTerm
-  COVERAGE: PartialSummary
   BUNDLE_WITH: maintenance
 
 jobs:
   test:
-    name: ${{matrix.ruby}} on ${{matrix.os}}
-    runs-on: ${{matrix.os}}-latest
-
-    strategy:
-      matrix:
-        os:
-          - ubuntu
-          - macos
-
-        ruby:
-          - '3.4'
-
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{matrix.ruby}}
-          bundler-cache: true
-
-      - name: Run tests
-        timeout-minutes: 5
-        run: bundle exec rake
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: coverage-${{matrix.os}}-${{matrix.ruby}}
-          path: .covered.db
-
-  validate:
-    needs: test
+    name: Coverage Check
     runs-on: ubuntu-latest
 
     steps:
@@ -51,8 +21,16 @@ jobs:
           ruby-version: '3.4'
           bundler-cache: true
 
-      - uses: actions/download-artifact@v4
-
-      - name: Validate coverage
+      - name: Run tests
         timeout-minutes: 5
-        run: bundle exec bake covered:validate --paths */.covered.db \;
+        run: bundle exec rake test
+
+      - name: Check coverage threshold
+        timeout-minutes: 1
+        run: bundle exec rake coverage:check
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage

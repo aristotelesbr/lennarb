@@ -4,11 +4,16 @@ on:
   push:
     branches:
       - main
-
-    workflow_dispatch:
+    paths:
+      - 'lib/**'
+      - '*.md'
+      - 'logo/**'
+      - '.yardopts'
+      - '.github/workflows/documentation.yaml'
+  workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -25,23 +30,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - uses: ruby/setup-ruby@v1
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.4'
           bundler-cache: true
 
-      - name: Installing packages
-        run: sudo apt-get install wget
-
-      - name: Prepare GitHub Pages
-        run: bundle exec bake github:pages:prepare --directory docs
+      - name: Install dependencies
+        run: bundle install
 
       - name: Generate documentation
         timeout-minutes: 5
-        run: bundle exec bake utopia:project:static --force no
+        run: |
+          bundle exec yard doc
+          echo "Documentation generated successfully"
 
-      - name: Deploy GitHub Pages
-        run: bundle exec bake github:pages:commit --directory docs
+          if [ -f "doc/logo/lennarb.svg" ]; then
+            echo "Logo file successfully included in documentation"
+          else
+            echo "Warning: Logo file not found in generated documentation"
+            exit 1
+          fi
 
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: doc
+          branch: gh-pages
+          clean: true
+          commit-message: "docs: update documentation [skip ci]"

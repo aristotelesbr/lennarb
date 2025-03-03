@@ -7,16 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-# Added
+### Added
 
 - Add `Lennarb::Application` class to be the base class of the "standard" implementation of the Lennarb framework.
 - Add middleware support to Lennarb::App class.
 - Add `middleware` support to the `Lennarb::Application` with default middlewares.
 - Add files to centralize the errors of the project.
+- Add CODE_OF_CONDUCT.md in English and Portuguese
+- Add CONTRIBUTING.md in English and Portuguese
 
-# Changed
+### Changed
 
 - Lennarb Logo
+- Migrate from utopiaproject to yard for documentation
+- Fix logo SVG display in yard documentation
 
 ## [1.4.1] - 2025-02-23
 

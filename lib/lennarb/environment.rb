@@ -1,14 +1,18 @@
 module Lennarb
+  # Manage the environment of the application.
+  #
+  # @example
+  #  app.env.development? # => true
+  #  app.env.test? # => false
+  #
   class Environment
-    NAMES = %i[development test production local]
-
     # Returns the name of the environment.
-    # @parameter name [Symbol]
+    # @param name [Symbol]
     #
     attr_reader :name
 
     # Initialize the environment.
-    #  @parameter name [String, Symbol] The name of the environment.
+    #  @param name [String, Symbol] The name of the environment.
     #
     def initialize(name)
       @name = name.to_sym
@@ -42,17 +46,17 @@ module Lennarb
     alias_method :===, :==
 
     # Returns the name of the environment as a symbol.
-    # @returns [Symbol]
+    # @retrn [Symbol]
     #
     def to_sym = name
 
     # Returns the name of the environment as a string.
-    # @returns [String]
+    # @retrn [String]
     #
     def to_s = name.to_s
 
     # Returns the name of the environment as a string.
-    # @returns [String]
+    # @retrn [String]
     def inspect = to_s.inspect
 
     # Yields a block if the environment is the same as the given environment.
