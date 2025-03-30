@@ -1,196 +1,108 @@
 module Lennarb
-  # Lite implementation of app.
+  # Application class that extends Base with routing capabilities.
+  # This class adds routing and request handling to the Base class,
+  # providing a complete web application framework.
   #
-  class App
-    # This error is raised whenever the app is initialized more than once.
-    AlreadyInitializedError = Class.new(StandardError)
+  # @example Creating a simple application
+  #   class Blog < Lennarb::App
+  #     get "/" do |req, res|
+  #       res.html("<h1>Welcome to my blog</h1>")
+  #     end
+  #
+  #     get "/posts/:id" do |req, res|
+  #       res.json({ id: req.params[:id], title: "Post Title" })
+  #     end
+  #   end
+  #
+  # @since 1.0.0
+  class App < Base
+    include Routing
 
-    # The root app directory of the app.
+    # The Rack app with all middlewares and routing.
+    # This builds a middleware stack around the request handler.
     #
-    # @return[Pathname]
-    #
-    attr_accessor :root
-
-    # The current environment. Defaults to "development".
-    # It can be set using the following environment variables:
-    #
-    # - `LENNA_ENV`
-    # - `APP_ENV`
-    # - `RACK_ENV`
-    #
-    # @return[Lennarb::Environment]
-    #
-    attr_reader :env
-
-    def initialize(&)
-      @initialized = false
-      self.root = Pathname.pwd
-      self.env = compute_env
-      instance_eval(&) if block_given?
-    end
-
-    # Set the current environment. See {Lennarb::Environment} for more details.
-    #
-    # @param[Hash] env
-    #
-    def env=(env)
-      raise AlreadyInitializedError if initialized?
-
-      @env = Environment.new(env)
-    end
-
-    # Mount an app at a specific path.
-    #
-    # @param[Object] The controller|app to mount.
-    #
-    # @return[void]
-    #
-    # @example
-    #
-    #   class PostController
-    #     extend Lennarb::Routes::Mixin
-    #
-    #     get "/post/:id" do |req, res|
-    #       res.text("Post ##{req.params[:id]}")
-    #     end
-    #   end
-    #
-    #  MyApp = Lennarb::App.new do
-    #    routes do
-    #      mount PostController
-    #    end
-    #
-    def mount(*controllers)
-      controllers.each do |controller|
-        raise ArgumentError, "Controller must respond to :routes" unless controller.respond_to?(:routes)
-
-        self.controllers << controller
-      end
-    end
-
-    # Define the app's middleware stack. See {Lennarb::Middleware::Stack} for more details.
-    #
-    # @return[Lennarb::MiddlewareStack]
-    #
-    def middleware(&)
-      @middleware ||= MiddlewareStack.new(self)
-      @middleware.instance_eval(&) if block_given?
-      @middleware
-    end
-
-    # Define the app's configuration. See {Lennarb::Config}.
-    #
-    # @return[Lennarb::Config]
-    #
-    # @example Run config on every environment
-    #   app.config do
-    #     mandatory :database_url, string
-    #   end
-    #
-    # @example Run config on every a specific environment
-    #   app.config :development do
-    #     set :domain, "example.dev"
-    #   end
-    #
-    # @example Run config on every a specific environment
-    #   app.config :development, :test do
-    #     set :domain, "example.dev"
-    #   end
-    #
-    def config(*envs, &)
-      @config ||= Config.new
-
-      write = block_given? &&
-        (envs.map(&:to_sym).include?(env.to_sym) || envs.empty?)
-
-      @config.instance_eval(&) if write
-
-      @config
-    end
-
-    # Define the app's route. See {Lennarb::RouteNode} for more details.
-    #
-    # @return[Lennarb::RouteNode]
-    #
-    def routes(&)
-      @routes ||= Routes.new
-      @routes.instance_eval(&) if block_given?
-      @routes
-    end
-
-    # The Rack app.
-    #
+    # @return [#call] The Rack application
+    # @since 1.0.0
     def app
       @app ||= begin
-        request_handler = RequestHandler.new(self)
+        request_handler = build_request_handler
 
         stack = middleware.to_a
 
         Rack::Builder.app do
           stack.each { |middleware, args, block| use(middleware, *args, &block) }
-
           run request_handler
         end
       end
     end
 
-    # Store mounted app's
+    # Call the app.
+    # This method is called by Rack when a request is received.
+    # It overrides the Base#call method to avoid duplicating logs.
     #
-    def controllers
-      @controllers ||= []
+    # @param [Hash] env The Rack environment
+    # @return [Array(Integer, Hash, #each)] The Rack response
+    # @since 1.0.0
+    def call(env)
+      env[RACK_LENNA_APP] = self
+
+      app.call(env)
     end
-    alias_method :mounted_apps, :controllers
 
-    # Check if the app is initialized.
+    # Define the app's middleware stack with default middlewares.
+    # This method initializes the middleware stack with common middlewares
+    # and allows adding additional middlewares via a block.
     #
-    # @return[Boolean]
+    # @yield [middleware] Block to configure middleware
+    # @return [Lennarb::MiddlewareStack] the middleware stack
+    # @since 1.4.0
     #
-    def initialized? = @initialized
+    # @example Adding custom middleware
+    #   middleware do
+    #     use MyCustomMiddleware
+    #   end
+    def middleware(&block)
+      @middleware ||= default_middleware_stack
+      @middleware.instance_eval(&block) if block_given?
+      @middleware
+    end
 
-    # Initialize the app.
+    # Build a request handler with routing support.
+    # This creates a handler that processes requests according to
+    # the defined routes.
     #
-    # @return[void]
+    # @return [Lennarb::RequestHandler] The request handler
+    # @since 1.4.0
+    # @api protected
+    protected def build_request_handler
+      RequestHandler.new(self)
+    end
+
+    # The default middleware stack.
+    # This defines the standard middlewares that are applied to all
+    # App instances.
     #
-    def initialize!
-      raise AlreadyInitializedError if initialized?
-
-      if controllers.any?
-        controllers.each do
-          routes.store.merge!(it.routes.store)
-        end
-      end
-
-      @initialized = true
+    # @return [Lennarb::MiddlewareStack] The default middleware stack
+    # @since 1.4.0
+    # @api private
+    private def default_middleware_stack
+      stack = MiddlewareStack.new
+      stack.use(Rack::CommonLogger)
+      stack.use(Rack::Runtime)
+      stack.use(Rack::Head)
+      stack.use(Rack::ETag)
+      stack.use Rack::ShowExceptions if env.development?
+      stack
     end
 
     # Freeze the app.
+    # This freezes both the app and its routes.
     #
-    # @return[void]
-    #
+    # @return [void]
+    # @since 1.4.0
     def freeze!
-      app.freeze
-      routes.freeze
-    end
-
-    # Call the app.
-    #
-    # @param[Hash] env
-    #
-    def call(env)
-      env[RACK_LENNA_APP] = self
-      Dir.chdir(root) { return app.call(env) }
-    end
-
-    # Compute the current environment.
-    #
-    # @return[String]
-    #
-    # @private
-    #
-    private def compute_env
-      env = ENV_NAMES.map { ENV[_1] }.compact.first.to_s
-
-      env.empty? ? "development" : env
+      super
+      routes.freeze if respond_to?(:routes)
     end
   end
 end

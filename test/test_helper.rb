@@ -10,6 +10,7 @@ SimpleCov.formatters = [
 SimpleCov.start do
   add_filter "/test/"
   add_filter "/vendor/"
+  add_filter "/lib/lennarb/version.rb"
 
   enable_coverage :branch
 
