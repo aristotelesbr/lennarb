@@ -7,6 +7,7 @@
 /.covered.db
 /external
 /docs
+/.ruby-lsp
 doc/
 .DS_Store
 *.gem
@@ -16,4 +17,5 @@ doc/
 coverage/
 tmp/
 !tmp/.keep
-.yardoc/
+.yardo/
+minitestfailures
