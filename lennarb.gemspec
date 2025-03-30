@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "bigdecimal"
   spec.add_dependency "colorize", "~> 1.1"
   spec.add_dependency "rack", "~> 3.1"
-  spec.add_dependency "superconfig"
+  spec.add_dependency "superconfig", "~> 3.0"
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "simplecov"
   spec.add_development_dependency "simplecov-json"
@@ -42,6 +42,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "standard"
   spec.add_development_dependency "standard-custom"
   spec.add_development_dependency "standard-performance"
-  spec.add_development_dependency "m"
   spec.add_development_dependency "debug"
 end
