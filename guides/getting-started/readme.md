@@ -28,7 +28,7 @@ Create a new file named `config.ru`:
 require 'lennarb'
 
 MyApp = Lennarb::App.new do
-  routes
+  routes do
     get '/' do |req, res|
       res.status = 200
       res.html('<h1>Welcome to Lennarb!</h1>')
@@ -37,7 +37,7 @@ MyApp = Lennarb::App.new do
 end
 
 MyApp.initialize!
-run App
+run MyApp
 ```
 
 Start the server:
@@ -71,7 +71,7 @@ app.get '/html' do |req, res|
 end
 
 app.get '/json' do |req, res|
-  res.json('{"message": "JSON response"}')
+  res.json({ message: "JSON response" })
 end
 ```
 
@@ -94,7 +94,7 @@ Lennarb::App.new do
 
     get '/users/:id' do |req, res|
       user_id = req.params[:id]
-      res.json("{\"id\": #{user_id}}")
+      res.json({ id: user_id })
     end
   end
 end
@@ -124,7 +124,7 @@ Lennarb is thread-safe by design:
 ### Initialization
 
 ```ruby
-Myapp = Lennarb::App.new do
+MyApp = Lennarb::App.new do
   # Define routes
   routes do
   end
@@ -189,7 +189,7 @@ Default error responses:
    ```ruby
    get '/api' do |req, res|
      res.status = 200
-     res.json('{"status": "ok"}')
+     res.json({ status: "ok" })
    end
    ```
 
@@ -200,7 +200,7 @@ Default error responses:
    res.html('<h1>Web Page</h1>')
 
    # JSON for APIs
-   res.json('{"data": "value"}')
+   res.json({ data: "value" })
 
    # Text for simple responses
    res.text('Hello')
@@ -213,3 +213,7 @@ For help and bug reports, please visit:
 - GitHub Issues: [lennarb/issues](https://github.com/aristotelesbr/lennarb/issues)
 
 Now you can run your app!
+
+```
+
+```
