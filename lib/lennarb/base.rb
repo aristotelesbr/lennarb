@@ -213,6 +213,37 @@ module Lennarb
       self
     end
 
+    # Defines helper methods available within route blocks.
+    # These methods are cached in a module and made available to all routes defined in this app.
+    #
+    # @yield [self] Block defining helper methods.
+    # @return [void]
+    # @since 1.5.0
+    # @example
+    #   class MyApp < Lennarb::App
+    #     helpers do
+    #       def current_user
+    #         "Ari"
+    #       end
+    #     end
+    #
+    #     get "/" do |req, res|
+    #       res.text("Hello, #{current_user}")
+    #     end
+    #   end
+    def self.helpers(&block)
+      @helpers_module ||= Module.new
+      @helpers_module.module_eval(&block)
+    end
+
+    # Returns the module containing helper methods defined for this app.
+    #
+    # @return [Module] The helpers module, or an empty module if none defined.
+    # @since 1.5.0
+    def self.helpers_module
+      @helpers_module || Module.new
+    end
+
     # Set the environment for the application.
     # @param [String, Symbol] value The environment name
     # @raise [AlreadyInitializedError] If the app is already initialized

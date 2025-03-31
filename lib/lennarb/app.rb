@@ -3,8 +3,19 @@ module Lennarb
   # This class adds routing and request handling to the Base class,
   # providing a complete web application framework.
   #
-  # @example Creating a simple application
+  # @example Creating a simple application with hooks
   #   class Blog < Lennarb::App
+  #     # Define a hook that runs before all requests
+  #     before do |req, res|
+  #       puts "Processing request to #{req.path}"
+  #     end
+  #
+  #     # Define a hook that runs before a specific route
+  #     before get: "/posts/:id" do |req, res|
+  #       puts "Accessing post #{req.params[:id]}"
+  #     end
+  #
+  #     # Define routes
   #     get "/" do |req, res|
   #       res.html("<h1>Welcome to my blog</h1>")
   #     end
@@ -12,11 +23,18 @@ module Lennarb
   #     get "/posts/:id" do |req, res|
   #       res.json({ id: req.params[:id], title: "Post Title" })
   #     end
+  #
+  #     # Define a hook that runs after all requests
+  #     after do |req, res|
+  #       puts "Request processed in #{req['X-Runtime']} seconds"
+  #     end
   #   end
   #
   # @since 1.0.0
   class App < Base
     include Routing
+    include Hooks
+    # include Helpers
 
     # The Rack app with all middlewares and routing.
     # This builds a middleware stack around the request handler.

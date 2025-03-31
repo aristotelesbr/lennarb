@@ -25,6 +25,7 @@ module Lennarb
   require_relative "lennarb/errors"
   require_relative "lennarb/middleware_stack"
   require_relative "lennarb/request_handler"
+  require_relative "lennarb/hooks"
   require_relative "lennarb/routing"
   require_relative "lennarb/base"
   require_relative "lennarb/app"

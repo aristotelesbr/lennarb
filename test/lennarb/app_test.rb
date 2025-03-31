@@ -127,4 +127,26 @@ class AppTest < Minitest::Test
 
     assert_kind_of Integer, status
   end
+
+  test "helpers are accessible in routes" do
+    app = Lennarb::App.new do
+      helpers do
+        def greet(name)
+          "Hello, #{name}!"
+        end
+      end
+
+      get "/greet/:name" do |req, res|
+        res.text(greet(req.params[:name]))
+      end
+    end
+
+    app.initialize!
+
+    env = Rack::MockRequest.env_for("/greet/Ari")
+    status, _, body = app.app.call(env)
+
+    assert_equal 200, status
+    assert_equal "Hello, Ari!", body.first
+  end
 end

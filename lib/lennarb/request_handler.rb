@@ -23,15 +23,16 @@ module Lennarb
       parts = env[Rack::PATH_INFO].split("/").reject(&:empty?)
       block, params = app.routes.match_route(parts, http_method)
 
-      unless block
-        return [404, {"content-type" => CONTENT_TYPE[:TEXT]}, ["Not Found"]]
-      end
+      return [404, {"content-type" => CONTENT_TYPE[:TEXT]}, ["Not Found"]] unless block
 
       req = Request.new(env, params)
       res = Response.new
 
       catch(:halt) do
-        block.call(req, res)
+        app.class.run_before_hooks(req, res) if app.class.respond_to?(:run_before_hooks)
+        block.call(req, res, params || {})
+        app.class.run_after_hooks(req, res) if app.class.respond_to?(:run_after_hooks)
+
         res.finish
       rescue Lennarb::Error => error
         [500, {"content-type" => CONTENT_TYPE[:TEXT]}, ["Internal Server Error (#{error.message})"]]

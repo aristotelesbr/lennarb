@@ -15,9 +15,8 @@ module Lennarb
       # @return [void]
       #
       def routes(&block)
-        @routes ||= Routes.new
-        @routes.instance_eval(&block) if block_given?
-        @routes
+        helpers_mod = respond_to?(:helpers_module) ? helpers_module : Module.new
+        @routes ||= Routes.new(helpers_mod, &block)
       end
 
       # Define a route for the GET HTTP method
