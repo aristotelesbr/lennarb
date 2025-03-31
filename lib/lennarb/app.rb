@@ -32,9 +32,8 @@ module Lennarb
   #
   # @since 1.0.0
   class App < Base
-    include Routing
-    include Hooks
-    # include Helpers
+    include Lennarb::Routes::Routable
+    include Lennarb::Hooks::Hookable
 
     # The Rack app with all middlewares and routing.
     # This builds a middleware stack around the request handler.

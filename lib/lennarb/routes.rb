@@ -14,7 +14,7 @@ module Lennarb
     def initialize(helpers_module = Module.new, &)
       @store = RouteNode.new
       # @!attribute [r] context_module
-      #   @return [Module] The cached module that includes helpers and provides access to req and res.
+      # @return [Module] The cached module that includes helpers and provides access to req and res.
       @context_module = Module.new do
         include helpers_module
         attr_accessor :req, :res
@@ -22,10 +22,12 @@ module Lennarb
       @helpers_module = helpers_module
       instance_eval(&) if block_given?
     end
+
     # Define the HTTP methods.
-    #
     # get, post, put, delete, patch, options, head
-    #
+    # @return [Array<Symbol>] The HTTP methods.
+    # @since 1.0.0
+    # @see Lennarb::RouteNode
     HTTP_METHODS.each do |http_method|
       define_method(http_method.downcase) do |path, &block|
         register_route(http_method, path, &block)

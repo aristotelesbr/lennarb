@@ -126,6 +126,8 @@ module Lennarb
     # @since 1.4.0
     attr_reader :mounted_apps
 
+    include Lennarb::Hooks::Hookable
+
     # Initialize a new Base instance.
     # @yield [self] Block to configure the application
     # @return [Base] The initialized application
@@ -233,7 +235,8 @@ module Lennarb
     #   end
     def self.helpers(&block)
       @helpers_module ||= Module.new
-      @helpers_module.module_eval(&block)
+      @helpers_module.module_eval(&block) if block_given?
+      @helpers_module
     end
 
     # Returns the module containing helper methods defined for this app.
@@ -309,7 +312,6 @@ module Lennarb
         end
       end
 
-      # Only add root handler if there's no mount at root path
       url_map["/"] = build_request_handler unless url_map.key?("/")
 
       Rack::URLMap.new(url_map)

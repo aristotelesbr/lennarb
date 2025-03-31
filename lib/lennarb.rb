@@ -23,10 +23,11 @@ module Lennarb
   require_relative "lennarb/routes"
   require_relative "lennarb/config"
   require_relative "lennarb/errors"
+  require_relative "lennarb/routes/routable"
   require_relative "lennarb/middleware_stack"
   require_relative "lennarb/request_handler"
   require_relative "lennarb/hooks"
-  require_relative "lennarb/routing"
+  require_relative "lennarb/hooks/hookable"
   require_relative "lennarb/base"
   require_relative "lennarb/app"
 end
