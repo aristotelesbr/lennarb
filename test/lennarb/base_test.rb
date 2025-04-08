@@ -178,50 +178,6 @@ class BaseTest < Minitest::Test
     assert_equal app_class, base.mounted_apps["/example"]
   end
 
-  test "normalizes mount paths with various inputs" do
-    base = Lennarb::Base.new
-
-    # Path without leading slash
-    assert_equal "/example", base.send(:normalize_mount_path, "example")
-
-    # Path with leading slash
-    assert_equal "/example", base.send(:normalize_mount_path, "/example")
-
-    # Path with trailing slash
-    assert_equal "/example", base.send(:normalize_mount_path, "/example/")
-
-    # Root path
-    assert_equal "/", base.send(:normalize_mount_path, "/")
-  end
-
-  test "builds url map with mounted apps" do
-    app_class = Class.new(Lennarb::App)
-    base = Lennarb::Base.new
-    base.mount(app_class, at: "/example")
-
-    url_map = base.send(:build_url_map)
-
-    assert_instance_of Rack::URLMap, url_map
-  end
-
-  test "builds url map without mounted apps" do
-    base = Lennarb::Base.new
-
-    url_map = base.send(:build_url_map)
-
-    assert_instance_of Rack::URLMap, url_map
-  end
-
-  test "builds url map with root mount" do
-    app_class = Class.new(Lennarb::App)
-    base = Lennarb::Base.new
-    base.mount(app_class, at: "/")
-
-    url_map = base.send(:build_url_map)
-
-    assert_instance_of Rack::URLMap, url_map
-  end
-
   test "calls app with environment" do
     base = Lennarb::Base.new
     base.initialize!

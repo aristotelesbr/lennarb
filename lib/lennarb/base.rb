@@ -1,9 +1,9 @@
 module Lennarb
   # Base class for mounting applications with middleware support.
-  # This class serves as the foundation for creating modular, mountable applications
-  # with middleware processing at the router level.
+  # This class serves as a proxy for mounting Lennarb::App instances,
+  # providing a lightweight router to dispatch requests to the appropriate app.
   #
-  # @example Creating a root application
+  # @example Creating a mounting application
   #   class Application < Lennarb::Base
   #     # Define base-level middleware
   #     middleware do
@@ -15,6 +15,9 @@ module Lennarb
   #     mount(Blog, at: "/blog")
   #     mount(Admin, at: "/admin")
   #   end
+  #
+  #   # Start the server
+  #   run Application.new
   #
   # @since 1.4.0
   class Base
@@ -73,7 +76,7 @@ module Lennarb
       # Mount a component at the given path.
       # @param [Class] component The component to mount (must be a Lennarb::App subclass)
       # @param [Hash] options The mounting options
-      # @option options [String] :at The path to mount the component at
+      # @option options [String] :at The path to mount the component at (defaults to "/")
       # @raise [ArgumentError] If the component is not a Lennarb::App subclass
       # @return [void]
       # @since 1.4.0
@@ -88,15 +91,6 @@ module Lennarb
         else
           raise ArgumentError, "Component must be a Lennarb::App subclass"
         end
-      end
-
-      # Called when a subclass is created
-      # @param [Class] subclass The created subclass
-      # @return [void]
-      # @since 1.4.0
-      # @api private
-      def inherited(subclass)
-        super
       end
 
       # Normalize the mount path.
@@ -125,8 +119,6 @@ module Lennarb
     # @return [Hash] The mounted applications by path
     # @since 1.4.0
     attr_reader :mounted_apps
-
-    include Lennarb::Hooks::Hookable
 
     # Initialize a new Base instance.
     # @yield [self] Block to configure the application
@@ -182,28 +174,12 @@ module Lennarb
       @config
     end
 
-    # The Rack app with all middlewares and mounted applications.
-    # This builds a middleware stack around the URL map of mounted applications.
-    #
-    # @return [#call] The Rack application
-    # @since 1.0.0
-    def app
-      @app ||= begin
-        url_map = build_url_map
-
-        stack = middleware.to_a
-
-        Rack::Builder.app do
-          stack.each { |middleware, args, block| use(middleware, *args, &block) }
-          run url_map
-        end
-      end
-    end
-
     # Check if the app is initialized.
     # @return [Boolean] true if initialized, false otherwise
     # @since 1.4.0
-    def initialized? = @initialized
+    def initialized?
+      @initialized
+    end
 
     # Initialize the app.
     # @return [self] The initialized app
@@ -213,38 +189,6 @@ module Lennarb
       raise AlreadyInitializedError if initialized?
       @initialized = true
       self
-    end
-
-    # Defines helper methods available within route blocks.
-    # These methods are cached in a module and made available to all routes defined in this app.
-    #
-    # @yield [self] Block defining helper methods.
-    # @return [void]
-    # @since 1.5.0
-    # @example
-    #   class MyApp < Lennarb::App
-    #     helpers do
-    #       def current_user
-    #         "Ari"
-    #       end
-    #     end
-    #
-    #     get "/" do |req, res|
-    #       res.text("Hello, #{current_user}")
-    #     end
-    #   end
-    def self.helpers(&block)
-      @helpers_module ||= Module.new
-      @helpers_module.module_eval(&block) if block_given?
-      @helpers_module
-    end
-
-    # Returns the module containing helper methods defined for this app.
-    #
-    # @return [Module] The helpers module, or an empty module if none defined.
-    # @since 1.5.0
-    def self.helpers_module
-      @helpers_module || Module.new
     end
 
     # Set the environment for the application.
@@ -264,6 +208,24 @@ module Lennarb
       app.freeze
     end
 
+    # The Rack app with all middlewares and mounted applications.
+    # This builds a middleware stack around the URL map of mounted applications.
+    #
+    # @return [#call] The Rack application
+    # @since 1.0.0
+    def app
+      @app ||= begin
+        url_map = build_url_map
+
+        stack = middleware.to_a
+
+        Rack::Builder.app do
+          stack.each { |middleware, args, block| use(middleware, *args, &block) }
+          run url_map
+        end
+      end
+    end
+
     # Call the app - main Rack entry point.
     # This method is called by Rack when a request is received.
     #
@@ -281,7 +243,7 @@ module Lennarb
     # Mount a component at the given path (instance method)
     # @param [Class] component The component to mount (must be a Lennarb::App subclass)
     # @param [Hash] options The mounting options
-    # @option options [String] :at The path to mount the component at
+    # @option options [String] :at The path to mount the component at (defaults to "/")
     # @raise [ArgumentError] If the component is not a Lennarb::App subclass
     # @return [void]
     # @since 1.4.0
@@ -297,11 +259,13 @@ module Lennarb
       end
     end
 
+    private
+
     # Build the URL map with all mounted applications.
     # @return [Rack::URLMap] The URL map
     # @since 1.4.0
     # @api private
-    private def build_url_map
+    def build_url_map
       url_map = {}
 
       if mounted_apps.any?
@@ -312,16 +276,18 @@ module Lennarb
         end
       end
 
-      url_map["/"] = build_request_handler unless url_map.key?("/")
+      # If no app is mounted at root path, provide a default handler
+      url_map["/"] = default_app_handler unless url_map.key?("/")
 
       Rack::URLMap.new(url_map)
     end
 
-    # Build a simple request handler for the root path.
-    # @return [#call] The request handler
+    # Default handler for when no app is mounted at root path.
+    # @return [#call] A simple not found handler
     # @since 1.4.0
-    # @api protected
-    protected def build_request_handler
+    # @api private
+    def default_app_handler
+      # config.logger.warn("No application mounted at root path. Default handler will be used.")
       ->(env) { [404, {"content-type" => "text/plain"}, ["Not Found"]] }
     end
 
@@ -330,7 +296,7 @@ module Lennarb
     # @return [String] The normalized path
     # @since 1.4.0
     # @api private
-    private def normalize_mount_path(path)
+    def normalize_mount_path(path)
       path = "/#{path}" unless path.start_with?("/")
       path = path[0..-2] if path.end_with?("/") && path != "/"
       path
@@ -340,8 +306,8 @@ module Lennarb
     # @return [String] The environment name
     # @since 1.4.0
     # @api private
-    private def compute_env
-      env = ENV_NAMES.map { ENV[_1] }.compact.first.to_s
+    def compute_env
+      env = ENV_NAMES.map { |name| ENV[name] }.compact.first.to_s
       env.empty? ? "development" : env
     end
   end
