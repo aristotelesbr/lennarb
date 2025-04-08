@@ -71,7 +71,6 @@ module Lennarb
     test "handling json generation error" do
       response = Lennarb::Response.new
 
-      # Mockando o JSON.generate para lançar um erro específico
       JSON.stub :generate, ->(_) { raise JSON::GeneratorError, "Mock generator error" } do
         response.json({test: "data"})
 
@@ -85,12 +84,11 @@ module Lennarb
     test "redirect response" do
       response = Lennarb::Response.new
 
-      # Como redirect usa throw, precisamos capturar
       caught = catch(:halt) do
         response.redirect("/login")
       end
 
-      status, headers, body = caught
+      status, headers, _body = caught
 
       assert_equal 302, status
       assert_equal "/login", headers["location"]
@@ -103,7 +101,7 @@ module Lennarb
         response.redirect("/permanent", 301)
       end
 
-      status, headers, body = caught
+      status, headers, _body = caught
 
       assert_equal 301, status
       assert_equal "/permanent", headers["location"]
