@@ -38,33 +38,13 @@ class AppTest < Minitest::Test
     assert_equal "two", app.config.two
   end
 
-  test "mounts apps with path" do
-    sample_app = Class.new(Lennarb::App)
-
-    app = Lennarb::Base.new do
-      mount sample_app, at: "/example"
-    end
-
-    assert_equal sample_app, app.mounted_apps["/example"]
-  end
-
-  test "mounts controller at root path by default" do
-    sample_app = Class.new(Lennarb::App)
-
-    app = Lennarb::Base.new do
-      mount sample_app
-    end
-
-    assert_equal sample_app, app.mounted_apps["/"]
-  end
-
   test "sets default middleware stack" do
     ENV["LENNA_ENV"] = "development"
     app = Lennarb::App.new
     stack = app.middleware.to_a.map(&:first)
 
     assert_equal 5, stack.size
-    assert_includes stack, Rack::CommonLogger
+    assert_includes stack, Lennarb::Middleware::RequestLogger
     assert_includes stack, Rack::Runtime
     assert_includes stack, Rack::Head
     assert_includes stack, Rack::ETag
@@ -92,21 +72,6 @@ class AppTest < Minitest::Test
     assert_respond_to app, :routes
   end
 
-  test "must respond to mount" do
-    app = Lennarb::App.new
-
-    assert_respond_to app, :mount
-  end
-
-  test "mount raises ArgumentError for invalid component" do
-    app = Lennarb::App.new
-    invalid_component = Class.new
-
-    assert_raises(ArgumentError, "Component must be a Lennarb::App subclass") do
-      app.mount(invalid_component, at: "/invalid")
-    end
-  end
-
   test "prevents app from being initialized twice" do
     app = Lennarb::App.new
     app.initialize!
@@ -114,37 +79,28 @@ class AppTest < Minitest::Test
     assert_raises(Lennarb::App::AlreadyInitializedError) { app.initialize! }
   end
 
-  test "mounted apps are accessible via url map" do
-    app = Lennarb::App.new
-    sample_app = Class.new(Lennarb::App)
-    app.mount(sample_app, at: "/example")
-    app.initialize!
-
-    rack_app = app.app
-
-    env = Rack::MockRequest.env_for("/example")
-    status, _, _ = rack_app.call(env)
-
-    assert_kind_of Integer, status
-  end
-
   test "helpers are accessible in routes" do
-    app = Lennarb::App.new do
+    test_app_class = Class.new(Lennarb::App)
+    my_app = test_app_class.new do
       helpers do
         def greet(name)
           "Hello, #{name}!"
         end
       end
 
-      get "/greet/:name" do |req, res|
-        res.text(greet(req.params[:name]))
+      routes do
+        get "/greet/:name" do |req, res|
+          res.text(greet(req.params[:name]))
+        end
       end
     end
 
-    app.initialize!
+    my_app.initialize!
+
+    def app = my_app
 
     env = Rack::MockRequest.env_for("/greet/Ari")
-    status, _, body = app.app.call(env)
+    status, _, body = my_app.call(env)
 
     assert_equal 200, status
     assert_equal "Hello, Ari!", body.first
