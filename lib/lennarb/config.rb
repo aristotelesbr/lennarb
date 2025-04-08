@@ -44,7 +44,7 @@ module Lennarb
         Lennarb::Logger.new(
           ::Logger.new(stderr_output),
           colorize: true,
-          tag: Lennarb::App.name
+          tag: :lennarb
         )
       set :enable_reloading, false
     end
