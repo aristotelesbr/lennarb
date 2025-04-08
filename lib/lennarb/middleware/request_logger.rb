@@ -24,13 +24,10 @@ module Lennarb
         request = Lennarb::Request.new(env)
         start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 
-        # Process the request
         status, headers, body = @app.call(env)
 
-        # Calculate duration
         duration = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
 
-        # Log request information
         log_request(request, status, headers, duration)
 
         [status, headers, body]
@@ -56,36 +53,32 @@ module Lennarb
 
       # Log the complete request
       def log_request(request, status, headers, duration)
-        # Log request line
-        logger.info { request_line(request, duration) }
+        logger.info { request_line(request, duration, status) }
 
-        # Log status
         logger.info { status_line(status) }
 
-        # Log parameters if they exist
         if request.params.any?
           logger.info { params_line(request.params) }
         end
 
-        # Log redirect if present
         if headers["Location"]
           logger.info { redirect_line(headers["Location"]) }
         end
       end
 
       # Format the request line
-      def request_line(request, duration)
+      def request_line(request, duration, status)
         method = request.request_method
         path = filter_path(request.path)
         duration_text = "(#{format_duration(duration)})"
 
-        "#{method} #{path} #{duration_text}".colorize(:magenta).bold
+        "#{method} #{path} #{duration_text}".colorize(status_to_color(status)).bold
       end
 
       # Format the status line
       def status_line(status)
         status_text = "#{status} #{Rack::Utils::HTTP_STATUS_CODES[status]}"
-        "Status: #{status_text}".colorize(status_to_color(status))
+        "Status: #{status_text}".colorize(status_to_color(status)).bold
       end
 
       # Format the parameters line

@@ -85,7 +85,6 @@ module Lennarb
     # Format the log message
     def format_log(_severity, _time, _progname, message)
       tag = @tag.map { |t| "[#{t}]" }.join(" ")
-
       tag = colorize_text(tag, @tag_color)
       message = colorize_text(message, @message_color)
 
@@ -93,11 +92,9 @@ module Lennarb
     end
 
     def colorize_text(text, color)
-      if @colorize
-        text.to_s.colorize(color)
-      else
-        text.to_s
-      end
+      reutnn text.to_s unless @colorize
+      return text.to_s if color.nil?
+      text.to_s.colorize(color)
     end
   end
 end

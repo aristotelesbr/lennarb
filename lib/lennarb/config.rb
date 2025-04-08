@@ -9,15 +9,14 @@ module Lennarb
     attr_accessor :stderr_output
 
     def initialize(app = nil, silent: !ENV["LENNARB_SILENT_LOGS"].nil?, **options)
-      @app = app
-      block = proc { true }
-
       self.stderr_output = if silent
         nil
       else
         $stderr
       end
 
+      @app = app
+      block = proc { true }
       super(**options, &block)
       apply_defaults_settings
     end
@@ -44,13 +43,9 @@ module Lennarb
       set :logger,
         Lennarb::Logger.new(
           ::Logger.new(stderr_output),
-          tag: "lennarb",
           colorize: true,
-          tag_color: :magenta,
-          message_color: :cyan
+          tag: Lennarb::App.name
         )
-      set :allowed_hosts, ["localhost"]
-      set :session_options, secret: SecureRandom.hex(64)
       set :enable_reloading, false
     end
   end
