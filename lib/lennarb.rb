@@ -17,7 +17,7 @@ require "superconfig"
 # Lennarb::Application: Standard version. Include common features like middleware, request handler, and more.
 #
 module Lennarb
-  require_relative "lennarb/constansts"
+  require_relative "lennarb/constants"
   require_relative "lennarb/environment"
   require_relative "lennarb/version"
   require_relative "lennarb/request"
