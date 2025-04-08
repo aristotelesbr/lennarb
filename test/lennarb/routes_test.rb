@@ -113,7 +113,7 @@ class RoutesTest < Minitest::Test
     @routes.freeze
 
     assert @routes.frozen?
-    
+
     assert_raises(RuntimeError) do
       @routes.get "/bar" do |req, res|
         "bar"
