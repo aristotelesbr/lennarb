@@ -61,10 +61,10 @@ module Lennarb
       when Hash
         object.each do |key, value|
           object[key] = if key.to_s.match?(@filter)
-                          mask
-                        else
-                          filter_object(value, mask)
-                        end
+            mask
+          else
+            filter_object(value, mask)
+          end
         end
       when Array
         object = object.map { filter_object(_1, mask) }
