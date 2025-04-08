@@ -13,7 +13,7 @@ module Lennarb
     # Define a route for each HTTP method
     HTTP_METHODS.each do |http_method|
       define_method(http_method.downcase) do |path, &block|
-        raise "Routes are frozen and cannot be modified" if @frozen
+        fail RoutesFrozenError, "Routes are frozen and cannot be modified" if @frozen
         register_route(http_method, path, &block)
       end
     end

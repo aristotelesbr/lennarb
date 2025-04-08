@@ -11,4 +11,7 @@ module Lennarb
   # This error is raised whenever the app is initialized more than once.
   #
   MissingCallable = Class.new(StandardError)
+  # This error is raised whenever the app is initialized more than once.
+  #
+  RoutesFrozenError = Class.new(RuntimeError)
 end
