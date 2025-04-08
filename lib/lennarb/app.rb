@@ -71,13 +71,12 @@ module Lennarb
       # @param [Array<Symbol>] envs Environments
       # @yield Configuration block
       # @return [Config] The config instance
-      def config(*envs, &block)
+      def config(*envs, &)
         @config ||= Config.new(self)
 
         if block_given?
-          current_env = ENV.fetch("RACK_ENV", "development").to_sym
-          write = envs.empty? || envs.map(&:to_sym).include?(current_env)
-          @config.instance_eval(&block) if write
+          write = envs.empty? || envs.map(&:to_sym).include?(env.name)
+          @config.instance_eval(&) if write
         end
 
         @config
@@ -188,12 +187,12 @@ module Lennarb
     # @param [Array<Symbol>] envs Environments
     # @yield Configuration block
     # @return [Config] The config instance
-    def config(*envs, &block)
-      @config ||= self.class.config.dup
+    def config(*envs, &)
+      @config ||= self.class.config
 
       if block_given?
         write = envs.empty? || envs.map(&:to_sym).include?(env.name)
-        @config.instance_eval(&block) if write
+        @config.instance_eval(&) if write
       end
 
       @config
@@ -205,8 +204,9 @@ module Lennarb
     # @raise [AlreadyInitializedError] If already initialized
     def initialize!
       raise AlreadyInitializedError if @initialized
-      routes.freeze
+
       @initialized = true
+      routes.freeze
       self
     end
 
