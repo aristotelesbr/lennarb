@@ -49,9 +49,6 @@ class LoggerTest < Minitest::Test
     assert_includes content, "warn message"
   end
 
-  # test "evaluates blocks lazily" do
-  # end
-
   test "supports method chaining" do
     logger = Lennarb::Logger.new(Logger.new(io, level: Logger::DEBUG))
     result = logger.debug("first").info("second")
