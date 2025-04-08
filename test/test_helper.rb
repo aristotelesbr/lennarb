@@ -1,3 +1,8 @@
+ENV["APP_ENV"] = "test"
+ENV["LENNARB_SILENT_LOGS"] = "true"
+
+$stdout.sync = true
+
 require "simplecov"
 require "simplecov-json"
 
