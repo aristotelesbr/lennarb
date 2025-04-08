@@ -43,5 +43,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "standard"
   spec.add_development_dependency "standard-custom"
   spec.add_development_dependency "standard-performance"
-  spec.add_development_dependency "debug"
+  spec.add_development_dependency "debug" if RUBY_ENGINE == "ruby"
 end
