@@ -1,68 +1,70 @@
 module Lennarb
-  # The Hooks class provides a mechanism to register and execute
-  # before and after hooks around certain operations.
-  class Hooks
-    # @return [Array<Proc>] the list of before hooks
-    attr_reader :before_hooks
+  # Provides hook functionality for Lennarb applications.
+  # Hooks execute code before and after route handlers.
+  #
+  # @example
+  #   Hooks.add(MyApp, :before) do |req, res|
+  #     res.headers["X-My-Header"] = "MyValue"
+  #   end
+  #   Hooks.add(MyApp, :after) do |req, res|
+  #     res.body << "Goodbye!"
+  #   end
+  #
+  # @note
+  #   - Hooks are executed in the order they are added.
+  #   - The context of the hook is the object that calls the route handler.
+  #   - Hooks can modify the request and response objects.
+  #   - Hooks can be used to implement middleware-like functionality.
+  #   - Hooks are not thread-safe. Use with caution in multi-threaded environments.
+  module Hooks
+    # Valid hook types
+    TYPES = [:before, :after].freeze
 
-    # @return [Array<Proc>] the list of after hooks
-    attr_reader :after_hooks
+    # Store hooks for each app class
+    @app_hooks = {}
 
-    # Initializes a new Hooks instance.
-    #
-    # @param helpers_module [Module] a module containing helper methods to be included in the hook context
-    def initialize(helpers_module = Module.new)
-      @before_hooks = []
-      @after_hooks = []
-      @context_module = Module.new do
-        include helpers_module
-        attr_accessor :req, :res
+    class << self
+      # Get the hooks hash
+      #
+      # @return [Hash] The hooks hash with app classes as keys
+      attr_reader :app_hooks
+
+      # Get the hooks for an app class
+      #
+      # @param [Class] app_class The application class
+      # @return [Hash] The hooks hash with :before and :after keys
+      def for(app_class)
+        app_hooks[app_class] ||= {before: [], after: []}
       end
-    end
 
-    # Registers a block to be executed before the main operation.
-    #
-    # @yield the block to be executed before
-    def before(&block)
-      @before_hooks << wrap_block(&block) if block_given?
-    end
+      # Add a hook for an app class
+      #
+      # @param [Class] app_class The application class
+      # @param [Symbol] type The hook type (:before or :after)
+      # @param [Proc] block The hook block
+      # @return [Array] The hooks array for the given type
+      def add(app_class, type, &block)
+        raise ArgumentError, "Invalid hook type: #{type}" unless TYPES.include?(type)
 
-    # Registers a block to be executed after the main operation.
-    #
-    # @yield the block to be executed after
-    def after(&block)
-      @after_hooks << wrap_block(&block) if block_given?
-    end
+        hooks = self.for(app_class)
+        hooks[type] << block if block_given?
+        hooks[type]
+      end
 
-    # Executes all registered before hooks with the given request and response.
-    #
-    # @param req [Request] the request object
-    # @param res [Response] the response object
-    def run_before_hooks(req, res)
-      @before_hooks.each { |hook| hook.call(req, res) }
-    end
+      # Execute hooks of a given type
+      #
+      # @param [Object] context The execution context
+      # @param [Class] app_class The application class
+      # @param [Symbol] type The hook type to execute
+      # @param [Request] req The request object
+      # @param [Response] res The response object
+      # @return [void]
+      def execute(context, app_class, type, req, res)
+        hooks = self.for(app_class)[type]
 
-    # Executes all registered after hooks with the given request and response.
-    #
-    # @param req [Request] the request object
-    # @param res [Response] the response object
-    def run_after_hooks(req, res)
-      @after_hooks.each { |hook| hook.call(req, res) }
-    end
-
-    private
-
-    # Wraps a block in a context that includes helper methods and request/response accessors.
-    #
-    # @yield the block to be wrapped
-    # @return [Proc] the wrapped block
-    def wrap_block(&block)
-      context_module = @context_module
-      proc do |req, res|
-        context = Object.new.extend(context_module)
-        context.req = req
-        context.res = res
-        context.instance_exec(req, res, &block)
+        hooks.each do |hook|
+          context.instance_exec(req, res, &hook)
+        end
       end
     end
   end
