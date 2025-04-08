@@ -15,12 +15,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add files to centralize the errors of the project.
 - Add CODE_OF_CONDUCT.md in English and Portuguese
 - Add CONTRIBUTING.md in English and Portuguese
+- Add `Lennarb::Logger` class for structured logging with support for tags and colorization
+- Add logger dependency to enhance logging capabilities in the framework
+- Add `Lennarb::ParameterFilter` for sensitive parameter filtering in logs and exceptions
+- Add `Lennarb::RequestLogger` middleware for detailed HTTP request logging
+- Add `Lennarb::Hooks` module for implementing hooks in the framework
+- Add improved request handling and configuration options
 
 ### Changed
 
 - Lennarb Logo
 - Migrate from utopiaproject to yard for documentation
 - Fix logo SVG display in yard documentation
+- Restructure App class to enhance routing, middleware, and initialization processes
+- Simplify Routes class by removing unnecessary comments and enhancing route definitions
+- Introduce Helpers module for managing application-specific helper methods
 
 ## [1.4.1] - 2025-02-23
 
