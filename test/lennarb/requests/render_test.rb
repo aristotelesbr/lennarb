@@ -40,7 +40,7 @@ class RenderTest < Minitest::Test
     get "/error"
 
     assert_equal 500, last_response.status
-    assert_match(/Lennarb::Error/, last_response.body)
+    assert_equal "Internal Server Error", last_response.body
   end
 
   test "different HTTP methods for same path" do

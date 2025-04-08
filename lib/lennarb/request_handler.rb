@@ -36,7 +36,9 @@ module Lennarb
 
         res.finish
       rescue Lennarb::Error => e
-        [500, {"content-type" => "text/plain"}, ["Error: #{e.message} (#{e.backtrace.first})"]]
+        app.class.config.logger.error("Error: #{e.message}")
+        app.class.config.logger.error(e.backtrace.first)
+        [500, {"content-type" => "text/plain"}, ["Internal Server Error"]]
       end
     end
 
