@@ -92,7 +92,7 @@ module Lennarb
     end
 
     def colorize_text(text, color)
-      reutnn text.to_s unless @colorize
+      return text.to_s unless @colorize
       return text.to_s if color.nil?
       text.to_s.colorize(color)
     end
