@@ -2,7 +2,7 @@ require "test_helper"
 
 class BaseTest < Minitest::Test
   setup do
-    Lennarb::ENV_NAMES.each { ENV.delete(_1) }
+    Lennarb::ENV_NAMES.each { ENV.delete(it) }
   end
 
   test "initializes with default values" do

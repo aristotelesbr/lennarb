@@ -23,7 +23,7 @@ class LoggerTest < Minitest::Test
   test "adds nested tag" do
     logger = Lennarb::Logger.new(Logger.new(io, level: Logger::DEBUG), tag: :app)
     logger.tagged(:request).debug "nested tagged message"
-    logger.tagged(:request) { _1.debug "nested tagged message with block" }
+    logger.tagged(:request) { it.debug "nested tagged message with block" }
     logger.debug "debug message"
 
     content = io_read

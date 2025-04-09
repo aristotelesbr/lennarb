@@ -67,7 +67,7 @@ module Lennarb
           end
         end
       when Array
-        object = object.map { filter_object(_1, mask) }
+        object = object.map { filter_object(it, mask) }
       end
 
       object

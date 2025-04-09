@@ -2,7 +2,7 @@ require "test_helper"
 
 class AppTest < Minitest::Test
   setup do
-    Lennarb::ENV_NAMES.each { ENV.delete(_1) }
+    Lennarb::ENV_NAMES.each { ENV.delete(it) }
   end
 
   test "uses LENNA_ENV as the env value" do
