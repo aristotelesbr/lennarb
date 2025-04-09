@@ -50,8 +50,8 @@ module Lennarb
       })
 
       headers = request.headers
-      assert_equal "test-agent", headers["HTTP_USER_AGENT"]
-      assert_equal "application/json", headers["HTTP_ACCEPT"]
+      assert_equal "test-agent", headers["User-Agent"]
+      assert_equal "application/json", headers["Accept"]
       refute headers.key?("PATH_INFO")
     end
 
