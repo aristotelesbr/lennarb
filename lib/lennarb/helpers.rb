@@ -20,10 +20,18 @@ module Lennarb
       # Define helpers for an app class
       #
       # @param [Class] app_class The application class
-      # @param [Proc] block The block with helper definitions
+      # @param [Module, Proc] mod_or_block The module to include or block with helper definitions
       # @return [Module] The helpers module
-      def define(app_class, &block)
+      def define(app_class, mod_or_block = nil, &block)
         mod = self.for(app_class)
+
+        case mod_or_block
+        when Module
+          mod.include(mod_or_block)
+        when Proc
+          mod.module_eval(&mod_or_block)
+        end
+
         mod.module_eval(&block) if block_given?
         mod
       end
