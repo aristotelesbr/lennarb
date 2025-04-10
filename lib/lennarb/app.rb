@@ -14,8 +14,8 @@ module Lennarb
       #
       # @yield Block containing helper definitions
       # @return [Module] The helpers module
-      def helpers(&block)
-        Helpers.define(self, &block)
+      def helpers(mod_or_block = nil, &block)
+        Helpers.define(self, mod_or_block, &block)
       end
 
       # Define a before hook

@@ -105,4 +105,17 @@ class AppTest < Minitest::Test
     assert_equal 200, status
     assert_equal "Hello, Ari!", body.first
   end
+
+  test "helpers with module" do
+    app_class = Class.new(Lennarb::App)
+    test_helpers = Module.new do
+      def greet(name)
+        "Hello, #{name}!"
+      end
+    end
+
+    app_class.helpers(test_helpers)
+
+    assert_includes app_class.helpers, test_helpers
+  end
 end
