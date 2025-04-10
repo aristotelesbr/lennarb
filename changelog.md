@@ -22,6 +22,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `Lennarb::Hooks` module for implementing hooks in the framework
 - Add improved request handling and configuration options
 - Add `RoutesFrozenError` for improved route modification handling
+- Add support for defining helpers with both modules and blocks in `Lennarb::App`.
+- Add `Lennarb::Helpers.define` method to handle modules and blocks for helper definitions.
+- Add tests for `Lennarb::Helpers` to validate module inclusion and block evaluation.
+- Add `Lennarb::Hooks` tests to validate hook initialization, addition, and execution.
 
 ### Changed
 
@@ -34,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update logger tag to use symbol for consistency
 - Enhance logging functionality with improved request logging details
 - Simplify config method by removing block parameter and improving readability
+- Update `Lennarb::App.helpers` to accept a module or block for defining helpers.
 
 ### Fixed
 
