@@ -1,8 +1,8 @@
 module Lennarb
-  # Filtra parâmetros sensíveis de logs e exceções.
-  # Útil para evitar o vazamento de informações confidenciais.
+  # Filters sensitive parameters from logs and exceptions.
+  # Useful for preventing the leakage of confidential information.
   #
-  # Por padrão, as seguintes chaves de parâmetros são filtradas:
+  # By default, the following parameter keys are filtered:
   #
   # - `passw`
   # - `email`
@@ -33,29 +33,29 @@ module Lennarb
       signature
     ].freeze
 
-    # Inicializa um novo filtro de parâmetros
+    # Initialize a new parameter filter
     #
-    # @param [Array<String, Regexp>] filters Lista de padrões para filtrar
+    # @param [Array<String, Regexp>] filters List of patterns to filter
     def initialize(filters = DEFAULT_FILTERS)
       @filter = Regexp.union(filters.map(&:to_s))
     end
 
-    # Filtra os parâmetros conforme o filtro configurado
+    # Filter parameters according to the configured filter
     #
-    # @param [Hash, Array] params Parâmetros a serem filtrados
-    # @param [String] mask Valor que substituirá os parâmetros filtrados
-    # @return [Hash, Array] Parâmetros filtrados
+    # @param [Hash, Array] params Parameters to be filtered
+    # @param [String] mask Value that will replace filtered parameters
+    # @return [Hash, Array] Filtered parameters
     def filter(params, mask: DEFAULT_MASK)
       filter_object(params.dup, mask)
     end
 
     private
 
-    # Filtra recursivamente um objeto (hash ou array)
+    # Recursively filter an object (hash or array)
     #
-    # @param [Object] object Objeto a ser filtrado
-    # @param [String] mask Valor que substituirá os parâmetros filtrados
-    # @return [Object] Objeto filtrado
+    # @param [Object] object Object to be filtered
+    # @param [String] mask Value that will replace filtered parameters
+    # @return [Object] Filtered object
     def filter_object(object, mask)
       case object
       when Hash
