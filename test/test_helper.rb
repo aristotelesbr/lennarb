@@ -1,3 +1,8 @@
+ENV["APP_ENV"] = "test"
+ENV["LENNARB_SILENT_LOGS"] = "true"
+
+$stdout.sync = true
+
 require "simplecov"
 require "simplecov-json"
 
@@ -10,6 +15,7 @@ SimpleCov.formatters = [
 SimpleCov.start do
   add_filter "/test/"
   add_filter "/vendor/"
+  add_filter "/lib/lennarb/version.rb"
 
   enable_coverage :branch
 

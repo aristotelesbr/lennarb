@@ -3,7 +3,9 @@ require "test_helper"
 class RenderTest < Minitest::Test
   include Rack::Test::Methods
 
-  def app = LiteApp
+  def app
+    SampleApp
+  end
 
   test "GET root path" do
     get "/"
@@ -35,13 +37,26 @@ class RenderTest < Minitest::Test
   end
 
   test "GET /error" do
-    LiteApp.routes.get "/error" do |_, _|
-      raise Lennarb::Error
-    end
-
     get "/error"
 
     assert_equal 500, last_response.status
-    assert_equal "Internal Server Error (Lennarb::Error)", last_response.body
+    assert_equal "Internal Server Error", last_response.body
+  end
+
+  test "different HTTP methods for same path" do
+    get "/api"
+    assert_equal 200, last_response.status
+    assert_equal "{\"action\":\"index\"}", last_response.body
+
+    post "/api"
+    assert_equal 200, last_response.status
+    assert_equal "{\"action\":\"create\"}", last_response.body
+  end
+
+  test "route with parameters" do
+    get "/users/42"
+
+    assert_equal 200, last_response.status
+    assert_equal "{\"id\":\"42\"}", last_response.body
   end
 end

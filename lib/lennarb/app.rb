@@ -1,195 +1,252 @@
 module Lennarb
-  # Lite implementation of app.
-  #
+  # Main application class with hooks and helpers support
   class App
-    # This error is raised whenever the app is initialized more than once.
-    AlreadyInitializedError = Class.new(StandardError)
+    class << self
+      attr_writer :app
+      # Rack environment variable name
+      #
+      # @return [String] The environment variable name
+      def app
+        @app ||= self
+      end
 
-    # The root app directory of the app.
-    #
-    # @return[Pathname]
-    #
-    attr_accessor :root
+      # Define helper methods for the application
+      #
+      # @yield Block containing helper definitions
+      # @return [Module] The helpers module
+      def helpers(mod_or_block = nil, &block)
+        Helpers.define(self, mod_or_block, &block)
+      end
 
-    # The current environment. Defaults to "development".
-    # It can be set using the following environment variables:
-    #
-    # - `LENNA_ENV`
-    # - `APP_ENV`
-    # - `RACK_ENV`
-    #
-    # @return[Lennarb::Environment]
-    #
-    attr_reader :env
+      # Define a before hook
+      #
+      # @yield [req, res] Block to execute before route
+      # @return [Array] The before hooks array
+      def before(&block)
+        Hooks.add(self, :before, &block)
+      end
 
-    def initialize(&)
-      @initialized = false
-      self.root = Pathname.pwd
-      self.env = compute_env
-      instance_eval(&) if block_given?
-    end
+      # Define an after hook
+      #
+      # @yield [req, res] Block to execute after route
+      # @return [Array] The after hooks array
+      def after(&block)
+        Hooks.add(self, :after, &block)
+      end
 
-    # Set the current environment. See {Lennarb::Environment} for more details.
-    #
-    # @param[Hash] env
-    #
-    def env=(env)
-      raise AlreadyInitializedError if initialized?
+      # Get routes for this app class
+      #
+      # @return [Routes] The routes instance
+      def routes
+        @routes ||= Routes.new
+      end
 
-      @env = Environment.new(env)
-    end
+      # Set up subclass
+      #
+      # @param [Class] subclass The new subclass
+      # @return [void]
+      def inherited(subclass)
+        super
+        # Each subclass gets its own routes
+        subclass.instance_variable_set(:@routes, Routes.new)
+      end
 
-    # Mount an app at a specific path.
-    #
-    # @param[Object] The controller|app to mount.
-    #
-    # @return[void]
-    #
-    # @example
-    #
-    #   class PostController
-    #     extend Lennarb::Routes::Mixin
-    #
-    #     get "/post/:id" do |req, res|
-    #       res.text("Post ##{req.params[:id]}")
-    #     end
-    #   end
-    #
-    #  MyApp = Lennarb::App.new do
-    #    routes do
-    #      mount PostController
-    #    end
-    #
-    def mount(*controllers)
-      controllers.each do |controller|
-        raise ArgumentError, "Controller must respond to :routes" unless controller.respond_to?(:routes)
+      # Define route methods for all HTTP methods
+      HTTP_METHODS.each do |http_method|
+        define_method(http_method.downcase) do |path, &block|
+          routes.send(http_method.downcase, path, &block)
+        end
+      end
 
-        self.controllers << controller
+      # Define root route (GET /)
+      #
+      # @yield [req, res, params] Route block
+      # @return [void]
+      def root(&block)
+        get("/", &block)
+      end
+
+      # Define configuration
+      #
+      # @param [Array<Symbol>] envs Environments
+      # @yield Configuration block
+      # @return [Config] The config instance
+      def config(*envs, &)
+        @config ||= Config.new(self)
+
+        if block_given?
+          write = envs.empty? || envs.map(&:to_sym).include?(env.name)
+          @config.instance_eval(&) if write
+        end
+
+        @config
       end
     end
 
-    # Define the app's middleware stack. See {Lennarb::Middleware::Stack} for more details.
+    # Instance methods
+
+    # Initialize a new app
     #
-    # @return[Lennarb::MiddlewareStack]
-    #
-    def middleware(&)
-      @middleware ||= MiddlewareStack.new(self)
-      @middleware.instance_eval(&) if block_given?
-      @middleware
+    # @yield [self] Configuration block
+    def initialize(&block)
+      @initialized = false
+      @root = Pathname.pwd
+      @env = Environment.new(compute_env)
+
+      instance_eval(&block) if block_given?
     end
 
-    # Define the app's configuration. See {Lennarb::Config}.
-    #
-    # @return[Lennarb::Config]
-    #
-    # @example Run config on every environment
-    #   app.config do
-    #     mandatory :database_url, string
-    #   end
-    #
-    # @example Run config on every a specific environment
-    #   app.config :development do
-    #     set :domain, "example.dev"
-    #   end
-    #
-    # @example Run config on every a specific environment
-    #   app.config :development, :test do
-    #     set :domain, "example.dev"
-    #   end
-    #
-    def config(*envs, &)
-      @config ||= Config.new
+    # The current environment
+    attr_reader :env
 
-      write = block_given? &&
-        (envs.map(&:to_sym).include?(env.to_sym) || envs.empty?)
+    # The root directory
+    attr_accessor :root
 
-      @config.instance_eval(&) if write
-
-      @config
+    # Set environment
+    #
+    # @param [String, Symbol] value Environment name
+    # @raise [AlreadyInitializedError] If already initialized
+    # @return [Environment] The new environment
+    def env=(value)
+      raise AlreadyInitializedError if initialized?
+      @env = Environment.new(value)
     end
 
-    # Define the app's route. See {Lennarb::RouteNode} for more details.
+    # Get the Rack app with middleware
     #
-    # @return[Lennarb::RouteNode]
-    #
-    def routes(&)
-      @routes ||= Routes.new
-      @routes.instance_eval(&) if block_given?
-      @routes
-    end
-
-    # The Rack app.
-    #
+    # @return [#call] The Rack app
     def app
       @app ||= begin
-        request_handler = RequestHandler.new(self)
-
+        handler = build_request_handler
         stack = middleware.to_a
 
         Rack::Builder.app do
           stack.each { |middleware, args, block| use(middleware, *args, &block) }
-
-          run request_handler
+          run handler
         end
       end
     end
 
-    # Store mounted app's
+    # Rack interface method
     #
-    def controllers
-      @controllers ||= []
-    end
-    alias_method :mounted_apps, :controllers
-
-    # Check if the app is initialized.
-    #
-    # @return[Boolean]
-    #
-    def initialized? = @initialized
-
-    # Initialize the app.
-    #
-    # @return[void]
-    #
-    def initialize!
-      raise AlreadyInitializedError if initialized?
-
-      if controllers.any?
-        controllers.each do
-          routes.store.merge!(it.routes.store)
-        end
-      end
-
-      @initialized = true
-    end
-
-    # Freeze the app.
-    #
-    # @return[void]
-    #
-    def freeze!
-      app.freeze
-      routes.freeze
-    end
-
-    # Call the app.
-    #
-    # @param[Hash] env
-    #
+    # @param [Hash] env Rack environment
+    # @return [Array] Rack response
     def call(env)
       env[RACK_LENNA_APP] = self
-      Dir.chdir(root) { return app.call(env) }
+      app.call(env)
     end
 
-    # Compute the current environment.
+    # Define middleware
     #
-    # @return[String]
-    #
-    # @private
-    #
-    private def compute_env
-      env = ENV_NAMES.map { ENV[_1] }.compact.first.to_s
+    # @yield Block to configure middleware
+    # @return [MiddlewareStack] The middleware stack
+    def middleware(&block)
+      @middleware_stack ||= default_middleware_stack
+      @middleware_stack.instance_eval(&block) if block_given?
+      @middleware_stack
+    end
 
+    # Define helpers (instance method)
+    #
+    # @yield Block with helper definitions
+    # @return [Module] The helpers module
+    def helpers(&block)
+      self.class.helpers(&block)
+    end
+
+    # Define before hook (instance method)
+    #
+    # @yield [req, res] Before hook block
+    # @return [Array] The before hooks array
+    def before(&block)
+      self.class.before(&block)
+    end
+
+    # Define after hook (instance method)
+    #
+    # @yield [req, res] After hook block
+    # @return [Array] The after hooks array
+    def after(&block)
+      self.class.after(&block)
+    end
+
+    # Get/define routes
+    #
+    # @yield Block to define routes
+    # @return [Routes] The routes instance
+    def routes(&block)
+      if block_given?
+        self.class.instance_exec(&block)
+      end
+
+      self.class.routes
+    end
+
+    # Get/define configuration
+    #
+    # @param [Array<Symbol>] envs Environments
+    # @yield Configuration block
+    # @return [Config] The config instance
+    def config(*envs, &)
+      @config ||= self.class.config
+
+      if block_given?
+        write = envs.empty? || envs.map(&:to_sym).include?(env.name)
+        @config.instance_eval(&) if write
+      end
+
+      @config
+    end
+
+    # Initialize the app
+    #
+    # @return [self] The initialized app
+    # @raise [AlreadyInitializedError] If already initialized
+    def initialize!
+      raise AlreadyInitializedError if @initialized
+
+      @initialized = true
+      routes.freeze
+      self
+    end
+
+    # Check if initialized
+    #
+    # @return [Boolean] true if initialized
+    def initialized?
+      @initialized
+    end
+
+    # Error for already initialized app
+    AlreadyInitializedError = Class.new(StandardError)
+
+    protected
+
+    # Build the request handler
+    #
+    # @return [RequestHandler] The request handler
+    def build_request_handler
+      RequestHandler.new(self)
+    end
+
+    # Create default middleware stack
+    #
+    # @return [MiddlewareStack] The middleware stack
+    private def default_middleware_stack
+      stack = MiddlewareStack.new
+      stack.use(Lennarb::Middleware::RequestLogger)
+      stack.use(Rack::Runtime)
+      stack.use(Rack::Head)
+      stack.use(Rack::ETag)
+      stack.use(Rack::ShowExceptions) if env.development?
+      stack
+    end
+
+    # Compute environment from ENV variables
+    #
+    # @return [String] Environment name
+    private def compute_env
+      env = ENV_NAMES.map { |name| ENV[name] }.compact.first.to_s
       env.empty? ? "development" : env
     end
   end

@@ -21,14 +21,12 @@
   </a>
 </div>
 
-</div>
-
 ## Table of Contents
 
 - [Features](#features)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
-- [Performance](#performance)
+- [Basic Usage](#basic-usage)
 - [Documentation](#documentation)
 - [Contributing](#contributing)
 - [License](#license)
@@ -41,17 +39,8 @@
 - Support for middleware
 - Flexible configuration options
 - Two implementation options:
-  - `Lennarb::App`: Minimalist approach for complete control
-  - `Lennarb::Application`: Extended version with common components
-
-## Implementation Options
-
-Lennarb offers two implementation approaches to suit different needs:
-
-- **Lennarb::App**: Minimalist approach for complete control
-- **Lennarb::Application**: Extended version with common components
-
-See the [documentation](https://aristotelesbr.github.io/lennarb/) for details on each implementation.
+  - `Lennarb::App`: Minimalist approach for single applications
+  - `Lennarb::Base`: Extended version for mounting multiple applications
 
 ## Installation
 
@@ -64,22 +53,17 @@ gem 'lennarb'
 Or install it directly:
 
 ```bash
-
 gem install lennarb
 ```
 
 ## Quick Start
 
+Create a simple application with routes:
+
 ```ruby
 require "lennarb"
 
 app = Lennarb::App.new do
-  config do
-    mandatory :database_url, string
-    optional :env, string, "production"
-    optional :port, int, 9292
-  end
-
   routes do
     get("/") do |req, res|
       res.html("<h1>Welcome to Lennarb!</h1>")
@@ -98,48 +82,122 @@ run app  # In config.ru
 
 Start with: `rackup`
 
-## Performance
+## Basic Usage
 
-Lennarb is designed for high performance:
+### Creating a Simple Application
 
-![RPS](https://raw.githubusercontent.com/aristotelesbr/lennarb/main/benchmark/rps.png)
+The `Lennarb::App` class is the core of the framework:
 
-| Position | Application | 10 RPS     | 100 RPS    | 1.000 RPS | 10.000 RPS |
-| -------- | ----------- | ---------- | ---------- | --------- | ---------- |
-| 1        | Lenna       | 126.252,36 | 108.086,55 | 87.111,91 | 68.460,64  |
-| 2        | Roda        | 123.360,37 | 88.380,56  | 66.990,77 | 48.108,29  |
-| 3        | Syro        | 114.105,38 | 80.909,39  | 61.415,86 | 46.639,81  |
-| 4        | Hanami-API  | 68.089,18  | 52.851,88  | 40.801,78 | 27.996,00  |
+```ruby
+require "lennarb"
 
-See all [benchmark graphs](https://github.com/aristotelesbr/lennarb/blob/main/benchmark)
+class MyApp < Lennarb::App
+  # Define configuration
+  config do
+    mandatory :database_url, string
+    optional :port, int, 9292
+  end
+
+  # Define routes
+  routes do
+    get("/") do |req, res|
+      res.html("<h1>Welcome!</h1>")
+    end
+
+    post("/users") do |req, res|
+      # Access request data
+      data = req.body
+      res.json({status: "created", data: data})
+    end
+  end
+
+  # Define hooks
+  before do |req, res|
+    # Run before every request
+    puts "Processing request: #{req.path}"
+  end
+
+  after do |req, res|
+    # Run after every request
+    puts "Completed request: #{req.path}"
+  end
+
+  # Define helper methods
+  helpers do
+    def format_date(date)
+      date.strftime("%Y-%m-%d")
+    end
+  end
+end
+
+run MyApp.new.initialize!
+```
+
+### Response Types
+
+Lennarb provides various response methods:
+
+```ruby
+# HTML response
+res.html("<h1>Hello World</h1>")
+
+# JSON response
+res.json({message: "Hello World"})
+
+# Plain text response
+res.text("Plain text response")
+
+# Redirect
+res.redirect("/new-location")
+
+# Custom status code
+res.json({error: "Not found"}, status: 404)
+```
+
+### Mounting Applications
+
+For larger applications, use `Lennarb::Base` to mount multiple apps:
+
+```ruby
+class API < Lennarb::App
+  routes do
+    get("/users") do |req, res|
+      res.json([{id: 1, name: "Alice"}, {id: 2, name: "Bob"}])
+    end
+  end
+end
+
+class Admin < Lennarb::App
+  routes do
+    get("/dashboard") do |req, res|
+      res.html("<h1>Admin Dashboard</h1>")
+    end
+  end
+end
+
+class Application < Lennarb::Base
+  # Add common middleware
+  middleware do
+    use Rack::Session::Cookie, secret: "your_secret"
+  end
+
+  # Mount applications at specific paths
+  mount(API, at: "/api")
+  mount(Admin, at: "/admin")
+end
+
+run Application.new.initialize!
+```
 
 ## Documentation
 
+For more detailed information, please see:
+
 - [Getting Started](https://aristotelesbr.github.io/lennarb/guides/getting-started/index) - Setup and first steps
-- [Performance](https://aristotelesbr.github.io/lennarb/guides/performance/index.html) - Benchmarks and optimization
 - [Response](https://aristotelesbr.github.io/lennarb/guides/response/index.html) - Response handling
 - [Request](https://aristotelesbr.github.io/lennarb/guides/request/index.html) - Request handling
-
-## Key Features
-
-```ruby
-# Different response types
-res.html("<h1>Hello World</h1>")
-res.json("{\"message\": \"Hello World\"}")
-res.text("Plain text response")
-
-# Route parameters
-get("/users/:id") do |req, res|
-  user_id = req.params[:id]
-  res.json("{\"id\": #{user_id}}")
-end
-
-# Redirects
-res.redirect("/new-location")
-```
-
-For more examples and full documentation, see:
-[Complete Lennarb Documentation](https://aristotelesbr.github.io/lennarb/)
+- [Mounting Applications](https://aristotelesbr.github.io/lennarb/guides/mounting-applications/index.html) - Working with multiple apps
+- [Performance](https://aristotelesbr.github.io/lennarb/guides/performance/index.html) - Benchmarks showing Lennarb's routing algorithm efficiency
 
 ## Contributing
 

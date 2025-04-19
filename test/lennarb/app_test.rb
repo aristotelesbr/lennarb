@@ -38,35 +38,35 @@ class AppTest < Minitest::Test
     assert_equal "two", app.config.two
   end
 
-  test "mounts controller" do
-    app = Lennarb::App.new do
-      mount PostsController
-    end
-
-    assert_includes app.mounted_apps, PostsController
-  end
-
-  test "match routes by controller" do
-    app = Lennarb::App.new do
-      mount PostsController
-    end
-
-    app.initialize!
-
-    block, _ = app.routes.match_route(["posts"], :GET)
-
-    refute_nil(block)
-  end
-
   test "sets default middleware stack" do
     ENV["LENNA_ENV"] = "development"
     app = Lennarb::App.new
     stack = app.middleware.to_a.map(&:first)
 
-    assert_equal 0, stack.size
+    assert_equal 5, stack.size
+    assert_includes stack, Lennarb::Middleware::RequestLogger
+    assert_includes stack, Rack::Runtime
+    assert_includes stack, Rack::Head
+    assert_includes stack, Rack::ETag
+    assert_includes stack, Rack::ShowExceptions
   end
 
-  test "must be respond to routes" do
+  test "adds middleware to stack" do
+    sample_middleware = Class.new
+
+    app = Lennarb::App.new do
+      middleware do
+        use sample_middleware
+      end
+    end
+
+    stack = app.middleware.to_a.map(&:first)
+
+    assert_includes stack, sample_middleware
+    assert_equal 6, stack.size
+  end
+
+  test "must respond to routes" do
     app = Lennarb::App.new
 
     assert_respond_to app, :routes
@@ -79,10 +79,43 @@ class AppTest < Minitest::Test
     assert_raises(Lennarb::App::AlreadyInitializedError) { app.initialize! }
   end
 
-  test "prevents app from having the environment set after initialization" do
-    app = Lennarb::App.new
-    app.initialize!
+  test "helpers are accessible in routes" do
+    test_app_class = Class.new(Lennarb::App)
+    my_app = test_app_class.new do
+      helpers do
+        def greet(name)
+          "Hello, #{name}!"
+        end
+      end
 
-    assert_raises(Lennarb::App::AlreadyInitializedError) { app.env = :test }
+      routes do
+        get "/greet/:name" do |req, res|
+          res.text(greet(req.params[:name]))
+        end
+      end
+    end
+
+    my_app.initialize!
+
+    def app = my_app
+
+    env = Rack::MockRequest.env_for("/greet/Ari")
+    status, _, body = my_app.call(env)
+
+    assert_equal 200, status
+    assert_equal "Hello, Ari!", body.first
+  end
+
+  test "helpers with module" do
+    app_class = Class.new(Lennarb::App)
+    test_helpers = Module.new do
+      def greet(name)
+        "Hello, #{name}!"
+      end
+    end
+
+    app_class.helpers(test_helpers)
+
+    assert_includes app_class.helpers, test_helpers
   end
 end

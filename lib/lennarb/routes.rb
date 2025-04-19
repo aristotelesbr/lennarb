@@ -1,107 +1,67 @@
 module Lennarb
-  # Builder for the routes.
+  # Routes class for managing application routes
   #
   class Routes
-    attr_reader :store
-    # RouteNode is a trie data structure that stores routes.
-    # see {Lennarb::RouteNode} for more details.
+    # Initialize a new Routes instance
     #
-    # @example
-    #   node = RouteNode.new
-    #   node.add_route(["foo", "bar"], :GET, -> {})
-    #
-    def initialize(&)
+    # @return [Routes] The initialized routes instance
+    def initialize
       @store = RouteNode.new
-      instance_eval(&) if block_given?
+      @frozen = false
     end
 
-    # Define the HTTP methods.
-    #
-    # get, post, put, delete, patch, options, head
-    #
+    # Define a route for each HTTP method
     HTTP_METHODS.each do |http_method|
       define_method(http_method.downcase) do |path, &block|
+        fail RoutesFrozenError, "Routes are frozen and cannot be modified" if @frozen
         register_route(http_method, path, &block)
       end
     end
 
-    # Define the root route.
+    # Define the root route (GET /)
     #
-    # @param [String] path
-    #
-    # @param [Proc] block
-    #
-    # @retrn [void]
-    #
-    # @example
-    #   class MyApp
-    #     include Lennarb::Routes::Mixin
-    #
-    #     root do |req, res|
-    #     end
-    #
-    def root(&block) = register_route(:GET, "/", &block)
-
-    # Match the route.
-    #
-    # @param [Array<String>] parts
-    #
-    # @param [Symbol] http_method
-    #
-    def match_route(...) = @store.match_route(...)
-
-    # Freeze store object.
-    #
-    # @retrn [void]
-    #
-    def freeze = @store.freeze
-
-    private def register_route(http_method, path, &block)
-      parts = path.split("/").reject(&:empty?)
-      @store.add_route(parts, http_method, block)
+    # @param block [Proc] Block to execute when route matches
+    # @return [void]
+    def root(&block)
+      get("/", &block)
     end
 
-    # RouteNode is a trie data structure that stores routes.
-    # see {Lennarb::RouteNode} for more details.
+    # Match a route with the given path parts and HTTP method
     #
-    module Mixin
-      extend self
+    # @param parts [Array<String>] Path parts
+    # @param http_method [Symbol] HTTP method
+    # @return [Array(Proc, Hash), nil] Route handler and params, or nil if no match
+    def match_route(parts, http_method)
+      @store.match_route(parts, http_method)
+    end
 
-      # Define the routes.
-      #
-      # @return [Lennarb::Routes]
-      #
-      # @example
-      #   class MyApp
-      #     include Lennarb::Routes::Mixin
-      #
-      #     get "/foo" do |req, res|
-      #     end
-      #   end
-      #
-      def routes(&block)
-        @routes ||= Routes.new(&block)
-      end
+    # Freeze the routes to prevent further modification
+    #
+    # @return [self] The frozen routes
+    def freeze
+      @frozen = true
+      @store.freeze
+      self
+    end
 
-      # Define the HTTP methods.
-      #
-      # @see Lennarb::Routes#HTTP_METHODS
-      #
-      HTTP_METHODS.each do |http_method|
-        define_method(http_method.downcase) do |path, &block|
-          routes.send(http_method.downcase, path, &block)
-        end
-      end
+    # Check if the routes are frozen
+    #
+    # @return [Boolean] True if frozen
+    def frozen?
+      @frozen
+    end
 
-      # Define the root route.
-      #
-      # @param [Proc] block.
-      #
-      # @retrn [void]
-      #
-      # @see Lennarb::Routes#root
-      #
-      def root(&) = routes.root(&)
+    private
+
+    # Register a route with the specified HTTP method and path
+    #
+    # @param http_method [Symbol] HTTP method (:GET, :POST, etc.)
+    # @param path [String] Route path pattern
+    # @param block [Proc] Block to execute when route matches
+    # @return [void]
+    def register_route(http_method, path, &block)
+      parts = path.split("/").reject(&:empty?)
+      @store.add_route(parts, http_method, block)
     end
   end
 end

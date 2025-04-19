@@ -4,7 +4,7 @@ module Lennarb
   class Request < Rack::Request
     # The environment variables of the request
     #
-    # @retrn [Hash]
+    # @return [Hash]
     attr_reader :env
 
     # Initialize the request object
@@ -12,7 +12,7 @@ module Lennarb
     # @param [Hash] env
     # @param [Hash] route_params
     #
-    # @retrn [Request]
+    # @return [Request]
     #
     def initialize(env, route_params = {})
       super(env)
@@ -21,7 +21,7 @@ module Lennarb
 
     # Get the request parameters merged with route parameters
     #
-    # @retrn [Hash]
+    # @return [Hash]
     #
     def params
       @params ||= super.merge(@route_params)&.transform_keys(&:to_sym)
@@ -29,7 +29,7 @@ module Lennarb
 
     # Get the request path without query string
     #
-    # @retrn [String]
+    # @return [String]
     #
     def path
       @path ||= super.split("?").first
@@ -37,7 +37,7 @@ module Lennarb
 
     # Read the body of the request
     #
-    # @retrn [String]
+    # @return [String]
     #
     def body
       @body ||= super.read
@@ -45,7 +45,7 @@ module Lennarb
 
     # Get the query parameters
     #
-    # @retrn [Hash]
+    # @return [Hash]
     #
     def query_params
       @query_params ||= Rack::Utils.parse_nested_query(query_string || "").transform_keys(&:to_sym)
@@ -55,7 +55,7 @@ module Lennarb
     #
     # @param [String] key
     # @param [Object] value
-    # @retrn [Object] the value
+    # @return [Object] the value
     #
     def []=(key, value)
       env[key] = value
@@ -64,7 +64,7 @@ module Lennarb
     # Get a value from the environment
     #
     # @param [String] key
-    # @retrn [Object]
+    # @return [Object]
     #
     def [](key)
       env[key]
@@ -72,15 +72,20 @@ module Lennarb
 
     # Get the headers of the request
     #
-    # @retrn [Hash]
+    # @return [Hash]
     #
     def headers
-      @headers ||= env.select { |key, _| key.start_with?("HTTP_") }
+      @headers ||= env.each_with_object({}) do |(key, value), result|
+        if key.start_with?("HTTP_")
+          header_name = key.sub("HTTP_", "").split("_").map(&:capitalize).join("-")
+          result[header_name] = value
+        end
+      end
     end
 
     # Get the client IP address
     #
-    # @retrn [String]
+    # @return [String]
     #
     def ip
       ip_address
@@ -88,7 +93,7 @@ module Lennarb
 
     # Check if the request is secure (HTTPS)
     #
-    # @retrn [Boolean]
+    # @return [Boolean]
     #
     def secure?
       scheme == "https"
@@ -98,7 +103,7 @@ module Lennarb
 
     # Get the user agent
     #
-    # @retrn [String, nil]
+    # @return [String, nil]
     #
     def user_agent
       env["HTTP_USER_AGENT"]
@@ -106,7 +111,7 @@ module Lennarb
 
     # Get the accept header
     #
-    # @retrn [String, nil]
+    # @return [String, nil]
     #
     def accept
       env["HTTP_ACCEPT"]
@@ -114,7 +119,7 @@ module Lennarb
 
     # Get the referer header
     #
-    # @retrn [String, nil]
+    # @return [String, nil]
     #
     def referer
       env["HTTP_REFERER"]
@@ -122,7 +127,7 @@ module Lennarb
 
     # Get the host header
     #
-    # @retrn [String, nil]
+    # @return [String, nil]
     #
     def host
       env["HTTP_HOST"]
@@ -130,7 +135,7 @@ module Lennarb
 
     # Get the content length header
     #
-    # @retrn [String, nil]
+    # @return [String, nil]
     #
     def content_length
       env["HTTP_CONTENT_LENGTH"]
@@ -138,7 +143,7 @@ module Lennarb
 
     # Get the content type header
     #
-    # @retrn [String, nil]
+    # @return [String, nil]
     #
     def content_type
       env["HTTP_CONTENT_TYPE"]
@@ -146,7 +151,7 @@ module Lennarb
 
     # Check if the request is an XHR request
     #
-    # @retrn [Boolean]
+    # @return [Boolean]
     #
     def xhr?
       env["HTTP_X_REQUESTED_WITH"]&.casecmp("XMLHttpRequest")&.zero? || false
@@ -154,7 +159,7 @@ module Lennarb
 
     # Check if the request is a JSON request
     #
-    # @retrn [Boolean]
+    # @return [Boolean]
     #
     def json?
       content_type&.include?("application/json")
@@ -162,12 +167,11 @@ module Lennarb
 
     # Parse JSON body if content type is application/json
     #
-    # @retrn [Hash, nil]
+    # @return [Hash, nil]
     #
     def json_body
       return nil unless json?
       @json_body ||= begin
-        require "json"
         JSON.parse(body, symbolize_names: true)
       rescue JSON::ParserError
         nil
@@ -176,7 +180,7 @@ module Lennarb
 
     # Check if the request is an AJAX request (alias for xhr?)
     #
-    # @retrn [Boolean]
+    # @return [Boolean]
     #
     def ajax?
       xhr?
@@ -184,19 +188,21 @@ module Lennarb
 
     # Get the requested format (.html, .json, etc)
     #
-    # @retrn [Symbol, nil]
+    # @return [Symbol, nil]
     #
     def format
-      path_info = env["PATH_INFO"]
-      return nil unless path_info.include?(".")
+      @format ||= begin
+        path_info = env["PATH_INFO"]
+        return nil unless path_info.include?(".")
 
-      extension = File.extname(path_info).delete(".")
-      extension.empty? ? nil : extension.to_sym
+        extension = File.extname(path_info).delete(".")
+        extension.empty? ? nil : extension.to_sym
+      end
     end
 
     # Check if the request is a GET request
     #
-    # @retrn [Boolean]
+    # @return [Boolean]
     #
     def get?
       request_method == "GET"
@@ -204,7 +210,7 @@ module Lennarb
 
     # Check if the request is a POST request
     #
-    # @retrn [Boolean]
+    # @return [Boolean]
     #
     def post?
       request_method == "POST"
@@ -212,7 +218,7 @@ module Lennarb
 
     # Check if the request is a PUT request
     #
-    # @retrn [Boolean]
+    # @return [Boolean]
     #
     def put?
       request_method == "PUT"
@@ -220,7 +226,7 @@ module Lennarb
 
     # Check if the request is a DELETE request
     #
-    # @retrn [Boolean]
+    # @return [Boolean]
     #
     def delete?
       request_method == "DELETE"
@@ -228,7 +234,7 @@ module Lennarb
 
     # Check if the request is a HEAD request
     #
-    # @retrn [Boolean]
+    # @return [Boolean]
     #
     def head?
       request_method == "HEAD"
@@ -236,7 +242,7 @@ module Lennarb
 
     # Check if the request is a PATCH request
     #
-    # @retrn [Boolean]
+    # @return [Boolean]
     #
     def patch?
       request_method == "PATCH"
@@ -246,11 +252,13 @@ module Lennarb
 
     # Get the client IP address
     #
-    # @retrn [String]
+    # @return [String]
     #
     def ip_address
       forwarded_for = env["HTTP_X_FORWARDED_FOR"]
-      forwarded_for ? forwarded_for.split(",").first.strip : env["REMOTE_ADDR"]
+      return forwarded_for.split(",").map(&:strip).first if forwarded_for
+
+      env["REMOTE_ADDR"]
     end
   end
 end
