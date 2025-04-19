@@ -193,11 +193,10 @@ run Application.new.initialize!
 
 For more detailed information, please see:
 
-- [Getting Started](https://aristotelesbr.github.io/lennarb/guides/getting-started/index) - Setup and first steps
-- [Response](https://aristotelesbr.github.io/lennarb/guides/response/index.html) - Response handling
-- [Request](https://aristotelesbr.github.io/lennarb/guides/request/index.html) - Request handling
-- [Mounting Applications](https://aristotelesbr.github.io/lennarb/guides/mounting-applications/index.html) - Working with multiple apps
-- [Performance](https://aristotelesbr.github.io/lennarb/guides/performance/index.html) - Benchmarks showing Lennarb's routing algorithm efficiency
+- [Getting Started](https://github.com/aristotelesbr/lennarb/tree/main/guides/getting-started) - Setup and first steps
+- [Response](https://github.com/aristotelesbr/lennarb/tree/main/guides/response) - Response handling
+- [Mounting Applications](https://github.com/aristotelesbr/lennarb/tree/main/guides/mounting-applications) - Working with multiple apps
+- [Performance](https://github.com/aristotelesbr/lennarb/tree/main/guides/performance) - Benchmarks showing Lennarb's routing algorithm efficiency
 
 ## Contributing
 
