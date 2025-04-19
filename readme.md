@@ -64,15 +64,13 @@ Create a simple application with routes:
 require "lennarb"
 
 app = Lennarb::App.new do
-  routes do
-    get("/") do |req, res|
-      res.html("<h1>Welcome to Lennarb!</h1>")
-    end
+  get("/") do |req, res|
+    res.html("<h1>Welcome to Lennarb!</h1>")
+  end
 
-    get("/hello/:name") do |req, res|
-      name = req.params[:name]
-      res.html("Hello, #{name}!")
-    end
+  get("/hello/:name") do |req, res|
+     name = req.params[:name]
+     res.html("Hello, #{name}!")
   end
 end
 
@@ -98,15 +96,13 @@ class MyApp < Lennarb::App
     optional :port, int, 9292
   end
 
-  # Define routes
-  routes do
-    get("/") do |req, res|
-      res.html("<h1>Welcome!</h1>")
-    end
+  get("/") do |req, res|
+    res.html("<h1>Welcome!</h1>")
+  end
 
-    post("/users") do |req, res|
-      # Access request data
-      data = req.body
+  post("/users") do |req, res|
+    # Access request data
+    data = req.body
       res.json({status: "created", data: data})
     end
   end
@@ -160,18 +156,14 @@ For larger applications, use `Lennarb::Base` to mount multiple apps:
 
 ```ruby
 class API < Lennarb::App
-  routes do
-    get("/users") do |req, res|
-      res.json([{id: 1, name: "Alice"}, {id: 2, name: "Bob"}])
-    end
+  get("/users") do |req, res|
+    res.json([{id: 1, name: "Alice"}, {id: 2, name: "Bob"}])
   end
 end
 
-class Admin < Lennarb::App
-  routes do
-    get("/dashboard") do |req, res|
-      res.html("<h1>Admin Dashboard</h1>")
-    end
+class Admin < Lennarb::App  
+  get("/dashboard") do |req, res|
+    res.html("<h1>Admin Dashboard</h1>")
   end
 end
 
