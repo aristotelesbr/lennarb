@@ -79,8 +79,6 @@
     <img src="https://img.shields.io/:License-MIT-blue.svg" alt="MIT License">
   </a>
 </div>
-<p>&lt;/div&gt;</p>
-
 <h2 id="label-Table+of+Contents">Table of Contents</h2>
 <ul><li>
 <p><a href="#features">Features</a></p>
@@ -89,7 +87,7 @@
 </li><li>
 <p><a href="#quick-start">Quick Start</a></p>
 </li><li>
-<p><a href="#performance">Performance</a></p>
+<p><a href="#basic-usage">Basic Usage</a></p>
 </li><li>
 <p><a href="#documentation">Documentation</a></p>
 </li><li>
@@ -112,21 +110,10 @@
 </li><li>
 <p>Two implementation options:</p>
 </li><li>
-<p><code>Lennarb::App</code>: Minimalist approach for complete control</p>
+<p><code>Lennarb::App</code>: Minimalist approach for single applications</p>
 </li><li>
-<p><code>Lennarb::Application</code>: Extended version with common components</p>
+<p><code>Lennarb::Base</code>: Extended version for mounting multiple applications</p>
 </li></ul>
-
-<h2 id="label-Implementation+Options">Implementation Options</h2>
-
-<p>Lennarb offers two implementation approaches to suit different needs:</p>
-<ul><li>
-<p><strong>Lennarb::App</strong>: Minimalist approach for complete control</p>
-</li><li>
-<p><strong>Lennarb::Application</strong>: Extended version with common components</p>
-</li></ul>
-
-<p>See the <a href="https://aristotelesbr.github.io/lennarb/">documentation</a> for details on each implementation.</p>
 
 <h2 id="label-Installation">Installation</h2>
 
@@ -137,21 +124,16 @@
 
 <p>Or install it directly:</p>
 
-<pre class="code ruby"><code class="ruby">
-<span class='id identifier rubyid_gem'>gem</span> <span class='id identifier rubyid_install'>install</span> <span class='id identifier rubyid_lennarb'>lennarb</span>
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_gem'>gem</span> <span class='id identifier rubyid_install'>install</span> <span class='id identifier rubyid_lennarb'>lennarb</span>
 </code></pre>
 
 <h2 id="label-Quick+Start">Quick Start</h2>
 
+<p>Create a simple application with routes:</p>
+
 <pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_require'>require</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>lennarb</span><span class='tstring_end'>&quot;</span></span>
 
 <span class='id identifier rubyid_app'>app</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Lennarb.html" title="Lennarb (module)">Lennarb</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Lennarb/App.html" title="Lennarb::App (class)">App</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="Lennarb/App.html#initialize-instance_method" title="Lennarb::App#initialize (method)">new</a></span></span> <span class='kw'>do</span>
-  <span class='id identifier rubyid_config'>config</span> <span class='kw'>do</span>
-    <span class='id identifier rubyid_mandatory'>mandatory</span> <span class='symbol'>:database_url</span><span class='comma'>,</span> <span class='id identifier rubyid_string'>string</span>
-    <span class='id identifier rubyid_optional'>optional</span> <span class='symbol'>:env</span><span class='comma'>,</span> <span class='id identifier rubyid_string'>string</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>production</span><span class='tstring_end'>&quot;</span></span>
-    <span class='id identifier rubyid_optional'>optional</span> <span class='symbol'>:port</span><span class='comma'>,</span> <span class='id identifier rubyid_int'>int</span><span class='comma'>,</span> <span class='int'>9292</span>
-  <span class='kw'>end</span>
-
   <span class='id identifier rubyid_routes'>routes</span> <span class='kw'>do</span>
     <span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_req'>req</span><span class='comma'>,</span> <span class='id identifier rubyid_res'>res</span><span class='op'>|</span>
       <span class='id identifier rubyid_res'>res</span><span class='period'>.</span><span class='id identifier rubyid_html'>html</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>&lt;h1&gt;Welcome to Lennarb!&lt;/h1&gt;</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -170,90 +152,124 @@
 
 <p>Start with: <code>rackup</code></p>
 
-<h2 id="label-Performance">Performance</h2>
+<h2 id="label-Basic+Usage">Basic Usage</h2>
 
-<p>Lennarb is designed for high performance:</p>
+<h3 id="label-Creating+a+Simple+Application">Creating a Simple Application</h3>
 
-<p><img src="https://raw.githubusercontent.com/aristotelesbr/lennarb/main/benchmark/rps.png"></p>
+<p>The <code>Lennarb::App</code> class is the core of the framework:</p>
 
-<table role="table">
-<thead>
-<tr>
-<th>Position</th>
-<th>Application</th>
-<th>10 RPS</th>
-<th>100 RPS</th>
-<th>1.000 RPS</th>
-<th>10.000 RPS</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>Lenna</td>
-<td>126.252,36</td>
-<td>108.086,55</td>
-<td>87.111,91</td>
-<td>68.460,64</td>
-</tr>
-<tr>
-<td>2</td>
-<td>Roda</td>
-<td>123.360,37</td>
-<td>88.380,56</td>
-<td>66.990,77</td>
-<td>48.108,29</td>
-</tr>
-<tr>
-<td>3</td>
-<td>Syro</td>
-<td>114.105,38</td>
-<td>80.909,39</td>
-<td>61.415,86</td>
-<td>46.639,81</td>
-</tr>
-<tr>
-<td>4</td>
-<td>Hanami-API</td>
-<td>68.089,18</td>
-<td>52.851,88</td>
-<td>40.801,78</td>
-<td>27.996,00</td>
-</tr>
-</tbody>
-</table>
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_require'>require</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>lennarb</span><span class='tstring_end'>&quot;</span></span>
 
-<p>See all <a href="https://github.com/aristotelesbr/lennarb/blob/main/benchmark">benchmark graphs</a></p>
+<span class='kw'>class</span> <span class='const'>MyApp</span> <span class='op'>&lt;</span> <span class='const'><span class='object_link'><a href="Lennarb.html" title="Lennarb (module)">Lennarb</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Lennarb/App.html" title="Lennarb::App (class)">App</a></span></span>
+  <span class='comment'># Define configuration
+</span>  <span class='id identifier rubyid_config'>config</span> <span class='kw'>do</span>
+    <span class='id identifier rubyid_mandatory'>mandatory</span> <span class='symbol'>:database_url</span><span class='comma'>,</span> <span class='id identifier rubyid_string'>string</span>
+    <span class='id identifier rubyid_optional'>optional</span> <span class='symbol'>:port</span><span class='comma'>,</span> <span class='id identifier rubyid_int'>int</span><span class='comma'>,</span> <span class='int'>9292</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># Define routes
+</span>  <span class='id identifier rubyid_routes'>routes</span> <span class='kw'>do</span>
+    <span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_req'>req</span><span class='comma'>,</span> <span class='id identifier rubyid_res'>res</span><span class='op'>|</span>
+      <span class='id identifier rubyid_res'>res</span><span class='period'>.</span><span class='id identifier rubyid_html'>html</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>&lt;h1&gt;Welcome!&lt;/h1&gt;</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+
+    <span class='id identifier rubyid_post'>post</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/users</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_req'>req</span><span class='comma'>,</span> <span class='id identifier rubyid_res'>res</span><span class='op'>|</span>
+      <span class='comment'># Access request data
+</span>      <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='id identifier rubyid_req'>req</span><span class='period'>.</span><span class='id identifier rubyid_body'>body</span>
+      <span class='id identifier rubyid_res'>res</span><span class='period'>.</span><span class='id identifier rubyid_json'>json</span><span class='lparen'>(</span><span class='lbrace'>{</span><span class='label'>status:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>created</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='label'>data:</span> <span class='id identifier rubyid_data'>data</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># Define hooks
+</span>  <span class='id identifier rubyid_before'>before</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_req'>req</span><span class='comma'>,</span> <span class='id identifier rubyid_res'>res</span><span class='op'>|</span>
+    <span class='comment'># Run before every request
+</span>    <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Processing request: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_req'>req</span><span class='period'>.</span><span class='id identifier rubyid_path'>path</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>end</span>
+
+  <span class='id identifier rubyid_after'>after</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_req'>req</span><span class='comma'>,</span> <span class='id identifier rubyid_res'>res</span><span class='op'>|</span>
+    <span class='comment'># Run after every request
+</span>    <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Completed request: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_req'>req</span><span class='period'>.</span><span class='id identifier rubyid_path'>path</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># Define helper methods
+</span>  <span class='id identifier rubyid_helpers'>helpers</span> <span class='kw'>do</span>
+    <span class='kw'>def</span> <span class='id identifier rubyid_format_date'>format_date</span><span class='lparen'>(</span><span class='id identifier rubyid_date'>date</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_date'>date</span><span class='period'>.</span><span class='id identifier rubyid_strftime'>strftime</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>%Y-%m-%d</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span>
+
+<span class='id identifier rubyid_run'>run</span> <span class='const'>MyApp</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='period'>.</span><span class='id identifier rubyid_initialize!'>initialize!</span>
+</code></pre>
+
+<h3 id="label-Response+Types">Response Types</h3>
+
+<p>Lennarb provides various response methods:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='comment'># HTML response
+</span><span class='id identifier rubyid_res'>res</span><span class='period'>.</span><span class='id identifier rubyid_html'>html</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>&lt;h1&gt;Hello World&lt;/h1&gt;</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+
+<span class='comment'># JSON response
+</span><span class='id identifier rubyid_res'>res</span><span class='period'>.</span><span class='id identifier rubyid_json'>json</span><span class='lparen'>(</span><span class='lbrace'>{</span><span class='label'>message:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Hello World</span><span class='tstring_end'>&quot;</span></span><span class='rbrace'>}</span><span class='rparen'>)</span>
+
+<span class='comment'># Plain text response
+</span><span class='id identifier rubyid_res'>res</span><span class='period'>.</span><span class='id identifier rubyid_text'>text</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Plain text response</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+
+<span class='comment'># Redirect
+</span><span class='id identifier rubyid_res'>res</span><span class='period'>.</span><span class='id identifier rubyid_redirect'>redirect</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/new-location</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+
+<span class='comment'># Custom status code
+</span><span class='id identifier rubyid_res'>res</span><span class='period'>.</span><span class='id identifier rubyid_json'>json</span><span class='lparen'>(</span><span class='lbrace'>{</span><span class='label'>error:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Not found</span><span class='tstring_end'>&quot;</span></span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='label'>status:</span> <span class='int'>404</span><span class='rparen'>)</span>
+</code></pre>
+
+<h3 id="label-Mounting+Applications">Mounting Applications</h3>
+
+<p>For larger applications, use <code>Lennarb::Base</code> to mount multiple apps:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='kw'>class</span> <span class='const'>API</span> <span class='op'>&lt;</span> <span class='const'><span class='object_link'><a href="Lennarb.html" title="Lennarb (module)">Lennarb</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Lennarb/App.html" title="Lennarb::App (class)">App</a></span></span>
+  <span class='id identifier rubyid_routes'>routes</span> <span class='kw'>do</span>
+    <span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/users</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_req'>req</span><span class='comma'>,</span> <span class='id identifier rubyid_res'>res</span><span class='op'>|</span>
+      <span class='id identifier rubyid_res'>res</span><span class='period'>.</span><span class='id identifier rubyid_json'>json</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='lbrace'>{</span><span class='label'>id:</span> <span class='int'>1</span><span class='comma'>,</span> <span class='label'>name:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Alice</span><span class='tstring_end'>&quot;</span></span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='lbrace'>{</span><span class='label'>id:</span> <span class='int'>2</span><span class='comma'>,</span> <span class='label'>name:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Bob</span><span class='tstring_end'>&quot;</span></span><span class='rbrace'>}</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span>
+
+<span class='kw'>class</span> <span class='const'>Admin</span> <span class='op'>&lt;</span> <span class='const'><span class='object_link'><a href="Lennarb.html" title="Lennarb (module)">Lennarb</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Lennarb/App.html" title="Lennarb::App (class)">App</a></span></span>
+  <span class='id identifier rubyid_routes'>routes</span> <span class='kw'>do</span>
+    <span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/dashboard</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_req'>req</span><span class='comma'>,</span> <span class='id identifier rubyid_res'>res</span><span class='op'>|</span>
+      <span class='id identifier rubyid_res'>res</span><span class='period'>.</span><span class='id identifier rubyid_html'>html</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>&lt;h1&gt;Admin Dashboard&lt;/h1&gt;</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span>
+
+<span class='kw'>class</span> <span class='const'>Application</span> <span class='op'>&lt;</span> <span class='const'><span class='object_link'><a href="Lennarb.html" title="Lennarb (module)">Lennarb</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Lennarb/Base.html" title="Lennarb::Base (class)">Base</a></span></span>
+  <span class='comment'># Add common middleware
+</span>  <span class='id identifier rubyid_middleware'>middleware</span> <span class='kw'>do</span>
+    <span class='id identifier rubyid_use'>use</span> <span class='const'>Rack</span><span class='op'>::</span><span class='const'>Session</span><span class='op'>::</span><span class='const'>Cookie</span><span class='comma'>,</span> <span class='label'>secret:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>your_secret</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># Mount applications at specific paths
+</span>  <span class='id identifier rubyid_mount'>mount</span><span class='lparen'>(</span><span class='const'>API</span><span class='comma'>,</span> <span class='label'>at:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/api</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_mount'>mount</span><span class='lparen'>(</span><span class='const'>Admin</span><span class='comma'>,</span> <span class='label'>at:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/admin</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='kw'>end</span>
+
+<span class='id identifier rubyid_run'>run</span> <span class='const'>Application</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='period'>.</span><span class='id identifier rubyid_initialize!'>initialize!</span>
+</code></pre>
 
 <h2 id="label-Documentation">Documentation</h2>
+
+<p>For more detailed information, please see:</p>
 <ul><li>
 <p><a href="https://aristotelesbr.github.io/lennarb/guides/getting-started/index">Getting Started</a> - Setup and first steps</p>
-</li><li>
-<p><a href="https://aristotelesbr.github.io/lennarb/guides/performance/index.html">Performance</a> - Benchmarks and optimization</p>
 </li><li>
 <p><a href="https://aristotelesbr.github.io/lennarb/guides/response/index.html">Response</a> - Response handling</p>
 </li><li>
 <p><a href="https://aristotelesbr.github.io/lennarb/guides/request/index.html">Request</a> - Request handling</p>
+</li><li>
+<p><a href="https://aristotelesbr.github.io/lennarb/guides/mounting-applications/index.html">Mounting Applications</a> - Working with multiple apps</p>
+</li><li>
+<p><a href="https://aristotelesbr.github.io/lennarb/guides/performance/index.html">Performance</a> - Benchmarks showing Lennarb’s routing algorithm efficiency</p>
 </li></ul>
-
-<h2 id="label-Key+Features">Key Features</h2>
-
-<pre class="code ruby"><code class="ruby"><span class='comment'># Different response types
-</span><span class='id identifier rubyid_res'>res</span><span class='period'>.</span><span class='id identifier rubyid_html'>html</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>&lt;h1&gt;Hello World&lt;/h1&gt;</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-<span class='id identifier rubyid_res'>res</span><span class='period'>.</span><span class='id identifier rubyid_json'>json</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>{\&quot;message\&quot;: \&quot;Hello World\&quot;}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-<span class='id identifier rubyid_res'>res</span><span class='period'>.</span><span class='id identifier rubyid_text'>text</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Plain text response</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-
-<span class='comment'># Route parameters
-</span><span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/users/:id</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_req'>req</span><span class='comma'>,</span> <span class='id identifier rubyid_res'>res</span><span class='op'>|</span>
-  <span class='id identifier rubyid_user_id'>user_id</span> <span class='op'>=</span> <span class='id identifier rubyid_req'>req</span><span class='period'>.</span><span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:id</span><span class='rbracket'>]</span>
-  <span class='id identifier rubyid_res'>res</span><span class='period'>.</span><span class='id identifier rubyid_json'>json</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>{\&quot;id\&quot;: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_user_id'>user_id</span><span class='embexpr_end'>}</span><span class='tstring_content'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-<span class='kw'>end</span>
-
-<span class='comment'># Redirects
-</span><span class='id identifier rubyid_res'>res</span><span class='period'>.</span><span class='id identifier rubyid_redirect'>redirect</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/new-location</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-</code></pre>
-
-<p>For more examples and full documentation, see: <a href="https://aristotelesbr.github.io/lennarb/">Complete Lennarb Documentation</a></p>
 
 <h2 id="label-Contributing">Contributing</h2>
 <ol><li>
@@ -276,9 +292,9 @@
 </div></div>
 
       <div id="footer">
-  Generated on Mon Mar  3 19:51:46 2025 by
+  Generated on Sat Apr 19 19:43:04 2025 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.37 (ruby-3.4.2).
+  0.9.37 (ruby-3.4.3).
 </div>
 
     </div>

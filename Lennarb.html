@@ -79,7 +79,7 @@
   <dl>
     <dt>Defined in:</dt>
     <dd>lib/lennarb.rb<span class="defines">,<br />
-  lib/lennarb/app.rb,<br /> lib/lennarb/config.rb,<br /> lib/lennarb/errors.rb,<br /> lib/lennarb/routes.rb,<br /> lib/lennarb/request.rb,<br /> lib/lennarb/version.rb,<br /> lib/lennarb/response.rb,<br /> lib/lennarb/constansts.rb,<br /> lib/lennarb/route_node.rb,<br /> lib/lennarb/application.rb,<br /> lib/lennarb/environment.rb,<br /> lib/lennarb/request_handler.rb,<br /> lib/lennarb/middleware_stack.rb,<br /> lib/lennarb/application/request_handler.rb</span>
+  lib/lennarb/app.rb,<br /> lib/lennarb/base.rb,<br /> lib/lennarb/hooks.rb,<br /> lib/lennarb/config.rb,<br /> lib/lennarb/errors.rb,<br /> lib/lennarb/logger.rb,<br /> lib/lennarb/routes.rb,<br /> lib/lennarb/helpers.rb,<br /> lib/lennarb/request.rb,<br /> lib/lennarb/version.rb,<br /> lib/lennarb/response.rb,<br /> lib/lennarb/constants.rb,<br /> lib/lennarb/route_node.rb,<br /> lib/lennarb/environment.rb,<br /> lib/lennarb/request_handler.rb,<br /> lib/lennarb/middleware_stack.rb,<br /> lib/lennarb/parameter_filter.rb,<br /> lib/lennarb/middleware/request_logger.rb</span>
 </dd>
   </dl>
   
@@ -100,9 +100,11 @@
 <p class="children">
   
     
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Lennarb/Helpers.html" title="Lennarb::Helpers (module)">Helpers</a></span>, <span class='object_link'><a href="Lennarb/Hooks.html" title="Lennarb::Hooks (module)">Hooks</a></span>, <span class='object_link'><a href="Lennarb/Middleware.html" title="Lennarb::Middleware (module)">Middleware</a></span>
+    
   
     
-      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Lennarb/App.html" title="Lennarb::App (class)">App</a></span>, <span class='object_link'><a href="Lennarb/Application.html" title="Lennarb::Application (class)">Application</a></span>, <span class='object_link'><a href="Lennarb/Config.html" title="Lennarb::Config (class)">Config</a></span>, <span class='object_link'><a href="Lennarb/Environment.html" title="Lennarb::Environment (class)">Environment</a></span>, <span class='object_link'><a href="Lennarb/MiddlewareStack.html" title="Lennarb::MiddlewareStack (class)">MiddlewareStack</a></span>, <span class='object_link'><a href="Lennarb/Request.html" title="Lennarb::Request (class)">Request</a></span>, <span class='object_link'><a href="Lennarb/RequestHandler.html" title="Lennarb::RequestHandler (class)">RequestHandler</a></span>, <span class='object_link'><a href="Lennarb/Response.html" title="Lennarb::Response (class)">Response</a></span>, <span class='object_link'><a href="Lennarb/RouteNode.html" title="Lennarb::RouteNode (class)">RouteNode</a></span>, <span class='object_link'><a href="Lennarb/Routes.html" title="Lennarb::Routes (class)">Routes</a></span>
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Lennarb/App.html" title="Lennarb::App (class)">App</a></span>, <span class='object_link'><a href="Lennarb/Base.html" title="Lennarb::Base (class)">Base</a></span>, <span class='object_link'><a href="Lennarb/Config.html" title="Lennarb::Config (class)">Config</a></span>, <span class='object_link'><a href="Lennarb/Environment.html" title="Lennarb::Environment (class)">Environment</a></span>, <span class='object_link'><a href="Lennarb/Logger.html" title="Lennarb::Logger (class)">Logger</a></span>, <span class='object_link'><a href="Lennarb/MiddlewareStack.html" title="Lennarb::MiddlewareStack (class)">MiddlewareStack</a></span>, <span class='object_link'><a href="Lennarb/ParameterFilter.html" title="Lennarb::ParameterFilter (class)">ParameterFilter</a></span>, <span class='object_link'><a href="Lennarb/Request.html" title="Lennarb::Request (class)">Request</a></span>, <span class='object_link'><a href="Lennarb/RequestHandler.html" title="Lennarb::RequestHandler (class)">RequestHandler</a></span>, <span class='object_link'><a href="Lennarb/Response.html" title="Lennarb::Response (class)">Response</a></span>, <span class='object_link'><a href="Lennarb/RouteNode.html" title="Lennarb::RouteNode (class)">RouteNode</a></span>, <span class='object_link'><a href="Lennarb/Routes.html" title="Lennarb::Routes (class)">Routes</a></span>
     
   
 </p>
@@ -179,6 +181,22 @@
         </dt>
         <dd><pre class="code"><span class='const'>Class</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='const'>StandardError</span><span class='rparen'>)</span></pre></dd>
       
+        <dt id="RoutesFrozenError-constant" class="">RoutesFrozenError =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>This error is raised whenever the app is initialized more than once.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='const'>Class</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='const'>RuntimeError</span><span class='rparen'>)</span></pre></dd>
+      
         <dt id="VERSION-constant" class="">VERSION =
           <div class="docstring">
   <div class="discussion">
@@ -193,7 +211,7 @@
 
 </div>
         </dt>
-        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>1.4.1</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>1.5.0</span><span class='tstring_end'>&quot;</span></span></pre></dd>
       
         <dt id="RACK_LENNA_APP-constant" class="">RACK_LENNA_APP =
           <div class="docstring">
@@ -210,22 +228,6 @@
 </div>
         </dt>
         <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>lennarb.app</span><span class='tstring_end'>&quot;</span></span></pre></dd>
-      
-        <dt id="RACK_LENNA_BASE-constant" class="">RACK_LENNA_BASE =
-          <div class="docstring">
-  <div class="discussion">
-    
-<p>The application base for the standard application</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-
-</div>
-        </dt>
-        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>lennarb.base</span><span class='tstring_end'>&quot;</span></span></pre></dd>
       
         <dt id="ENV_NAMES-constant" class="">ENV_NAMES =
           <div class="docstring">
@@ -305,9 +307,9 @@
 </div>
 
       <div id="footer">
-  Generated on Mon Mar  3 19:51:46 2025 by
+  Generated on Sat Apr 19 19:43:04 2025 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.37 (ruby-3.4.2).
+  0.9.37 (ruby-3.4.3).
 </div>
 
     </div>
