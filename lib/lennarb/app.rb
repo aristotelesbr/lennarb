@@ -75,11 +75,23 @@ module Lennarb
         @config ||= Config.new(self)
 
         if block_given?
-          write = envs.empty? || envs.map(&:to_sym).include?(env.name)
+          write = envs.empty? || envs.map(&:to_sym).include?(compute_env_name)
           @config.instance_eval(&) if write
         end
 
         @config
+      end
+
+      # The environment name computed from ENV.
+      #
+      # A class has no env of its own, so environment-scoped config blocks
+      # resolve it here.
+      #
+      # @return [Symbol] Environment name
+      # @api private
+      private def compute_env_name
+        name = ENV_NAMES.map { |var| ENV[var] }.compact.first.to_s
+        (name.empty? ? "development" : name).to_sym
       end
     end
 

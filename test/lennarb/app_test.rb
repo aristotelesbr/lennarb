@@ -184,4 +184,24 @@ class AppTest < Minitest::Test
 
     app_class.new.initialize! # must not raise
   end
+
+  test "class-level config scoped to the current environment is applied" do
+    ENV["APP_ENV"] = "production"
+
+    app_class = Class.new(Lennarb::App) do
+      config(:production) { set :scoped, "yes" }
+    end
+
+    assert_equal "yes", app_class.config.scoped
+  end
+
+  test "class-level config scoped to another environment is skipped" do
+    ENV["APP_ENV"] = "production"
+
+    app_class = Class.new(Lennarb::App) do
+      config(:development) { set :scoped, "no" }
+    end
+
+    refute app_class.config.respond_to?(:scoped)
+  end
 end

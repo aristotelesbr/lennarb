@@ -28,6 +28,11 @@ A patch release. No public API was added; everything here is a defect fix.
   first boot works again -- it previously raised `RoutesFrozenError` and broke
   test suites and development reload.
 - `Routes#freeze` now freezes the whole route tree rather than only its root.
+- Environment-scoped configuration at the class level -- `config(:production) do
+  ... end` inside a `Lennarb::App` subclass -- no longer raises `NameError`. The
+  class-level `config` referenced an `env` that only exists on instances, so only
+  the unscoped form worked. The instance and `Lennarb::Base` forms were
+  unaffected.
 - The test suite runs green again. minitest 6 extracted `Minitest::Mock` and
   `Object#stub` into the separate `minitest-mock` gem, which is now a
   development dependency.
