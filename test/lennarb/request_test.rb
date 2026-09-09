@@ -191,6 +191,5 @@ module Lennarb
 
       assert_equal "17", request.content_length
     end
-
   end
 end

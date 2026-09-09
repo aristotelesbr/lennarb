@@ -119,7 +119,6 @@ module Lennarb
       assert_nil handler.send(:create_context).instance_variable_get(:@leak)
     end
 
-
     test "a route handler can call app without blowing the stack" do
       app_class = Class.new(Lennarb::App) do
         get("/whoami") { |req, res| res.text(app.env.to_s) }
@@ -133,6 +132,5 @@ module Lennarb
       assert_equal 200, status
       assert_equal ["production"], body
     end
-
   end
 end

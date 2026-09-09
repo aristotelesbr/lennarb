@@ -184,5 +184,4 @@ class AppTest < Minitest::Test
 
     app_class.new.initialize! # must not raise
   end
-
 end

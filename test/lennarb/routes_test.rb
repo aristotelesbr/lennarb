@@ -101,7 +101,7 @@ class RoutesTest < Minitest::Test
 
     refute_nil(route)
     assert_pattern do
-      route => [Proc, { id: "123" }]
+      route => [Proc, {id: "123"}]
     end
   end
 
@@ -202,5 +202,4 @@ class RoutesTest < Minitest::Test
     assert root.frozen?
     assert root.static_children["posts"].frozen?
   end
-
 end

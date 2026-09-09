@@ -87,9 +87,7 @@ module Lennarb
     #
     # @return [RouteNode]
     # @api private
-    protected def store
-      @store
-    end
+    protected attr_reader :store
 
     # Rebuild a route tree, sharing no node objects with the original.
     #
