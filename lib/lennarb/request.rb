@@ -125,14 +125,6 @@ module Lennarb
       env["HTTP_REFERER"]
     end
 
-    # Get the host header
-    #
-    # @return [String, nil]
-    #
-    def host
-      env["HTTP_HOST"]
-    end
-
     # Get the content length header
     #
     # @return [String, nil]

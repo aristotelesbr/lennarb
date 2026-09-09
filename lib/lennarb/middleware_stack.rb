@@ -19,7 +19,7 @@ module Lennarb
     # @param [Array] args
     # @param [Proc] block
     #
-    # @retrn [void]
+    # @return [void]
     #
     def use(middleware, *args, &block)
       @store << [middleware, args, block]
@@ -31,7 +31,7 @@ module Lennarb
     # @param [Array] args
     # @param [Proc] block
     #
-    # @retrn [void]
+    # @return [void]
     #
     def unshift(middleware, *args, &block)
       @store.unshift([middleware, args, block])
@@ -39,7 +39,7 @@ module Lennarb
 
     # Clear the middleware stack.
     #
-    # @retrn [void]
+    # @return [void]
     #
     def clear
       @store.clear
@@ -47,7 +47,7 @@ module Lennarb
 
     # Convert the middleware stack to an array.
     #
-    # @retrn [Array]
+    # @return [Array]
     #
     def to_a
       @store

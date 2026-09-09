@@ -39,6 +39,23 @@ A patch release. No public API was added; everything here is a defect fix.
   bump has to be a deliberate change rather than the result of a fresh resolve.
 - Tests no longer leak `LENNA_ENV`/`APP_ENV`/`RACK_ENV` between each other,
   which made results depend on minitest's random seed.
+- `Request#host` no longer shadows `Rack::Request#host` with a worse version. It
+  returned the raw `Host` header, so it kept the port (`example.com:3000`) and
+  returned `nil` when there was no `Host` header instead of falling back to
+  `SERVER_NAME`. The override is removed and Rack's implementation applies.
+- `Lennarb::Environment` equality is fixed in three ways. Two environments with
+  the same name were not `==` to each other; `equal?` was aliased to `==`, which
+  broke Ruby's object-identity contract in both directions (`env.equal?(env)` was
+  false and `env.equal?(:test)` was true); and `eql?` was inconsistent with
+  `hash`, so an environment did not work as a Hash key. `equal?` is no longer
+  overridden, and `eql?`/`hash` are now consistent.
+- 22 YARD `@retrn` typos corrected to `@return` in `route_node.rb`,
+  `middleware_stack.rb`, `environment.rb` and `response.rb`. The tag was not
+  recognised, so those return types were missing from the published
+  documentation.
+- The comments on `DuplicateRouteError`, `MissingEnvironmentVariable`,
+  `MissingCallable` and `RoutesFrozenError` all claimed the error was raised
+  when the app is initialized more than once. Each now describes what it is.
 - `.gitignore` now matches `.minitestfailures`.
 
 ### Changed

@@ -13,7 +13,7 @@ module Lennarb
 
     # Initialize the route node.
     #
-    # @retrn [RouteNode]
+    # @return [RouteNode]
     #
     def initialize
       @blocks = {}
@@ -28,7 +28,7 @@ module Lennarb
     # @param http_method [String] The HTTP method.
     # @param block [Proc] The block to be executed when the route is matched.
     #
-    # @retrn [void]
+    # @return [void]
     #
     def add_route(parts, http_method, block)
       current_node = self
@@ -55,7 +55,7 @@ module Lennarb
     # @param http_method [String] The HTTP method.
     # @param params [Hash] The parameters of the route.
     #
-    # @retrn [Array<Proc, Hash>]
+    # @return [Array<Proc, Hash>]
     #
     def match_route(parts, http_method, params: {})
       if parts.empty?
@@ -85,7 +85,7 @@ module Lennarb
     #
     # @param other [RouteNode] The other route node.
     #
-    # @retrn [void|DuplicateRouteError]
+    # @return [void|DuplicateRouteError]
     #
     def merge!(other)
       other.blocks.each do |http_method, block|

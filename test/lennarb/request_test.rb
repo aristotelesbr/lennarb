@@ -191,5 +191,17 @@ module Lennarb
 
       assert_equal "17", request.content_length
     end
+
+    test "host strips the port, like Rack::Request" do
+      request = Lennarb::Request.new({"HTTP_HOST" => "example.com:3000"})
+
+      assert_equal "example.com", request.host
+    end
+
+    test "host falls back to SERVER_NAME when there is no Host header" do
+      request = Lennarb::Request.new({"SERVER_NAME" => "fallback.example", "SERVER_PORT" => "80"})
+
+      assert_equal "fallback.example", request.host
+    end
   end
 end

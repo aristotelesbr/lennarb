@@ -40,23 +40,39 @@ module Lennarb
 
     # Implements equality for the environment.
     #
-    def ==(other) = name == other || name.to_s == other
-    alias_method :eql?, :==
-    alias_method :equal?, :==
+    # Compares by name, so an environment equals its name as a Symbol or a
+    # String, and equals another environment with the same name.
+    #
+    # `equal?` is deliberately not aliased here: in Ruby it means object
+    # identity and overriding it broke that contract in both directions.
+    #
+    def ==(other) = name == other || name.to_s == other.to_s
     alias_method :===, :==
 
+    # Value equality, kept consistent with {#hash} so an environment behaves as
+    # a Hash key.
+    #
+    # @param other [Object]
+    # @return [Boolean]
+    #
+    def eql?(other) = other.is_a?(Environment) && name == other.name
+
+    # @return [Integer]
+    #
+    def hash = name.hash
+
     # Returns the name of the environment as a symbol.
-    # @retrn [Symbol]
+    # @return [Symbol]
     #
     def to_sym = name
 
     # Returns the name of the environment as a string.
-    # @retrn [String]
+    # @return [String]
     #
     def to_s = name.to_s
 
     # Returns the name of the environment as a string.
-    # @retrn [String]
+    # @return [String]
     def inspect = to_s.inspect
 
     # Yields a block if the environment is the same as the given environment.
