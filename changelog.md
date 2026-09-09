@@ -35,7 +35,8 @@ A patch release. No public API was added; everything here is a defect fix.
   unaffected.
 - The test suite runs green again. minitest 6 extracted `Minitest::Mock` and
   `Object#stub` into the separate `minitest-mock` gem, which is now a
-  development dependency.
+  development dependency. Both are pinned to their major, so a future major
+  bump has to be a deliberate change rather than the result of a fresh resolve.
 - Tests no longer leak `LENNA_ENV`/`APP_ENV`/`RACK_ENV` between each other,
   which made results depend on minitest's random seed.
 - `.gitignore` now matches `.minitestfailures`.
