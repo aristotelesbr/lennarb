@@ -125,12 +125,13 @@ module Lennarb
         get("/whoami") { |req, res| res.text(app.env.to_s) }
       end
       app = app_class.new
+      app.env = :production
       app.initialize!
 
       status, _, body = Lennarb::RequestHandler.new(app).call(rack_env("/whoami"))
 
       assert_equal 200, status
-      assert_equal ["test"], body
+      assert_equal ["production"], body
     end
 
   end

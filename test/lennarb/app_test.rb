@@ -2,7 +2,14 @@ require "test_helper"
 
 class AppTest < Minitest::Test
   setup do
+    @original_env = Lennarb::ENV_NAMES.to_h { [it, ENV[it]] }
     Lennarb::ENV_NAMES.each { ENV.delete(it) }
+  end
+
+  teardown do
+    # These tests set LENNA_ENV/APP_ENV/RACK_ENV and the suite runs in random
+    # order, so anything left behind leaks into whatever runs next.
+    @original_env.each { |name, value| value.nil? ? ENV.delete(name) : ENV[name] = value }
   end
 
   test "uses LENNA_ENV as the env value" do
