@@ -138,7 +138,7 @@ module Lennarb
     # @return [String, nil]
     #
     def content_length
-      env["HTTP_CONTENT_LENGTH"]
+      env["CONTENT_LENGTH"]
     end
 
     # Get the content type header
@@ -146,7 +146,7 @@ module Lennarb
     # @return [String, nil]
     #
     def content_type
-      env["HTTP_CONTENT_TYPE"]
+      env["CONTENT_TYPE"]
     end
 
     # Check if the request is an XHR request

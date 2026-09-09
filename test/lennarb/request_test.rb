@@ -86,8 +86,8 @@ module Lennarb
         "HTTP_ACCEPT" => "text/html",
         "HTTP_REFERER" => "http://example.com",
         "HTTP_HOST" => "test.com",
-        "HTTP_CONTENT_LENGTH" => "100",
-        "HTTP_CONTENT_TYPE" => "application/json"
+        "CONTENT_LENGTH" => "100",
+        "CONTENT_TYPE" => "application/json"
       })
 
       assert_equal "test-agent", request.user_agent
@@ -111,11 +111,11 @@ module Lennarb
     end
 
     test "json request detection" do
-      request = Lennarb::Request.new({"HTTP_CONTENT_TYPE" => "application/json"})
+      request = Lennarb::Request.new({"CONTENT_TYPE" => "application/json"})
 
       assert request.json?
 
-      request = Lennarb::Request.new({"HTTP_CONTENT_TYPE" => "text/html"})
+      request = Lennarb::Request.new({"CONTENT_TYPE" => "text/html"})
 
       refute request.json?
     end
@@ -123,7 +123,7 @@ module Lennarb
     test "json body parsing" do
       input = StringIO.new('{"name":"test","age":30}')
       request = Lennarb::Request.new({
-        "HTTP_CONTENT_TYPE" => "application/json",
+        "CONTENT_TYPE" => "application/json",
         "rack.input" => input
       })
 
@@ -133,7 +133,7 @@ module Lennarb
     test "json body parsing with invalid JSON" do
       input = StringIO.new('{"name":test"}')
       request = Lennarb::Request.new({
-        "HTTP_CONTENT_TYPE" => "application/json",
+        "CONTENT_TYPE" => "application/json",
         "rack.input" => input
       })
 
@@ -179,5 +179,18 @@ module Lennarb
         end
       end
     end
+
+    test "content_type reads the Rack CONTENT_TYPE header" do
+      request = Lennarb::Request.new({"CONTENT_TYPE" => "application/json"})
+
+      assert_equal "application/json", request.content_type
+    end
+
+    test "content_length reads the Rack CONTENT_LENGTH header" do
+      request = Lennarb::Request.new({"CONTENT_LENGTH" => "17"})
+
+      assert_equal "17", request.content_length
+    end
+
   end
 end
