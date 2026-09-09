@@ -125,6 +125,11 @@ A patch release. No public API was added; everything here is a defect fix.
 ### Added
 
 - `benchmark/hot_path.rb`, so the performance claims can be reproduced.
+- `required_ruby_version = ">= 3.4"` in the gemspec. The code uses `it`, the
+  implicit block parameter introduced in Ruby 3.4, and the README has always
+  promised 3.4+, but no version constraint was declared. RubyGems would install
+  the gem on an older Ruby and the first `require` failed with a `SyntaxError`
+  rather than a clear resolution error. This has been missing since 0.1.0.
 
 ### Known limitations
 

@@ -24,6 +24,11 @@ Gem::Specification.new do |spec|
       .reject { |f| f.match(%r{^(test|features)/}) }
   end
 
+  # lib/lennarb/routes.rb uses `it`, the implicit block parameter, which is
+  # Ruby 3.4+. Without this, RubyGems installs happily on an older Ruby and the
+  # first require fails with a SyntaxError instead of a clear resolution error.
+  spec.required_ruby_version = ">= 3.4"
+
   spec.bindir = "exe"
   spec.executables = ["lenna"]
   spec.require_paths = ["lib"]
