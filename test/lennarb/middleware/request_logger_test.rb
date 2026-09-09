@@ -22,7 +22,7 @@ module Lennarb
 
         mock_logger = Lennarb::Logger.new(@std_logger, colorize: false)
 
-        @middleware.define_singleton_method(:logger) { mock_logger }
+        @middleware.define_singleton_method(:logger) { |_ = nil| mock_logger }
       end
 
       test "formats duration correctly" do
@@ -56,11 +56,11 @@ module Lennarb
       test "logs redirects" do
         env = Rack::MockRequest.env_for("/test", method: "GET")
 
-        redirect_app = proc { [302, {"Location" => "/other"}, []] }
+        redirect_app = proc { [302, {"location" => "/other"}, []] }
         middleware = RequestLogger.new(redirect_app)
 
         mock_logger = Lennarb::Logger.new(@std_logger, colorize: false)
-        middleware.define_singleton_method(:logger) { mock_logger }
+        middleware.define_singleton_method(:logger) { |_ = nil| mock_logger }
 
         mock_request = Object.new
         mock_request.define_singleton_method(:request_method) { "GET" }
@@ -112,7 +112,7 @@ module Lennarb
           message = block.call
           duration_captured = message if message.include?("(") && message.include?(")") && message.include?("GET")
         end
-        middleware.define_singleton_method(:logger) { mock_logger }
+        middleware.define_singleton_method(:logger) { |_ = nil| mock_logger }
 
         mock_request = Object.new
         mock_request.define_singleton_method(:request_method) { "GET" }
@@ -124,6 +124,33 @@ module Lennarb
 
           assert_match(/\(\d+ms\)/, duration_captured)
         end
+      end
+
+      test "uses the logger configured on the app handling the request" do
+        app_log = StringIO.new
+        app_class = Class.new(Lennarb::App) do
+          get("/") { |req, res| res.text("ok") }
+        end
+        app_class.config.set :logger, Lennarb::Logger.new(::Logger.new(app_log), colorize: false)
+        app = app_class.new
+        app.initialize!
+
+        app.call({
+          "REQUEST_METHOD" => "GET", "PATH_INFO" => "/", "QUERY_STRING" => "",
+          "SERVER_NAME" => "x", "SERVER_PORT" => "80", "rack.url_scheme" => "http",
+          "rack.input" => StringIO.new
+        })
+
+        assert_includes app_log.string, "GET /"
+      end
+
+      test "escapes control characters in the logged path" do
+        middleware = Lennarb::Middleware::RequestLogger.new(->(_) { [200, {}, ["ok"]] })
+
+        line = middleware.send(:filter_path, "/a/\e[1mPWNED\nStatus: 200 OK")
+
+        refute_includes line, "\e"
+        refute_includes line, "\n"
       end
     end
   end
