@@ -18,4 +18,4 @@ coverage/
 tmp/
 !tmp/.keep
 .yardo/
-minitestfailures
+.minitestfailures
