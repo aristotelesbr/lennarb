@@ -7,11 +7,141 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.1] - 2026-09-09
+
+A patch release. No public API was added; everything here is a defect fix.
+
+### Fixed
+
+- `Lennarb::Request#content_type` and `#content_length` now read the Rack
+  `CONTENT_TYPE` and `CONTENT_LENGTH` headers instead of the `HTTP_`-prefixed
+  names. `Request#json?` was never true and `#json_body` never parsed on a real
+  HTTP request.
+- Exceptions raised inside a route handler no longer escape to Rack. They are
+  logged and answered with a 500, except in development, where they are
+  re-raised so `Rack::ShowExceptions` can render the backtrace.
+- `app` inside a route handler no longer raises `SystemStackError`. The context
+  object defined `app` with a block whose `self` was rebound to the context, so
+  the call recursed into itself. Nothing had exercised it.
+- `App#initialize!` no longer freezes the class-level routes. Each booted
+  instance holds its own deep, frozen snapshot, so registering a route after the
+  first boot works again -- it previously raised `RoutesFrozenError` and broke
+  test suites and development reload.
+- `Routes#freeze` now freezes the whole route tree rather than only its root.
+- Environment-scoped configuration at the class level -- `config(:production) do
+  ... end` inside a `Lennarb::App` subclass -- no longer raises `NameError`. The
+  class-level `config` referenced an `env` that only exists on instances, so only
+  the unscoped form worked. The instance and `Lennarb::Base` forms were
+  unaffected.
+- The test suite runs green again. minitest 6 extracted `Minitest::Mock` and
+  `Object#stub` into the separate `minitest-mock` gem, which is now a
+  development dependency. Both are pinned to their major, so a future major
+  bump has to be a deliberate change rather than the result of a fresh resolve.
+- Tests no longer leak `LENNA_ENV`/`APP_ENV`/`RACK_ENV` between each other,
+  which made results depend on minitest's random seed.
+- `Request#host` no longer shadows `Rack::Request#host` with a worse version. It
+  returned the raw `Host` header, so it kept the port (`example.com:3000`) and
+  returned `nil` when there was no `Host` header instead of falling back to
+  `SERVER_NAME`. The override is removed and Rack's implementation applies.
+- `Lennarb::Environment` equality is fixed in three ways. Two environments with
+  the same name were not `==` to each other; `equal?` was aliased to `==`, which
+  broke Ruby's object-identity contract in both directions (`env.equal?(env)` was
+  false and `env.equal?(:test)` was true); and `eql?` was inconsistent with
+  `hash`, so an environment did not work as a Hash key. `equal?` is no longer
+  overridden, and `eql?`/`hash` are now consistent.
+- 22 YARD `@retrn` typos corrected to `@return` in `route_node.rb`,
+  `middleware_stack.rb`, `environment.rb` and `response.rb`. The tag was not
+  recognised, so those return types were missing from the published
+  documentation.
+- The comments on `DuplicateRouteError`, `MissingEnvironmentVariable`,
+  `MissingCallable` and `RoutesFrozenError` all claimed the error was raised
+  when the app is initialized more than once. Each now describes what it is.
+- **Route parameters are now URL-decoded.** `/u/John%20Doe` used to yield
+  `"John%20Doe"`; it now yields `"John Doe"`, and a percent-encoded slash stays
+  inside its segment instead of splitting the path. **If your application worked
+  around this by decoding route parameters itself, remove that workaround or you
+  will decode twice.** Segments are decoded with `Rack::Utils.unescape_path`, so
+  `+` is left alone, as it should be in a path.
+- `.gitignore` now matches `.minitestfailures`.
+
+### Security
+
+- **`ParameterFilter` matching is now case-insensitive.** It was built with a
+  case-sensitive `Regexp.union`, and `RequestLogger` is in the default
+  middleware stack in every environment and logs `request.params` at `info`. A
+  form field named `Password`, `Token` or `API_KEY` was written to the log in
+  cleartext, and from there to journald, CloudWatch or Datadog.
+- **`Regexp` filters passed to `ParameterFilter` now work.** The docstring
+  documented them, but `filters.map(&:to_s)` stringified them and
+  `Regexp.union` escaped the result, so the filter matched only the literal text
+  `(?i-mx:password)`. Passing a Regexp to harden filtering disabled it entirely,
+  including for keys that had previously been filtered.
+- **The default filter list now covers** `auth`, `credit`, `card_number`, `cvn`,
+  `iban`, `api`, `pin` and `session_id`. Previously `cvv` was filtered while
+  `card_number` was not, protecting the CVV and not the card number it guards.
+- **`ParameterFilter#filter` no longer modifies the parameters it is given.**
+  `params.dup` is shallow and nested values were assigned in place, so an app
+  calling `filter(req.params)` for an error report found its own params replaced
+  by `"[FILTERED]"`.
+- **`RequestLogger` now uses the logger configured on the app handling the
+  request**, resolved from the Rack env. It read `Lennarb::App.app.config.logger`,
+  and `App.app` is never assigned anywhere, so a configured logger was
+  unreachable and request lines always went to the process's stderr. Configuring
+  a redacting or file-scoped logger was therefore not an available mitigation.
+- **The request path is escaped before being logged.** Control characters from
+  the client could otherwise forge log lines. Parameter values were already safe
+  because they go through `inspect`.
+- **Booting without `LENNA_ENV`, `APP_ENV` or `RACK_ENV` now logs a warning.**
+  The environment defaults to `development`, which enables
+  `Rack::ShowExceptions`; a deployment that forgot to export the variable served
+  the entire Rack environment, `Authorization` and `Cookie` included, to anyone
+  who could trigger a 500. Changing the default itself is a breaking change and
+  is deferred to 1.6.0.
+- **`Response#json` no longer echoes the exception message to the client**, which
+  could carry `inspect` output of the object being serialized, and now rescues
+  `JSON::JSONError` rather than `JSON::GeneratorError`: a circular or over-deep
+  object graph raises `JSON::NestingError`, which descends from `ParserError` and
+  escaped the rescue entirely.
+
+### Changed
+
+- `RequestHandler` compiles the route execution context once per application
+  class instead of building an object with a fresh singleton class on every
+  request. On ruby 3.4.1 (arm64-darwin23): static route 424,302 to 753,914
+  req/s, dynamic route 175,364 to 221,795 req/s, `create_context` 1.37us to
+  0.15us (24% to 3.3% of a request), 48 to 40 objects allocated per request.
+  The extra object over the 39 measured mid-release is the cost of decoding
+  route parameters, below.
+- `App#routes` returns the instance's frozen snapshot after `initialize!`, so
+  `app.routes.equal?(App.routes)` is no longer true once the app is booted.
+- Documentation now teaches subclassing `Lennarb::App` as the canonical form.
+  The previous quick start raised `NoMethodError`, and subclassing is the only
+  form isolated per application. The pt-BR quick start also called `configure`
+  (the method is `config`) and `mandary` (a typo for `mandatory`).
+- Changelog no longer references `Lennarb::Application` or
+  `Lennarb::Routes::Mixin`, neither of which exists. The real APIs are
+  `Lennarb::Base` and `Lennarb::Base.mount`.
+
 ### Added
 
-- Add `Lennarb::Application` class to be the base class of the "standard" implementation of the Lennarb framework.
+- `benchmark/hot_path.rb`, so the performance claims can be reproduced.
+
+### Known limitations
+
+- Two applications created with `Lennarb::App.new` without subclassing still
+  share the class's route definitions. Subclass to isolate them.
+- Hooks and helpers are still stored per app class and are shared the same way.
+  Tracked in [#87](https://github.com/aristotelesbr/lennarb/issues/87); they are
+  meant to become an opt-in mechanism rather than machinery every application
+  carries.
+
+## [1.5.0] - 2025-04-19
+
+### Added
+
+- Add `Lennarb::Base` class to be the base class of the "standard" implementation of the Lennarb framework, for mounting several applications behind one middleware stack.
 - Add middleware support to Lennarb::App class.
-- Add `middleware` support to the `Lennarb::Application` with default middlewares.
+- Add `middleware` support to `Lennarb::Base` with default middlewares.
 - Add files to centralize the errors of the project.
 - Add CODE_OF_CONDUCT.md in English and Portuguese
 - Add CONTRIBUTING.md in English and Portuguese
@@ -52,20 +182,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add support to mount routes. Now, you can centralize the routes in a single file and mount them in the main application. Ex.
 
 ```rb
-class PostsController
-  extend Lennarb::Routes::Mixin
-
+class Posts < Lennarb::App
   get '/posts' do |req, res|
     res.html('Posts')
   end
 end
 
-SampleApp = Lennarb.new do |router|
-  mount PostsController
+class Application < Lennarb::Base
+  mount Posts, at: '/'
 end
 ```
 
-The `mount` method will add the routes from the `PostsController` class to the main application. You can use the `mount` method with multiple classes, ex. `mount PostsController, CommentsController`.
+`Lennarb::Base.mount` registers a `Lennarb::App` subclass at a path, behind the
+base application's middleware stack. Call it once per application you want to
+mount.
 
 - Add `Lennarb::Environment` module to manage the environment variables in the project. Now, the `Lennarb` class is the main class of the project.
 - Add `Lennarb::Config` module to manage the configuration in the project. Now, the `Lennarb` class is the main class of the project.

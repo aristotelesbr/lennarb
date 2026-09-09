@@ -36,7 +36,12 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "simplecov"
   spec.add_development_dependency "simplecov-json"
-  spec.add_development_dependency "minitest"
+  # Pinned to the major: minitest 6 removed Minitest::Mock and Object#stub, which
+  # silently broke CI for five months because nothing pins and gems.locked is
+  # gitignored. A major bump must be a deliberate change, not a fresh resolve.
+  spec.add_development_dependency "minitest", "~> 6.0"
+  # minitest 6 extracted Minitest::Mock and Object#stub into their own gem.
+  spec.add_development_dependency "minitest-mock", "~> 5.27"
   spec.add_development_dependency "minitest-utils"
   spec.add_development_dependency "rack-test"
   spec.add_development_dependency "rake"

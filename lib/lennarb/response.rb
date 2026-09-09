@@ -8,17 +8,17 @@ module Lennarb
     attr_accessor :status
 
     # @!attribute [r] body
-    # @retrn [Array]
+    # @return [Array]
     #
     attr_reader :body
 
     # @!attribute [r] headers
-    # @retrn [Hash]
+    # @return [Hash]
     #
     attr_reader :headers
 
     # @!attribute [r] length
-    # @retrn [Integer]
+    # @return [Integer]
     #
     attr_reader :length
 
@@ -35,7 +35,7 @@ module Lennarb
 
     # Initialize the response object
     #
-    # @retrn [Response]
+    # @return [Response]
     #
     def initialize
       @status = 200
@@ -48,7 +48,7 @@ module Lennarb
     #
     # @param [String] key
     #
-    # @retrn [String] value
+    # @return [String] value
     #
     def [](key)
       @headers[key]
@@ -59,7 +59,7 @@ module Lennarb
     # @param [String] key
     # @param [String] value
     #
-    # @retrn [String] value
+    # @return [String] value
     #
     def []=(key, value)
       @headers[key] = value
@@ -69,7 +69,7 @@ module Lennarb
     #
     # @param [String] str
     #
-    # @retrn [String] str
+    # @return [String] str
     #
     def write(str)
       str = str.to_s
@@ -82,7 +82,7 @@ module Lennarb
     #
     # @param [String] str
     #
-    # @retrn [String] str
+    # @return [String] str
     #
     def text(str)
       @headers[CONTENT_TYPE] = Lennarb::CONTENT_TYPE[:TEXT]
@@ -93,7 +93,7 @@ module Lennarb
     #
     # @param [String] str
     #
-    # @retrn [String] str
+    # @return [String] str
     #
     def html(str)
       @headers[CONTENT_TYPE] = Lennarb::CONTENT_TYPE[:HTML]
@@ -104,16 +104,22 @@ module Lennarb
     #
     # @param [String] str
     #
-    # @retrn [String] str
+    # @return [String] str
     #
     def json(str)
       json_str = JSON.generate(str)
       @headers[CONTENT_TYPE] = Lennarb::CONTENT_TYPE[:JSON]
       write(json_str)
-    rescue JSON::GeneratorError => e
+    # Rescues JSON::JSONError rather than JSON::GeneratorError: a circular or
+    # over-deep object graph raises JSON::NestingError, which descends from
+    # ParserError, not GeneratorError, and so escaped this rescue entirely.
+    #
+    # The body is static because the exception message can carry `inspect`
+    # output of the object being serialized, which may hold credentials.
+    rescue JSON::JSONError
       @status = 500
       @headers[CONTENT_TYPE] = Lennarb::CONTENT_TYPE[:TEXT]
-      write("JSON generation error: #{e.message}")
+      write("JSON generation error")
     end
 
     # Redirect the response
@@ -130,7 +136,7 @@ module Lennarb
 
     # Finish the response
     #
-    # @retrn [Array] response
+    # @return [Array] response
     #
     def finish
       [@status, @headers, @body]

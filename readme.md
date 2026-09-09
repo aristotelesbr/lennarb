@@ -63,20 +63,17 @@ Create a simple application with routes:
 ```ruby
 require "lennarb"
 
-app = Lennarb::App.new do
-  get("/") do |req, res|
-    res.html("<h1>Welcome to Lennarb!</h1>")
-  end
-
-  get("/hello/:name") do |req, res|
-     name = req.params[:name]
-     res.html("Hello, #{name}!")
-  end
+class App < Lennarb::App
+  get("/")            { |req, res| res.html("<h1>Welcome to Lennarb!</h1>") }
+  get("/hello/:name") { |req, res| res.html("Hello, #{req.params[:name]}!") }
+  post("/users")      { |req, res| res.json(id: 1, **req.json_body) }
 end
 
-app.initialize!
-run app  # In config.ru
+run App.new.initialize!   # In config.ru
 ```
+
+Subclassing is the canonical form: each subclass gets its own routes, so
+several applications can coexist in one process.
 
 Start with: `rackup`
 

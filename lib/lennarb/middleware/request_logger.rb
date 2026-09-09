@@ -13,8 +13,17 @@ module Lennarb
         @app = app
       end
 
-      # Get logger from application configuration
-      def logger = Lennarb::App.app.config.logger
+      # Get the logger for this request.
+      #
+      # Resolved from the app handling the request, which App#call publishes in
+      # the Rack env, so an app's configured logger is actually used. Falls back
+      # to the class-level default when there is no app in the env.
+      #
+      # @param [Hash, nil] env Rack environment
+      # @return [Object] The logger
+      def logger(env = nil)
+        env&.[](RACK_LENNA_APP)&.config&.logger || Lennarb::App.app.config.logger
+      end
 
       # Process the request and log information
       #
@@ -28,7 +37,7 @@ module Lennarb
 
         duration = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
 
-        log_request(request, status, headers, duration)
+        log_request(request, status, headers, duration, env)
 
         [status, headers, body]
       end
@@ -52,18 +61,20 @@ module Lennarb
       end
 
       # Log the complete request
-      def log_request(request, status, headers, duration)
-        logger.info { request_line(request, duration, status) }
+      def log_request(request, status, headers, duration, env = nil)
+        log = logger(env)
 
-        logger.info { status_line(status) }
+        log.info { request_line(request, duration, status) }
+
+        log.info { status_line(status) }
 
         if request.params.any?
-          logger.info { params_line(request.params) }
+          log.info { params_line(request.params) }
         end
 
-        if headers["Location"]
-          logger.info { redirect_line(headers["Location"]) }
-        end
+        # Rack 3 header names are lowercase; Response#redirect writes "location".
+        location = headers["location"]
+        log.info { redirect_line(location) } if location
       end
 
       # Format the request line
@@ -92,9 +103,16 @@ module Lennarb
         "Redirect: #{location}".colorize(:yellow)
       end
 
-      # Filter the request path
+      # Escape control characters in the request path.
+      #
+      # The path comes from the client, and an unescaped newline or ANSI escape
+      # would let it forge log lines. Parameter values are already safe because
+      # they go through #inspect.
+      #
+      # @param [String] path Request path
+      # @return [String] Path safe to write to a log
       def filter_path(path)
-        path
+        path.to_s.gsub(/[[:cntrl:]]/) { |char| format("\\x%02X", char.ord) }
       end
 
       # Filter request parameters

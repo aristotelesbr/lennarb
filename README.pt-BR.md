@@ -33,14 +33,14 @@ Um framework web leve, rápido e modular para Ruby baseado em Rack. **Lennarb** 
 - Opções de configuração flexíveis
 - Duas opções de implementação:
   - `Lennarb::App`: Abordagem minimalista para controle completo
-  - `Lennarb::Application`: Versão estendida com componentes comuns
+  - `Lennarb::Base`: Versão estendida, para montar várias aplicações
 
 ## Opções de Implementação
 
 Lennarb oferece duas abordagens de implementação para atender diferentes necessidades:
 
 - **Lennarb::App**: Abordagem minimalista para controle completo
-- **Lennarb::Application**: Versão estendida com componentes comuns
+- **Lennarb::Base**: Versão estendida, para montar várias aplicações
 
 Consulte a [documentação](https://aristotelesbr.github.io/lennarb/guides/getting-started/index) para detalhes sobre cada implementação.
 
@@ -63,26 +63,17 @@ gem install lennarb
 ```ruby
 require "lennarb"
 
-app = Lennarb::App.new do
-  configure do
-    mandary :database_url, string
-    optional :port, integer, 9292
-    optional :env, string, "development"
+class App < Lennarb::App
+  config do
+    mandatory :database_url, string
+    optional :port, int, 9292
   end
 
-  routes do
-    get("/") do |req, res|
-      res.html("<h1>Bem-vindo ao Lennarb!</h1>")
-    end
-
-    get("/hello/:name") do |req, res|
-      name = req.params[:name]
-      res.html("Olá, #{name}!")
-    end
-  end
+  get("/")            { |req, res| res.html("<h1>Bem-vindo ao Lennarb!</h1>") }
+  get("/hello/:name") { |req, res| res.html("Olá, #{req.params[:name]}!") }
 end
 
-app.initialize!
+run App.new.initialize!
 run app  # Em config.ru
 ```
 

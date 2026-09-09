@@ -101,7 +101,7 @@ class RoutesTest < Minitest::Test
 
     refute_nil(route)
     assert_pattern do
-      route => [Proc, { id: "123" }]
+      route => [Proc, {id: "123"}]
     end
   end
 
@@ -148,5 +148,58 @@ class RoutesTest < Minitest::Test
     refute_nil(block1)
     refute_nil(block2)
     assert_equal "42", params[:id]
+  end
+
+  test "merge! copies routes from another Routes" do
+    source = Lennarb::Routes.new
+    source.get("/from-source") { |req, res| res.text("source") }
+
+    target = Lennarb::Routes.new
+    target.merge!(source)
+
+    block, _ = target.match_route(["from-source"], :GET)
+
+    refute_nil block
+  end
+
+  test "merge! leaves the source untouched and independent" do
+    source = Lennarb::Routes.new
+    source.get("/a") { |req, res| res.text("a") }
+
+    target = Lennarb::Routes.new
+    target.merge!(source)
+    target.freeze
+
+    refute target.equal?(source)
+    refute source.frozen?
+  end
+
+  test "merge! deep-copies, so a nested route added later does not leak in" do
+    source = Lennarb::Routes.new
+    source.get("/posts") { |req, res| res.text("posts") }
+
+    target = Lennarb::Routes.new
+    target.merge!(source)
+
+    # /posts already exists in the copy, so a child added under it would leak
+    # if the merge shared node objects instead of copying them.
+    source.get("/posts/:id") { |req, res| res.text("show") }
+
+    assert_nil target.match_route(["posts", "1"], :GET).first
+    refute_nil target.match_route(["posts"], :GET).first
+  end
+
+  test "freeze is deep, so the whole copied tree is immutable" do
+    source = Lennarb::Routes.new
+    source.get("/posts/:id") { |req, res| res.text("show") }
+
+    target = Lennarb::Routes.new
+    target.merge!(source)
+    target.freeze
+
+    root = target.instance_variable_get(:@store)
+
+    assert root.frozen?
+    assert root.static_children["posts"].frozen?
   end
 end

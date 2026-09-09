@@ -28,6 +28,9 @@ require "rack/test"
 
 require "minitest/utils"
 require "minitest/autorun"
+# minitest 6 extracted Minitest::Mock and Object#stub into the minitest-mock
+# gem; minitest 5 loaded them from autorun.
+require "minitest/mock"
 
 Dir["#{__dir__}/support/**/*.rb"].each do |file|
   require file

@@ -77,7 +77,9 @@ module Lennarb
         assert_equal 500, response.status
         assert_equal "text/plain", response.headers["content-type"]
         assert_includes response.body.first, "JSON generation error"
-        assert_includes response.body.first, "Mock generator error"
+        # The exception message can carry inspect output of the object being
+        # serialized, so it must not reach the client.
+        refute_includes response.body.first, "Mock generator error"
       end
     end
 
@@ -118,6 +120,34 @@ module Lennarb
       assert_equal 201, result[0]
       assert_equal "text/plain", result[1]["Content-Type"]
       assert_equal ["Created"], result[2]
+    end
+
+    test "json rescues JSON::NestingError, which is not a GeneratorError" do
+      response = Lennarb::Response.new
+      deep = current = []
+      200.times {
+        nxt = []
+        current << nxt
+        current = nxt
+      }
+
+      response.json(deep)
+
+      assert_equal 500, response.status
+      assert_equal "text/plain", response.headers["content-type"]
+    end
+
+    test "json does not echo the exception message to the client" do
+      response = Lennarb::Response.new
+      leaky = Class.new do
+        def initialize = @db_password = "s3cret"
+        def to_json(*) = raise(JSON::GeneratorError, "cannot serialize #{inspect}")
+      end.new
+
+      response.json(leaky)
+
+      assert_equal 500, response.status
+      refute_includes response.body.join, "s3cret"
     end
   end
 end

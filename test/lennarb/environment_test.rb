@@ -89,4 +89,29 @@ class EnvironmentTest < Minitest::Test
       Lennarb::Environment.new("invalid")
     end
   end
+
+  test "two environments with the same name are equal" do
+    assert_equal Lennarb::Environment.new(:test), Lennarb::Environment.new(:test)
+  end
+
+  test "environments with different names are not equal" do
+    refute_equal Lennarb::Environment.new(:test), Lennarb::Environment.new(:production)
+  end
+
+  test "equal? keeps Ruby's object identity meaning" do
+    env = Lennarb::Environment.new(:test)
+
+    assert env.equal?(env)
+    refute env.equal?(Lennarb::Environment.new(:test))
+    refute env.equal?(:test)
+  end
+
+  test "eql? and hash are consistent, so it works as a Hash key" do
+    a = Lennarb::Environment.new(:test)
+    b = Lennarb::Environment.new(:test)
+
+    assert a.eql?(b)
+    assert_equal a.hash, b.hash
+    assert_equal 1, {a => 1}[b]
+  end
 end

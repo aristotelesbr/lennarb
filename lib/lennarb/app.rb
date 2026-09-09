@@ -75,11 +75,23 @@ module Lennarb
         @config ||= Config.new(self)
 
         if block_given?
-          write = envs.empty? || envs.map(&:to_sym).include?(env.name)
+          write = envs.empty? || envs.map(&:to_sym).include?(compute_env_name)
           @config.instance_eval(&) if write
         end
 
         @config
+      end
+
+      # The environment name computed from ENV.
+      #
+      # A class has no env of its own, so environment-scoped config blocks
+      # resolve it here.
+      #
+      # @return [Symbol] Environment name
+      # @api private
+      private def compute_env_name
+        name = ENV_NAMES.map { |var| ENV[var] }.compact.first.to_s
+        (name.empty? ? "development" : name).to_sym
       end
     end
 
@@ -179,7 +191,9 @@ module Lennarb
         self.class.instance_exec(&block)
       end
 
-      self.class.routes
+      # Before boot, route definitions go to the class. After boot, this
+      # instance serves from its own frozen snapshot.
+      @routes || self.class.routes
     end
 
     # Get/define configuration
@@ -205,8 +219,15 @@ module Lennarb
     def initialize!
       raise AlreadyInitializedError if @initialized
 
+      warn_about_defaulted_env
+
+      # Snapshot the class routes into this instance and freeze only the copy,
+      # so booting an app never freezes process-global class state.
+      @routes = Routes.new
+      @routes.merge!(self.class.routes)
+      @routes.freeze
+
       @initialized = true
-      routes.freeze
       self
     end
 
@@ -240,6 +261,26 @@ module Lennarb
       stack.use(Rack::ETag)
       stack.use(Rack::ShowExceptions) if env.development?
       stack
+    end
+
+    # Warn when the environment was defaulted rather than chosen.
+    #
+    # Defaulting to development is a fail-open: development enables
+    # Rack::ShowExceptions, which renders the whole Rack environment -- the
+    # Authorization and Cookie headers included -- on any unhandled error. A
+    # deployment that simply forgot to export the variable would serve that to
+    # anyone able to trigger a 500.
+    #
+    # @return [void]
+    private def warn_about_defaulted_env
+      return if ENV_NAMES.any? { |name| ENV[name] }
+
+      config.logger.warn do
+        "No #{ENV_NAMES.join(", ")} is set, so the environment defaults to " \
+          "development. Rack::ShowExceptions is enabled and will render the " \
+          "full Rack environment, including Authorization and Cookie headers, " \
+          "on any unhandled error. Set one of these variables in production."
+      end
     end
 
     # Compute environment from ENV variables
