@@ -219,6 +219,8 @@ module Lennarb
     def initialize!
       raise AlreadyInitializedError if @initialized
 
+      warn_about_defaulted_env
+
       # Snapshot the class routes into this instance and freeze only the copy,
       # so booting an app never freezes process-global class state.
       @routes = Routes.new
@@ -259,6 +261,26 @@ module Lennarb
       stack.use(Rack::ETag)
       stack.use(Rack::ShowExceptions) if env.development?
       stack
+    end
+
+    # Warn when the environment was defaulted rather than chosen.
+    #
+    # Defaulting to development is a fail-open: development enables
+    # Rack::ShowExceptions, which renders the whole Rack environment -- the
+    # Authorization and Cookie headers included -- on any unhandled error. A
+    # deployment that simply forgot to export the variable would serve that to
+    # anyone able to trigger a 500.
+    #
+    # @return [void]
+    private def warn_about_defaulted_env
+      return if ENV_NAMES.any? { |name| ENV[name] }
+
+      config.logger.warn do
+        "No #{ENV_NAMES.join(", ")} is set, so the environment defaults to " \
+          "development. Rack::ShowExceptions is enabled and will render the " \
+          "full Rack environment, including Authorization and Cookie headers, " \
+          "on any unhandled error. Set one of these variables in production."
+      end
     end
 
     # Compute environment from ENV variables

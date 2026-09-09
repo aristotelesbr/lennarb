@@ -204,4 +204,26 @@ class AppTest < Minitest::Test
 
     refute app_class.config.respond_to?(:scoped)
   end
+
+  test "warns at boot when no environment variable is set" do
+    Lennarb::ENV_NAMES.each { ENV.delete(it) }
+    warnings = []
+    app_class = Class.new(Lennarb::App)
+    app_class.config.set :logger, Struct.new(:out).new(warnings).tap { |s| def s.warn(msg = nil) = out << (msg || yield) }
+
+    app_class.new.initialize!
+
+    assert(warnings.any? { |w| w.include?("development") }, "expected a boot warning, got #{warnings.inspect}")
+  end
+
+  test "does not warn when an environment variable is set" do
+    ENV["APP_ENV"] = "production"
+    warnings = []
+    app_class = Class.new(Lennarb::App)
+    app_class.config.set :logger, Struct.new(:out).new(warnings).tap { |s| def s.warn(msg = nil) = out << (msg || yield) }
+
+    app_class.new.initialize!
+
+    assert_empty warnings
+  end
 end

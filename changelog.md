@@ -64,6 +64,45 @@ A patch release. No public API was added; everything here is a defect fix.
   `+` is left alone, as it should be in a path.
 - `.gitignore` now matches `.minitestfailures`.
 
+### Security
+
+- **`ParameterFilter` matching is now case-insensitive.** It was built with a
+  case-sensitive `Regexp.union`, and `RequestLogger` is in the default
+  middleware stack in every environment and logs `request.params` at `info`. A
+  form field named `Password`, `Token` or `API_KEY` was written to the log in
+  cleartext, and from there to journald, CloudWatch or Datadog.
+- **`Regexp` filters passed to `ParameterFilter` now work.** The docstring
+  documented them, but `filters.map(&:to_s)` stringified them and
+  `Regexp.union` escaped the result, so the filter matched only the literal text
+  `(?i-mx:password)`. Passing a Regexp to harden filtering disabled it entirely,
+  including for keys that had previously been filtered.
+- **The default filter list now covers** `auth`, `credit`, `card_number`, `cvn`,
+  `iban`, `api`, `pin` and `session_id`. Previously `cvv` was filtered while
+  `card_number` was not, protecting the CVV and not the card number it guards.
+- **`ParameterFilter#filter` no longer modifies the parameters it is given.**
+  `params.dup` is shallow and nested values were assigned in place, so an app
+  calling `filter(req.params)` for an error report found its own params replaced
+  by `"[FILTERED]"`.
+- **`RequestLogger` now uses the logger configured on the app handling the
+  request**, resolved from the Rack env. It read `Lennarb::App.app.config.logger`,
+  and `App.app` is never assigned anywhere, so a configured logger was
+  unreachable and request lines always went to the process's stderr. Configuring
+  a redacting or file-scoped logger was therefore not an available mitigation.
+- **The request path is escaped before being logged.** Control characters from
+  the client could otherwise forge log lines. Parameter values were already safe
+  because they go through `inspect`.
+- **Booting without `LENNA_ENV`, `APP_ENV` or `RACK_ENV` now logs a warning.**
+  The environment defaults to `development`, which enables
+  `Rack::ShowExceptions`; a deployment that forgot to export the variable served
+  the entire Rack environment, `Authorization` and `Cookie` included, to anyone
+  who could trigger a 500. Changing the default itself is a breaking change and
+  is deferred to 1.6.0.
+- **`Response#json` no longer echoes the exception message to the client**, which
+  could carry `inspect` output of the object being serialized, and now rescues
+  `JSON::JSONError` rather than `JSON::GeneratorError`: a circular or over-deep
+  object graph raises `JSON::NestingError`, which descends from `ParserError` and
+  escaped the rescue entirely.
+
 ### Changed
 
 - `RequestHandler` compiles the route execution context once per application

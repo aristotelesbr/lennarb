@@ -110,10 +110,16 @@ module Lennarb
       json_str = JSON.generate(str)
       @headers[CONTENT_TYPE] = Lennarb::CONTENT_TYPE[:JSON]
       write(json_str)
-    rescue JSON::GeneratorError => e
+    # Rescues JSON::JSONError rather than JSON::GeneratorError: a circular or
+    # over-deep object graph raises JSON::NestingError, which descends from
+    # ParserError, not GeneratorError, and so escaped this rescue entirely.
+    #
+    # The body is static because the exception message can carry `inspect`
+    # output of the object being serialized, which may hold credentials.
+    rescue JSON::JSONError
       @status = 500
       @headers[CONTENT_TYPE] = Lennarb::CONTENT_TYPE[:TEXT]
-      write("JSON generation error: #{e.message}")
+      write("JSON generation error")
     end
 
     # Redirect the response

@@ -158,6 +158,5 @@ module Lennarb
 
       assert_equal ["a/b"], body
     end
-
   end
 end
