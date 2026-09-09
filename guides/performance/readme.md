@@ -1,5 +1,9 @@
 # Performance
 
+> The comparison tables below were produced in 2024 on a 2013 MacBook Pro with
+> Ruby 3.3.0. They are kept for historical reference. To measure the current
+> request path on your own machine, run `bundle exec ruby benchmark/hot_path.rb`.
+
 The **Lennarb** is very fast. The following benchmarks were performed on a MacBook Pro (Retina, 13-inch, Early 2013) with 2,7 GHz Intel Core i7 and 8 GB 1867 MHz DDR3. Based on [jeremyevans/r10k](https://github.com/jeremyevans/r10k) using the following. All tests are performed using the **Ruby 3.3.0**
 
 ## Benchmark results
