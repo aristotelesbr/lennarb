@@ -56,5 +56,82 @@ module Lennarb
       assert_equal 200, status
       assert_equal ["ok"], body
     end
+
+    test "reuses one context class instead of building a singleton per request" do
+      app_class = Class.new(Lennarb::App) do
+        get("/ok") { |req, res| res.text("ok") }
+      end
+      app = app_class.new
+      app.initialize!
+      handler = Lennarb::RequestHandler.new(app)
+
+      first = handler.send(:create_context)
+      second = handler.send(:create_context)
+
+      refute_same first, second, "each request must get its own context instance"
+      assert_same first.class, second.class, "the context class must be compiled once"
+    end
+
+    test "context exposes app and the app class helpers" do
+      app_class = Class.new(Lennarb::App) do
+        get("/ok") { |req, res| res.text("ok") }
+      end
+      app_class.helpers do
+        def shout = "HI"
+      end
+      app = app_class.new
+      app.initialize!
+
+      context = Lennarb::RequestHandler.new(app).send(:create_context)
+
+      assert_same app, context.app
+      assert_equal "HI", context.shout
+    end
+
+    test "helpers defined after the first request are still visible" do
+      app_class = Class.new(Lennarb::App) do
+        get("/ok") { |req, res| res.text("ok") }
+      end
+      app = app_class.new
+      app.initialize!
+      handler = Lennarb::RequestHandler.new(app)
+
+      handler.send(:create_context) # compiles the context class
+
+      app_class.helpers do
+        def late = "late"
+      end
+
+      assert_equal "late", handler.send(:create_context).late
+    end
+
+    test "context instances do not share ivars across requests" do
+      app_class = Class.new(Lennarb::App) do
+        get("/ok") { |req, res| res.text("ok") }
+      end
+      app = app_class.new
+      app.initialize!
+      handler = Lennarb::RequestHandler.new(app)
+
+      first = handler.send(:create_context)
+      first.instance_variable_set(:@leak, "leaked")
+
+      assert_nil handler.send(:create_context).instance_variable_get(:@leak)
+    end
+
+
+    test "a route handler can call app without blowing the stack" do
+      app_class = Class.new(Lennarb::App) do
+        get("/whoami") { |req, res| res.text(app.env.to_s) }
+      end
+      app = app_class.new
+      app.initialize!
+
+      status, _, body = Lennarb::RequestHandler.new(app).call(rack_env("/whoami"))
+
+      assert_equal 200, status
+      assert_equal ["test"], body
+    end
+
   end
 end

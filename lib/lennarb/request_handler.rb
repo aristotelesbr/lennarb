@@ -48,18 +48,34 @@ module Lennarb
 
     private
 
+    # The context class for this app, compiled once.
+    #
+    # Safe to memoize: Helpers.for always returns the same Module object for a
+    # given app class, and Ruby's include is live, so helpers defined after the
+    # first request still resolve through it.
+    #
+    # @return [Class] The context class
+    def context_class
+      @context_class ||= begin
+        helpers_module = Helpers.for(app.class)
+
+        Class.new do
+          def initialize(app)
+            @app = app
+          end
+
+          attr_reader :app
+
+          include helpers_module
+        end
+      end
+    end
+
     # Create a context object with app's helper methods
     #
     # @return [Object] A context object with helper methods
     def create_context
-      context = Object.new
-
-      context.define_singleton_method(:app) { app }
-
-      helpers_module = Helpers.for(app.class)
-      context.extend(helpers_module) if helpers_module
-
-      context
+      context_class.new(app)
     end
   end
 end
