@@ -6,13 +6,13 @@
 <title>
   Class: Lennarb::ParameterFilter
   
-    &mdash; Documentation by YARD 0.9.37
+    &mdash; Documentation by YARD 0.9.45
   
 </title>
 
-  <link rel="stylesheet" href="../css/style.css" type="text/css" />
+  <link rel="stylesheet" href="../css/style.css" type="text/css">
 
-  <link rel="stylesheet" href="../css/common.css" type="text/css" />
+  <link rel="stylesheet" href="../css/common.css" type="text/css">
 
 <script type="text/javascript">
   pathId = "Lennarb::ParameterFilter";
@@ -27,6 +27,8 @@
 
   </head>
   <body>
+    <div id="main_progress" aria-hidden="true"></div>
+
     <div class="nav_wrap">
       <iframe id="nav" src="../class_list.html?1"></iframe>
       <div id="resizer"></div>
@@ -94,45 +96,41 @@
   
   <dl>
     <dt>Defined in:</dt>
-    <dd>lib/lennarb/parameter_filter.rb</dd>
+    <dd>lib/lennarb/parameter_filter.rb
+</dd>
   </dl>
   
 </div>
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    
-<p>Filters sensitive parameters from logs and exceptions. Useful for preventing the leakage of confidential information.</p>
-
+    <p>Filters sensitive parameters from logs and exceptions.
+Useful for preventing the leakage of confidential information.</p>
 <p>By default, the following parameter keys are filtered:</p>
-<ul><li>
-<p>‘passw`</p>
-</li><li>
-<p>‘email`</p>
-</li><li>
-<p>‘secret`</p>
-</li><li>
-<p>‘token`</p>
-</li><li>
-<p>‘_key`</p>
-</li><li>
-<p>‘crypt`</p>
-</li><li>
-<p>‘salt`</p>
-</li><li>
-<p>‘certificate`</p>
-</li><li>
-<p>‘otp`</p>
-</li><li>
-<p>‘ssn`</p>
-</li><li>
-<p>‘cvv`</p>
-</li><li>
-<p>‘cvc`</p>
-</li><li>
-<p>‘signature`</p>
-</li></ul>
-
+<ul>
+<li><code>passw</code></li>
+<li><code>email</code></li>
+<li><code>secret</code></li>
+<li><code>token</code></li>
+<li><code>_key</code></li>
+<li><code>crypt</code></li>
+<li><code>salt</code></li>
+<li><code>certificate</code></li>
+<li><code>otp</code></li>
+<li><code>ssn</code></li>
+<li><code>cvv</code></li>
+<li><code>cvc</code></li>
+<li><code>signature</code></li>
+<li><code>auth</code></li>
+<li><code>credit</code></li>
+<li><code>card_number</code></li>
+<li><code>cvn</code></li>
+<li><code>iban</code></li>
+<li><code>api</code></li>
+<li><code>pin</code></li>
+<li><code>session_id</code></li>
+</ul>
+<p>Matching is case-insensitive, so <code>Password</code> and <code>API_KEY</code> are filtered too.</p>
 
   </div>
 </div>
@@ -194,7 +192,7 @@
         </dt>
         <dd><pre class="code"><span class='qwords_beg'>%w[</span><span class='words_sep'>
 </span><span class='words_sep'>  </span><span class='tstring_content'>passw</span><span class='words_sep'> </span><span class='tstring_content'>email</span><span class='words_sep'> </span><span class='tstring_content'>secret</span><span class='words_sep'> </span><span class='tstring_content'>token</span><span class='words_sep'> </span><span class='tstring_content'>_key</span><span class='words_sep'> </span><span class='tstring_content'>crypt</span><span class='words_sep'> </span><span class='tstring_content'>salt</span><span class='words_sep'> </span><span class='tstring_content'>certificate</span><span class='words_sep'> </span><span class='tstring_content'>otp</span><span class='words_sep'> </span><span class='tstring_content'>ssn</span><span class='words_sep'> </span><span class='tstring_content'>cvv</span><span class='words_sep'> </span><span class='tstring_content'>cvc</span><span class='words_sep'>
-</span><span class='words_sep'>  </span><span class='tstring_content'>signature</span><span class='words_sep'>
+</span><span class='words_sep'>  </span><span class='tstring_content'>signature</span><span class='words_sep'> </span><span class='tstring_content'>auth</span><span class='words_sep'> </span><span class='tstring_content'>credit</span><span class='words_sep'> </span><span class='tstring_content'>card_number</span><span class='words_sep'> </span><span class='tstring_content'>cvn</span><span class='words_sep'> </span><span class='tstring_content'>iban</span><span class='words_sep'> </span><span class='tstring_content'>api</span><span class='words_sep'> </span><span class='tstring_content'>pin</span><span class='words_sep'> </span><span class='tstring_content'>session_id</span><span class='words_sep'>
 </span><span class='tstring_end'>]</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
       
     </dl>
@@ -231,9 +229,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Filter parameters according to the configured filter.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Filter parameters according to the configured filter.</p></div></span>
   
 </li>
 
@@ -257,14 +253,13 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Initialize a new parameter filter.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Initialize a new parameter filter.</p></div></span>
   
 </li>
 
       
     </ul>
+    
   
 
 <div id="constructor_details" class="method_details_list">
@@ -281,9 +276,9 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Initialize a new parameter filter</p>
-
+    <p>Initialize a new parameter filter</p>
+<p>Regexp filters are used as given. Anything else is matched as a literal
+substring of the key, case-insensitively.</p>
 
   </div>
 </div>
@@ -296,16 +291,14 @@
         <span class='name'>filters</span>
       
       
-        <span class='type'>(<tt>Array&lt;String, Regexp&gt;</tt>)</span>
+        <span class='type'>(<tt>Array&lt;String, Symbol, Regexp&gt;</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>DEFAULT_FILTERS</tt>)</em>
       
       
         &mdash;
-        <div class='inline'>
-<p>List of patterns to filter</p>
-</div>
+        <div class='inline'><p>List of patterns to filter</p></div>
       
     </li>
   
@@ -318,15 +311,17 @@
       <pre class="lines">
 
 
-39
-40
-41</pre>
+52
+53
+54
+55</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/lennarb/parameter_filter.rb', line 39</span>
+      <pre class="code"><span class="info file"># File 'lib/lennarb/parameter_filter.rb', line 52</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_filters'>filters</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="#DEFAULT_FILTERS-constant" title="Lennarb::ParameterFilter::DEFAULT_FILTERS (constant)">DEFAULT_FILTERS</a></span></span><span class='rparen'>)</span>
-  <span class='ivar'>@filter</span> <span class='op'>=</span> <span class='const'>Regexp</span><span class='period'>.</span><span class='id identifier rubyid_union'>union</span><span class='lparen'>(</span><span class='id identifier rubyid_filters'>filters</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:to_s</span><span class='rparen'>)</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_union'>union</span> <span class='op'>=</span> <span class='const'>Regexp</span><span class='period'>.</span><span class='id identifier rubyid_union'>union</span><span class='lparen'>(</span><span class='id identifier rubyid_filters'>filters</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_pattern'>pattern</span><span class='op'>|</span> <span class='id identifier rubyid_pattern'>pattern</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Regexp</span><span class='rparen'>)</span> <span class='op'>?</span> <span class='id identifier rubyid_pattern'>pattern</span> <span class='op'>:</span> <span class='id identifier rubyid_pattern'>pattern</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span> <span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='ivar'>@filter</span> <span class='op'>=</span> <span class='const'>Regexp</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_union'>union</span><span class='period'>.</span><span class='id identifier rubyid_source'>source</span><span class='comma'>,</span> <span class='const'>Regexp</span><span class='op'>::</span><span class='const'>IGNORECASE</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -351,9 +346,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Filter parameters according to the configured filter</p>
-
+    <p>Filter parameters according to the configured filter</p>
 
   </div>
 </div>
@@ -371,9 +364,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>Parameters to be filtered</p>
-</div>
+        <div class='inline'><p>Parameters to be filtered</p></div>
       
     </li>
   
@@ -389,9 +380,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>Value that will replace filtered parameters</p>
-</div>
+        <div class='inline'><p>Value that will replace filtered parameters</p></div>
       
     </li>
   
@@ -408,9 +397,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>Filtered parameters</p>
-</div>
+        <div class='inline'><p>Filtered parameters</p></div>
       
     </li>
   
@@ -422,15 +409,15 @@
       <pre class="lines">
 
 
-48
-49
-50</pre>
+62
+63
+64</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/lennarb/parameter_filter.rb', line 48</span>
+      <pre class="code"><span class="info file"># File 'lib/lennarb/parameter_filter.rb', line 62</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_filter'>filter</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='comma'>,</span> <span class='label'>mask:</span> <span class='const'><span class='object_link'><a href="#DEFAULT_MASK-constant" title="Lennarb::ParameterFilter::DEFAULT_MASK (constant)">DEFAULT_MASK</a></span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_filter_object'>filter_object</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='period'>.</span><span class='id identifier rubyid_dup'>dup</span><span class='comma'>,</span> <span class='id identifier rubyid_mask'>mask</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_filter_object'>filter_object</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='comma'>,</span> <span class='id identifier rubyid_mask'>mask</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -442,9 +429,9 @@
 </div>
 
       <div id="footer">
-  Generated on Sat Apr 19 20:08:46 2025 by
+  Generated on Wed Sep  9 22:34:08 2026 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.37 (ruby-3.4.3).
+  0.9.45 (ruby-3.4.10).
 </div>
 
     </div>

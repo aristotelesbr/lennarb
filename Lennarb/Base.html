@@ -6,13 +6,13 @@
 <title>
   Class: Lennarb::Base
   
-    &mdash; Documentation by YARD 0.9.37
+    &mdash; Documentation by YARD 0.9.45
   
 </title>
 
-  <link rel="stylesheet" href="../css/style.css" type="text/css" />
+  <link rel="stylesheet" href="../css/style.css" type="text/css">
 
-  <link rel="stylesheet" href="../css/common.css" type="text/css" />
+  <link rel="stylesheet" href="../css/common.css" type="text/css">
 
 <script type="text/javascript">
   pathId = "Lennarb::Base";
@@ -27,6 +27,8 @@
 
   </head>
   <body>
+    <div id="main_progress" aria-hidden="true"></div>
+
     <div class="nav_wrap">
       <iframe id="nav" src="../class_list.html?1"></iframe>
       <div id="resizer"></div>
@@ -94,16 +96,17 @@
   
   <dl>
     <dt>Defined in:</dt>
-    <dd>lib/lennarb/base.rb</dd>
+    <dd>lib/lennarb/base.rb
+</dd>
   </dl>
   
 </div>
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    
-<p>Base class for mounting applications with middleware support. This class serves as a proxy for mounting Lennarb::App instances, providing a lightweight router to dispatch requests to the appropriate app.</p>
-
+    <p>Base class for mounting applications with middleware support.
+This class serves as a proxy for mounting Lennarb::App instances,
+providing a lightweight router to dispatch requests to the appropriate app.</p>
 
   </div>
 </div>
@@ -113,9 +116,7 @@
     <h4 class="tag_title">Examples:</h4>
     
       
-        <h5 class="example_title"><div class='inline'>
-<p>Creating a mounting application</p>
-</div></h5>
+        <h5 class="example_title"><div class='inline'><p>Creating a mounting application</p></div></h5>
       
       <pre class="example code"><code><span class='kw'>class</span> <span class='const'>Application</span> <span class='op'>&lt;</span> <span class='const'><span class='object_link'><a href="../Lennarb.html" title="Lennarb (module)">Lennarb</a></span></span><span class='op'>::</span><span class='const'>Base</span>
   <span class='comment'># Define base-level middleware
@@ -143,9 +144,7 @@
       
       
         
-        <div class='inline'>
-<p>1.4.0</p>
-</div>
+        <div class='inline'><p>1.4.0</p></div>
       
     </li>
   
@@ -163,9 +162,7 @@
         <dt id="AlreadyInitializedError-constant" class="">AlreadyInitializedError =
           <div class="docstring">
   <div class="discussion">
-    
-<p>This error is raised whenever the app is initialized more than once.</p>
-
+    <p>This error is raised whenever the app is initialized more than once.</p>
 
   </div>
 </div>
@@ -180,9 +177,7 @@
       
       
         
-        <div class='inline'>
-<p>1.0.0</p>
-</div>
+        <div class='inline'><p>1.0.0</p></div>
       
     </li>
   
@@ -221,9 +216,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>The current environment.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>The current environment.</p></div></span>
   
 </li>
 
@@ -250,9 +243,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Get the mounted applications.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Get the mounted applications.</p></div></span>
   
 </li>
 
@@ -277,9 +268,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>The root directory of the application.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>The root directory of the application.</p></div></span>
   
 </li>
 
@@ -314,9 +303,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Define the app’s configuration at class level.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Define the app's configuration at class level.</p></div></span>
   
 </li>
 
@@ -338,9 +325,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Define the app’s middleware stack at class level.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Define the app's middleware stack at class level.</p></div></span>
   
 </li>
 
@@ -362,9 +347,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Mount a component at the given path.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Mount a component at the given path.</p></div></span>
   
 </li>
 
@@ -386,14 +369,13 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Store for mounted applications at class level.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Store for mounted applications at class level.</p></div></span>
   
 </li>
 
       
     </ul>
+    
   
     <h2>
       Instance Method Summary
@@ -419,9 +401,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>The Rack app with all middlewares and mounted applications.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>The Rack app with all middlewares and mounted applications.</p></div></span>
   
 </li>
 
@@ -443,9 +423,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Call the app - main Rack entry point.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Call the app - main Rack entry point.</p></div></span>
   
 </li>
 
@@ -467,9 +445,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Define the app’s configuration.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Define the app's configuration.</p></div></span>
   
 </li>
 
@@ -491,9 +467,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Freeze the app.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Freeze the app.</p></div></span>
   
 </li>
 
@@ -517,9 +491,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Initialize a new Base instance.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Initialize a new Base instance.</p></div></span>
   
 </li>
 
@@ -541,9 +513,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Initialize the app.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Initialize the app.</p></div></span>
   
 </li>
 
@@ -565,9 +535,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Check if the app is initialized.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Check if the app is initialized.</p></div></span>
   
 </li>
 
@@ -589,9 +557,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Define the app’s middleware stack.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Define the app's middleware stack.</p></div></span>
   
 </li>
 
@@ -613,14 +579,13 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Mount a component at the given path (instance method).</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Mount a component at the given path (instance method).</p></div></span>
   
 </li>
 
       
     </ul>
+    
   
 
 <div id="constructor_details" class="method_details_list">
@@ -637,9 +602,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Initialize a new Base instance.</p>
-
+    <p>Initialize a new Base instance.</p>
 
   </div>
 </div>
@@ -656,9 +619,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>Block to configure the application</p>
-</div>
+        <div class='inline'><p>Block to configure the application</p></div>
       
     </li>
   
@@ -672,9 +633,7 @@
       
       
         
-        <div class='inline'>
-<p>1.0.0</p>
-</div>
+        <div class='inline'><p>1.0.0</p></div>
       
     </li>
   
@@ -741,9 +700,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>The current environment.</p>
-
+    <p>The current environment.</p>
 
   </div>
 </div>
@@ -760,9 +717,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The environment</p>
-</div>
+        <div class='inline'><p>The environment</p></div>
       
     </li>
   
@@ -776,9 +731,7 @@
       
       
         
-        <div class='inline'>
-<p>1.0.0</p>
-</div>
+        <div class='inline'><p>1.0.0</p></div>
       
     </li>
   
@@ -818,9 +771,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Get the mounted applications.</p>
-
+    <p>Get the mounted applications.</p>
 
   </div>
 </div>
@@ -837,9 +788,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The mounted applications by path</p>
-</div>
+        <div class='inline'><p>The mounted applications by path</p></div>
       
     </li>
   
@@ -853,9 +802,7 @@
       
       
         
-        <div class='inline'>
-<p>1.4.0</p>
-</div>
+        <div class='inline'><p>1.4.0</p></div>
       
     </li>
   
@@ -895,9 +842,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>The root directory of the application.</p>
-
+    <p>The root directory of the application.</p>
 
   </div>
 </div>
@@ -914,9 +859,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The root directory</p>
-</div>
+        <div class='inline'><p>The root directory</p></div>
       
     </li>
   
@@ -930,9 +873,7 @@
       
       
         
-        <div class='inline'>
-<p>1.0.0</p>
-</div>
+        <div class='inline'><p>1.0.0</p></div>
       
     </li>
   
@@ -977,9 +918,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Define the app’s configuration at class level</p>
-
+    <p>Define the app's configuration at class level</p>
 
   </div>
 </div>
@@ -989,18 +928,14 @@
     <h4 class="tag_title">Examples:</h4>
     
       
-        <h5 class="example_title"><div class='inline'>
-<p>Configure for all environments</p>
-</div></h5>
+        <h5 class="example_title"><div class='inline'><p>Configure for all environments</p></div></h5>
       
       <pre class="example code"><code><span class='id identifier rubyid_config'>config</span> <span class='kw'>do</span>
   <span class='id identifier rubyid_set'>set</span> <span class='symbol'>:title</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>My Application</span><span class='tstring_end'>&quot;</span></span>
 <span class='kw'>end</span></code></pre>
     
       
-        <h5 class="example_title"><div class='inline'>
-<p>Configure for specific environments</p>
-</div></h5>
+        <h5 class="example_title"><div class='inline'><p>Configure for specific environments</p></div></h5>
       
       <pre class="example code"><code><span class='id identifier rubyid_config'>config</span> <span class='symbol'>:development</span><span class='comma'>,</span> <span class='symbol'>:test</span> <span class='kw'>do</span>
   <span class='id identifier rubyid_set'>set</span> <span class='symbol'>:debug</span><span class='comma'>,</span> <span class='kw'>true</span>
@@ -1020,9 +955,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>Environments to apply the configuration to</p>
-</div>
+        <div class='inline'><p>Environments to apply the configuration to</p></div>
       
     </li>
   
@@ -1039,9 +972,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>Block to configure the application</p>
-</div>
+        <div class='inline'><p>Block to configure the application</p></div>
       
     </li>
   
@@ -1057,9 +988,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>the configuration</p>
-</div>
+        <div class='inline'><p>the configuration</p></div>
       
     </li>
   
@@ -1073,9 +1002,7 @@
       
       
         
-        <div class='inline'>
-<p>1.4.0</p>
-</div>
+        <div class='inline'><p>1.4.0</p></div>
       
     </li>
   
@@ -1117,9 +1044,9 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Define the app’s middleware stack at class level. This allows defining middleware that will be applied before routing to any mounted applications.</p>
-
+    <p>Define the app's middleware stack at class level.
+This allows defining middleware that will be applied before
+routing to any mounted applications.</p>
 
   </div>
 </div>
@@ -1147,9 +1074,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>Block to configure middleware</p>
-</div>
+        <div class='inline'><p>Block to configure middleware</p></div>
       
     </li>
   
@@ -1165,9 +1090,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>the middleware stack</p>
-</div>
+        <div class='inline'><p>the middleware stack</p></div>
       
     </li>
   
@@ -1181,9 +1104,7 @@
       
       
         
-        <div class='inline'>
-<p>1.4.0</p>
-</div>
+        <div class='inline'><p>1.4.0</p></div>
       
     </li>
   
@@ -1225,9 +1146,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    <p class="note returns_void">This method returns an undefined value.</p>
-<p>Mount a component at the given path.</p>
-
+    <p class="note returns_void">This method returns an undefined value.</p><p>Mount a component at the given path.</p>
 
   </div>
 </div>
@@ -1254,9 +1173,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The component to mount (must be a Lennarb::App subclass)</p>
-</div>
+        <div class='inline'><p>The component to mount (must be a Lennarb::App subclass)</p></div>
       
     </li>
   
@@ -1270,9 +1187,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The mounting options</p>
-</div>
+        <div class='inline'><p>The mounting options</p></div>
       
     </li>
   
@@ -1295,9 +1210,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>If the component is not a Lennarb::App subclass</p>
-</div>
+        <div class='inline'><p>If the component is not a Lennarb::App subclass</p></div>
       
     </li>
   
@@ -1311,9 +1224,7 @@
       
       
         
-        <div class='inline'>
-<p>1.4.0</p>
-</div>
+        <div class='inline'><p>1.4.0</p></div>
       
     </li>
   
@@ -1361,9 +1272,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Store for mounted applications at class level</p>
-
+    <p>Store for mounted applications at class level</p>
 
   </div>
 </div>
@@ -1380,9 +1289,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>mounted applications by path</p>
-</div>
+        <div class='inline'><p>mounted applications by path</p></div>
       
     </li>
   
@@ -1396,9 +1303,7 @@
       
       
         
-        <div class='inline'>
-<p>1.4.0</p>
-</div>
+        <div class='inline'><p>1.4.0</p></div>
       
     </li>
   
@@ -1442,9 +1347,8 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>The Rack app with all middlewares and mounted applications. This builds a middleware stack around the URL map of mounted applications.</p>
-
+    <p>The Rack app with all middlewares and mounted applications.
+This builds a middleware stack around the URL map of mounted applications.</p>
 
   </div>
 </div>
@@ -1461,9 +1365,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The Rack application</p>
-</div>
+        <div class='inline'><p>The Rack application</p></div>
       
     </li>
   
@@ -1477,9 +1379,7 @@
       
       
         
-        <div class='inline'>
-<p>1.0.0</p>
-</div>
+        <div class='inline'><p>1.0.0</p></div>
       
     </li>
   
@@ -1535,9 +1435,8 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Call the app - main Rack entry point. This method is called by Rack when a request is received.</p>
-
+    <p>Call the app - main Rack entry point.
+This method is called by Rack when a request is received.</p>
 
   </div>
 </div>
@@ -1555,9 +1454,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The Rack environment</p>
-</div>
+        <div class='inline'><p>The Rack environment</p></div>
       
     </li>
   
@@ -1574,9 +1471,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The Rack response</p>
-</div>
+        <div class='inline'><p>The Rack response</p></div>
       
     </li>
   
@@ -1590,9 +1485,7 @@
       
       
         
-        <div class='inline'>
-<p>1.0.0</p>
-</div>
+        <div class='inline'><p>1.0.0</p></div>
       
     </li>
   
@@ -1638,9 +1531,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Define the app’s configuration.</p>
-
+    <p>Define the app's configuration.</p>
 
   </div>
 </div>
@@ -1658,9 +1549,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>Environments to apply the configuration to</p>
-</div>
+        <div class='inline'><p>Environments to apply the configuration to</p></div>
       
     </li>
   
@@ -1677,9 +1566,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>Block to configure the application</p>
-</div>
+        <div class='inline'><p>Block to configure the application</p></div>
       
     </li>
   
@@ -1695,9 +1582,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>the configuration</p>
-</div>
+        <div class='inline'><p>the configuration</p></div>
       
     </li>
   
@@ -1711,9 +1596,7 @@
       
       
         
-        <div class='inline'>
-<p>1.4.0</p>
-</div>
+        <div class='inline'><p>1.4.0</p></div>
       
     </li>
   
@@ -1765,9 +1648,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    <p class="note returns_void">This method returns an undefined value.</p>
-<p>Freeze the app.</p>
-
+    <p class="note returns_void">This method returns an undefined value.</p><p>Freeze the app.</p>
 
   </div>
 </div>
@@ -1782,9 +1663,7 @@
       
       
         
-        <div class='inline'>
-<p>1.0.0</p>
-</div>
+        <div class='inline'><p>1.0.0</p></div>
       
     </li>
   
@@ -1822,9 +1701,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Initialize the app.</p>
-
+    <p>Initialize the app.</p>
 
   </div>
 </div>
@@ -1841,9 +1718,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The initialized app</p>
-</div>
+        <div class='inline'><p>The initialized app</p></div>
       
     </li>
   
@@ -1859,9 +1734,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>If the app is already initialized</p>
-</div>
+        <div class='inline'><p>If the app is already initialized</p></div>
       
     </li>
   
@@ -1875,9 +1748,7 @@
       
       
         
-        <div class='inline'>
-<p>1.4.0</p>
-</div>
+        <div class='inline'><p>1.4.0</p></div>
       
     </li>
   
@@ -1919,9 +1790,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Check if the app is initialized.</p>
-
+    <p>Check if the app is initialized.</p>
 
   </div>
 </div>
@@ -1938,9 +1807,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>true if initialized, false otherwise</p>
-</div>
+        <div class='inline'><p>true if initialized, false otherwise</p></div>
       
     </li>
   
@@ -1954,9 +1821,7 @@
       
       
         
-        <div class='inline'>
-<p>1.4.0</p>
-</div>
+        <div class='inline'><p>1.4.0</p></div>
       
     </li>
   
@@ -1994,9 +1859,9 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Define the app’s middleware stack. Middleware defined here will be applied to all requests before they are routed to mounted applications.</p>
-
+    <p>Define the app's middleware stack.
+Middleware defined here will be applied to all requests before
+they are routed to mounted applications.</p>
 
   </div>
 </div>
@@ -2024,9 +1889,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>Block to configure middleware</p>
-</div>
+        <div class='inline'><p>Block to configure middleware</p></div>
       
     </li>
   
@@ -2042,9 +1905,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>the middleware stack</p>
-</div>
+        <div class='inline'><p>the middleware stack</p></div>
       
     </li>
   
@@ -2058,9 +1919,7 @@
       
       
         
-        <div class='inline'>
-<p>1.4.0</p>
-</div>
+        <div class='inline'><p>1.4.0</p></div>
       
     </li>
   
@@ -2102,9 +1961,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    <p class="note returns_void">This method returns an undefined value.</p>
-<p>Mount a component at the given path (instance method)</p>
-
+    <p class="note returns_void">This method returns an undefined value.</p><p>Mount a component at the given path (instance method)</p>
 
   </div>
 </div>
@@ -2130,9 +1987,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The component to mount (must be a Lennarb::App subclass)</p>
-</div>
+        <div class='inline'><p>The component to mount (must be a Lennarb::App subclass)</p></div>
       
     </li>
   
@@ -2146,9 +2001,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The mounting options</p>
-</div>
+        <div class='inline'><p>The mounting options</p></div>
       
     </li>
   
@@ -2171,9 +2024,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>If the component is not a Lennarb::App subclass</p>
-</div>
+        <div class='inline'><p>If the component is not a Lennarb::App subclass</p></div>
       
     </li>
   
@@ -2187,9 +2038,7 @@
       
       
         
-        <div class='inline'>
-<p>1.4.0</p>
-</div>
+        <div class='inline'><p>1.4.0</p></div>
       
     </li>
   
@@ -2231,9 +2080,9 @@
 </div>
 
       <div id="footer">
-  Generated on Sat Apr 19 20:08:46 2025 by
+  Generated on Wed Sep  9 22:34:08 2026 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.37 (ruby-3.4.3).
+  0.9.45 (ruby-3.4.10).
 </div>
 
     </div>

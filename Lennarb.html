@@ -6,13 +6,13 @@
 <title>
   Module: Lennarb
   
-    &mdash; Documentation by YARD 0.9.37
+    &mdash; Documentation by YARD 0.9.45
   
 </title>
 
-  <link rel="stylesheet" href="css/style.css" type="text/css" />
+  <link rel="stylesheet" href="css/style.css" type="text/css">
 
-  <link rel="stylesheet" href="css/common.css" type="text/css" />
+  <link rel="stylesheet" href="css/common.css" type="text/css">
 
 <script type="text/javascript">
   pathId = "Lennarb";
@@ -27,6 +27,8 @@
 
   </head>
   <body>
+    <div id="main_progress" aria-hidden="true"></div>
+
     <div class="nav_wrap">
       <iframe id="nav" src="class_list.html?1"></iframe>
       <div id="resizer"></div>
@@ -78,8 +80,9 @@
   
   <dl>
     <dt>Defined in:</dt>
-    <dd>lib/lennarb.rb<span class="defines">,<br />
-  lib/lennarb/app.rb,<br /> lib/lennarb/base.rb,<br /> lib/lennarb/hooks.rb,<br /> lib/lennarb/config.rb,<br /> lib/lennarb/errors.rb,<br /> lib/lennarb/logger.rb,<br /> lib/lennarb/routes.rb,<br /> lib/lennarb/helpers.rb,<br /> lib/lennarb/request.rb,<br /> lib/lennarb/version.rb,<br /> lib/lennarb/response.rb,<br /> lib/lennarb/constants.rb,<br /> lib/lennarb/route_node.rb,<br /> lib/lennarb/environment.rb,<br /> lib/lennarb/request_handler.rb,<br /> lib/lennarb/middleware_stack.rb,<br /> lib/lennarb/parameter_filter.rb,<br /> lib/lennarb/middleware/request_logger.rb</span>
+    <dd>lib/lennarb.rb<span class="defines">,<br>
+  lib/lennarb/app.rb,<br> lib/lennarb/base.rb,<br> lib/lennarb/hooks.rb,<br> lib/lennarb/config.rb,<br> lib/lennarb/errors.rb,<br> lib/lennarb/logger.rb,<br> lib/lennarb/routes.rb,<br> lib/lennarb/helpers.rb,<br> lib/lennarb/request.rb,<br> lib/lennarb/version.rb,<br> lib/lennarb/response.rb,<br> lib/lennarb/constants.rb,<br> lib/lennarb/route_node.rb,<br> lib/lennarb/environment.rb,<br> lib/lennarb/request_handler.rb,<br> lib/lennarb/middleware_stack.rb,<br> lib/lennarb/parameter_filter.rb,<br> lib/lennarb/middleware/request_logger.rb</span>
+
 </dd>
   </dl>
   
@@ -87,9 +90,7 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    
-<p>:nodoc:</p>
-
+    <p>:nodoc:</p>
 
   </div>
 </div>
@@ -120,9 +121,7 @@
         <dt id="Error-constant" class="">Error =
           <div class="docstring">
   <div class="discussion">
-    
-<p>Lite implementation of app.</p>
-
+    <p>Base class for errors raised by Lennarb.</p>
 
   </div>
 </div>
@@ -136,9 +135,8 @@
         <dt id="DuplicateRouteError-constant" class="">DuplicateRouteError =
           <div class="docstring">
   <div class="discussion">
-    
-<p>This error is raised whenever the app is initialized more than once.</p>
-
+    <p>Raised when merging routes would define the same HTTP method twice for the
+same path.</p>
 
   </div>
 </div>
@@ -152,9 +150,7 @@
         <dt id="MissingEnvironmentVariable-constant" class="">MissingEnvironmentVariable =
           <div class="docstring">
   <div class="discussion">
-    
-<p>This error is raised whenever the app is initialized more than once.</p>
-
+    <p>Raised when a mandatory configuration value has no environment variable set.</p>
 
   </div>
 </div>
@@ -168,9 +164,8 @@
         <dt id="MissingCallable-constant" class="">MissingCallable =
           <div class="docstring">
   <div class="discussion">
-    
-<p>This error is raised whenever the app is initialized more than once.</p>
-
+    <p>Raised when a configuration property is declared without something callable
+to compute it.</p>
 
   </div>
 </div>
@@ -184,9 +179,7 @@
         <dt id="RoutesFrozenError-constant" class="">RoutesFrozenError =
           <div class="docstring">
   <div class="discussion">
-    
-<p>This error is raised whenever the app is initialized more than once.</p>
-
+    <p>Raised when a route is registered after the routes have been frozen.</p>
 
   </div>
 </div>
@@ -200,9 +193,7 @@
         <dt id="VERSION-constant" class="">VERSION =
           <div class="docstring">
   <div class="discussion">
-    
-<p>:nodoc:</p>
-
+    <p>:nodoc:</p>
 
   </div>
 </div>
@@ -211,14 +202,12 @@
 
 </div>
         </dt>
-        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>1.5.0</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>1.5.1</span><span class='tstring_end'>&quot;</span></span></pre></dd>
       
         <dt id="RACK_LENNA_APP-constant" class="">RACK_LENNA_APP =
           <div class="docstring">
   <div class="discussion">
-    
-<p>The root app directory of the app.</p>
-
+    <p>The root app directory of the app.</p>
 
   </div>
 </div>
@@ -232,9 +221,7 @@
         <dt id="ENV_NAMES-constant" class="">ENV_NAMES =
           <div class="docstring">
   <div class="discussion">
-    
-<p>The current environment. Defaults to “development”.</p>
-
+    <p>The current environment. Defaults to &quot;development&quot;.</p>
 
   </div>
 </div>
@@ -248,9 +235,7 @@
         <dt id="HTTP_METHODS-constant" class="">HTTP_METHODS =
           <div class="docstring">
   <div class="discussion">
-    
-<p>The HTTP methods.</p>
-
+    <p>The HTTP methods.</p>
 
   </div>
 </div>
@@ -264,9 +249,7 @@
         <dt id="CONTENT_TYPE-constant" class="">CONTENT_TYPE =
           <div class="docstring">
   <div class="discussion">
-    
-<p>The HTTP status codes.</p>
-
+    <p>The HTTP status codes.</p>
 
   </div>
 </div>
@@ -280,9 +263,7 @@
         <dt id="NAMES-constant" class="">NAMES =
           <div class="docstring">
   <div class="discussion">
-    
-<p>The current environment. Defaults to “development”.</p>
-
+    <p>The current environment. Defaults to &quot;development&quot;.</p>
 
   </div>
 </div>
@@ -307,9 +288,9 @@
 </div>
 
       <div id="footer">
-  Generated on Sat Apr 19 20:08:45 2025 by
+  Generated on Wed Sep  9 22:34:07 2026 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.37 (ruby-3.4.3).
+  0.9.45 (ruby-3.4.10).
 </div>
 
     </div>

@@ -6,13 +6,13 @@
 <title>
   Class: Lennarb::RouteNode
   
-    &mdash; Documentation by YARD 0.9.37
+    &mdash; Documentation by YARD 0.9.45
   
 </title>
 
-  <link rel="stylesheet" href="../css/style.css" type="text/css" />
+  <link rel="stylesheet" href="../css/style.css" type="text/css">
 
-  <link rel="stylesheet" href="../css/common.css" type="text/css" />
+  <link rel="stylesheet" href="../css/common.css" type="text/css">
 
 <script type="text/javascript">
   pathId = "Lennarb::RouteNode";
@@ -27,6 +27,8 @@
 
   </head>
   <body>
+    <div id="main_progress" aria-hidden="true"></div>
+
     <div class="nav_wrap">
       <iframe id="nav" src="../class_list.html?1"></iframe>
       <div id="resizer"></div>
@@ -94,7 +96,8 @@
   
   <dl>
     <dt>Defined in:</dt>
-    <dd>lib/lennarb/route_node.rb</dd>
+    <dd>lib/lennarb/route_node.rb
+</dd>
   </dl>
   
 </div>
@@ -104,14 +107,11 @@
     
   <div class="note notetag">
     <strong>Note:</strong>
-    <div class='inline'>
-<p>RouteNode use a trie data structure to store the routes and match them.</p>
-</div>
+    <div class='inline'><p>RouteNode use a trie data structure to store the routes and match them.</p></div>
   </div>
 
-
-<p>RouteNode is key to the routing system. It is a tree structure that represents the routes of the application.</p>
-
+<p>RouteNode is key to the routing system. It is a tree structure that
+represents the routes of the application.</p>
 
   </div>
 </div>
@@ -154,9 +154,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute blocks.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Returns the value of attribute blocks.</p></div></span>
   
 </li>
 
@@ -181,9 +179,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute dynamic_children.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Returns the value of attribute dynamic_children.</p></div></span>
   
 </li>
 
@@ -208,9 +204,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute param_key.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Returns the value of attribute param_key.</p></div></span>
   
 </li>
 
@@ -235,9 +229,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute static_children.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Returns the value of attribute static_children.</p></div></span>
   
 </li>
 
@@ -258,7 +250,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#add_route-instance_method" title="#add_route (instance method)">#<strong>add_route</strong>(parts, http_method, block)  &#x21d2; Object </a>
+      <a href="#add_route-instance_method" title="#add_route (instance method)">#<strong>add_route</strong>(parts, http_method, block)  &#x21d2; void </a>
     
 
     
@@ -272,9 +264,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Add a route to the route node.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Add a route to the route node.</p></div></span>
   
 </li>
 
@@ -298,9 +288,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Initialize the route node.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Initialize the route node.</p></div></span>
   
 </li>
 
@@ -308,7 +296,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#match_route-instance_method" title="#match_route (instance method)">#<strong>match_route</strong>(parts, http_method, params: {})  &#x21d2; Object </a>
+      <a href="#match_route-instance_method" title="#match_route (instance method)">#<strong>match_route</strong>(parts, http_method, params: {})  &#x21d2; Array&lt;Proc, Hash&gt; </a>
     
 
     
@@ -322,9 +310,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Match a route.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Match a route.</p></div></span>
   
 </li>
 
@@ -332,7 +318,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#merge!-instance_method" title="#merge! (instance method)">#<strong>merge!</strong>(other)  &#x21d2; Object </a>
+      <a href="#merge!-instance_method" title="#merge! (instance method)">#<strong>merge!</strong>(other)  &#x21d2; void|DuplicateRouteError </a>
     
 
     
@@ -346,14 +332,13 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Merge another route node into this one.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Merge another route node into this one.</p></div></span>
   
 </li>
 
       
     </ul>
+    
   
 
 <div id="constructor_details" class="method_details_list">
@@ -370,9 +355,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Initialize the route node.</p>
-
+    <p>Initialize the route node.</p>
 
   </div>
 </div>
@@ -424,9 +407,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Returns the value of attribute blocks.</p>
-
+    <p>Returns the value of attribute blocks.</p>
 
   </div>
 </div>
@@ -467,9 +448,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Returns the value of attribute dynamic_children.</p>
-
+    <p>Returns the value of attribute dynamic_children.</p>
 
   </div>
 </div>
@@ -510,9 +489,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Returns the value of attribute param_key.</p>
-
+    <p>Returns the value of attribute param_key.</p>
 
   </div>
 </div>
@@ -553,9 +530,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Returns the value of attribute static_children.</p>
-
+    <p>Returns the value of attribute static_children.</p>
 
   </div>
 </div>
@@ -593,7 +568,7 @@
       <div class="method_details first">
   <h3 class="signature first" id="add_route-instance_method">
   
-    #<strong>add_route</strong>(parts, http_method, block)  &#x21d2; <tt>Object</tt> 
+    #<strong>add_route</strong>(parts, http_method, block)  &#x21d2; <tt>void</tt> 
   
 
   
@@ -601,9 +576,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Add a route to the route node.</p>
-
+    <p class="note returns_void">This method returns an undefined value.</p><p>Add a route to the route node.</p>
 
   </div>
 </div>
@@ -621,9 +594,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The parts of the route.</p>
-</div>
+        <div class='inline'><p>The parts of the route.</p></div>
       
     </li>
   
@@ -637,9 +608,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The HTTP method.</p>
-</div>
+        <div class='inline'><p>The HTTP method.</p></div>
       
     </li>
   
@@ -653,9 +622,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The block to be executed when the route is matched.</p>
-</div>
+        <div class='inline'><p>The block to be executed when the route is matched.</p></div>
       
     </li>
   
@@ -716,7 +683,7 @@
       <div class="method_details ">
   <h3 class="signature " id="match_route-instance_method">
   
-    #<strong>match_route</strong>(parts, http_method, params: {})  &#x21d2; <tt>Object</tt> 
+    #<strong>match_route</strong>(parts, http_method, params: {})  &#x21d2; <tt>Array&lt;Proc, Hash&gt;</tt> 
   
 
   
@@ -724,9 +691,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Match a route.</p>
-
+    <p>Match a route.</p>
 
   </div>
 </div>
@@ -744,9 +709,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The parts of the route.</p>
-</div>
+        <div class='inline'><p>The parts of the route.</p></div>
       
     </li>
   
@@ -760,9 +723,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The HTTP method.</p>
-</div>
+        <div class='inline'><p>The HTTP method.</p></div>
       
     </li>
   
@@ -778,14 +739,25 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The parameters of the route.</p>
-</div>
+        <div class='inline'><p>The parameters of the route.</p></div>
       
     </li>
   
 </ul>
 
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;Proc, Hash&gt;</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -851,7 +823,7 @@
       <div class="method_details ">
   <h3 class="signature " id="merge!-instance_method">
   
-    #<strong>merge!</strong>(other)  &#x21d2; <tt>Object</tt> 
+    #<strong>merge!</strong>(other)  &#x21d2; <tt>void|<span class='object_link'><a href="../Lennarb.html#DuplicateRouteError-constant" title="Lennarb::DuplicateRouteError (constant)">DuplicateRouteError</a></span></tt> 
   
 
   
@@ -859,9 +831,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Merge another route node into this one.</p>
-
+    <p>Merge another route node into this one.</p>
 
   </div>
 </div>
@@ -879,14 +849,25 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The other route node.</p>
-</div>
+        <div class='inline'><p>The other route node.</p></div>
       
     </li>
   
 </ul>
 
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>void|<span class='object_link'><a href="../Lennarb.html#DuplicateRouteError-constant" title="Lennarb::DuplicateRouteError (constant)">DuplicateRouteError</a></span></tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -956,9 +937,9 @@
 </div>
 
       <div id="footer">
-  Generated on Sat Apr 19 20:08:46 2025 by
+  Generated on Wed Sep  9 22:34:08 2026 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.37 (ruby-3.4.3).
+  0.9.45 (ruby-3.4.10).
 </div>
 
     </div>

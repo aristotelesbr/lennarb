@@ -6,13 +6,13 @@
 <title>
   Class: Lennarb::Middleware::RequestLogger
   
-    &mdash; Documentation by YARD 0.9.37
+    &mdash; Documentation by YARD 0.9.45
   
 </title>
 
-  <link rel="stylesheet" href="../../css/style.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/style.css" type="text/css">
 
-  <link rel="stylesheet" href="../../css/common.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/common.css" type="text/css">
 
 <script type="text/javascript">
   pathId = "Lennarb::Middleware::RequestLogger";
@@ -27,6 +27,8 @@
 
   </head>
   <body>
+    <div id="main_progress" aria-hidden="true"></div>
+
     <div class="nav_wrap">
       <iframe id="nav" src="../../class_list.html?1"></iframe>
       <div id="resizer"></div>
@@ -94,16 +96,16 @@
   
   <dl>
     <dt>Defined in:</dt>
-    <dd>lib/lennarb/middleware/request_logger.rb</dd>
+    <dd>lib/lennarb/middleware/request_logger.rb
+</dd>
   </dl>
   
 </div>
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    
-<p>Request logger for the Lennarb framework Logs HTTP request details with color formatting</p>
-
+    <p>Request logger for the Lennarb framework
+Logs HTTP request details with color formatting</p>
 
   </div>
 </div>
@@ -113,9 +115,7 @@
     <h4 class="tag_title">Examples:</h4>
     
       
-        <h5 class="example_title"><div class='inline'>
-<p>Output:</p>
-</div></h5>
+        <h5 class="example_title"><div class='inline'><p>Output:</p></div></h5>
       
       <pre class="example code"><code>GET /users/123 (30ms)
 Status: 200 OK
@@ -156,9 +156,7 @@ Params: {&quot;id&quot;=&gt;&quot;123&quot;, &quot;password&quot;=&gt;&quot;[FIL
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Process the request and log information.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Process the request and log information.</p></div></span>
   
 </li>
 
@@ -182,9 +180,7 @@ Params: {&quot;id&quot;=&gt;&quot;123&quot;, &quot;password&quot;=&gt;&quot;[FIL
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>A new instance of RequestLogger.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>A new instance of RequestLogger.</p></div></span>
   
 </li>
 
@@ -192,7 +188,7 @@ Params: {&quot;id&quot;=&gt;&quot;123&quot;, &quot;password&quot;=&gt;&quot;[FIL
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#logger-instance_method" title="#logger (instance method)">#<strong>logger</strong>  &#x21d2; Object </a>
+      <a href="#logger-instance_method" title="#logger (instance method)">#<strong>logger</strong>(env = nil)  &#x21d2; Object </a>
     
 
     
@@ -206,14 +202,13 @@ Params: {&quot;id&quot;=&gt;&quot;123&quot;, &quot;password&quot;=&gt;&quot;[FIL
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Get logger from application configuration.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Get the logger for this request.</p></div></span>
   
 </li>
 
       
     </ul>
+    
   
 
 <div id="constructor_details" class="method_details_list">
@@ -230,9 +225,7 @@ Params: {&quot;id&quot;=&gt;&quot;123&quot;, &quot;password&quot;=&gt;&quot;[FIL
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Returns a new instance of RequestLogger.</p>
-
+    <p>Returns a new instance of RequestLogger.</p>
 
   </div>
 </div>
@@ -278,9 +271,7 @@ Params: {&quot;id&quot;=&gt;&quot;123&quot;, &quot;password&quot;=&gt;&quot;[FIL
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Process the request and log information</p>
-
+    <p>Process the request and log information</p>
 
   </div>
 </div>
@@ -298,9 +289,7 @@ Params: {&quot;id&quot;=&gt;&quot;123&quot;, &quot;password&quot;=&gt;&quot;[FIL
       
       
         &mdash;
-        <div class='inline'>
-<p>Rack environment</p>
-</div>
+        <div class='inline'><p>Rack environment</p></div>
       
     </li>
   
@@ -317,9 +306,7 @@ Params: {&quot;id&quot;=&gt;&quot;123&quot;, &quot;password&quot;=&gt;&quot;[FIL
       
       
         &mdash;
-        <div class='inline'>
-<p>Rack response [status, headers, body]</p>
-</div>
+        <div class='inline'><p>Rack response [status, headers, body]</p></div>
       
     </li>
   
@@ -331,21 +318,21 @@ Params: {&quot;id&quot;=&gt;&quot;123&quot;, &quot;password&quot;=&gt;&quot;[FIL
       <pre class="lines">
 
 
-23
-24
-25
-26
-27
-28
-29
-30
-31
 32
 33
-34</pre>
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/lennarb/middleware/request_logger.rb', line 23</span>
+      <pre class="code"><span class="info file"># File 'lib/lennarb/middleware/request_logger.rb', line 32</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='id identifier rubyid_env'>env</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_request'>request</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../../Lennarb.html" title="Lennarb (module)">Lennarb</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Request.html" title="Lennarb::Request (class)">Request</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="../Request.html#initialize-instance_method" title="Lennarb::Request#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_env'>env</span><span class='rparen'>)</span>
@@ -355,7 +342,7 @@ Params: {&quot;id&quot;=&gt;&quot;123&quot;, &quot;password&quot;=&gt;&quot;[FIL
 
   <span class='id identifier rubyid_duration'>duration</span> <span class='op'>=</span> <span class='const'>Process</span><span class='period'>.</span><span class='id identifier rubyid_clock_gettime'>clock_gettime</span><span class='lparen'>(</span><span class='const'>Process</span><span class='op'>::</span><span class='const'>CLOCK_MONOTONIC</span><span class='rparen'>)</span> <span class='op'>-</span> <span class='id identifier rubyid_start_time'>start_time</span>
 
-  <span class='id identifier rubyid_log_request'>log_request</span><span class='lparen'>(</span><span class='id identifier rubyid_request'>request</span><span class='comma'>,</span> <span class='id identifier rubyid_status'>status</span><span class='comma'>,</span> <span class='id identifier rubyid_headers'>headers</span><span class='comma'>,</span> <span class='id identifier rubyid_duration'>duration</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_log_request'>log_request</span><span class='lparen'>(</span><span class='id identifier rubyid_request'>request</span><span class='comma'>,</span> <span class='id identifier rubyid_status'>status</span><span class='comma'>,</span> <span class='id identifier rubyid_headers'>headers</span><span class='comma'>,</span> <span class='id identifier rubyid_duration'>duration</span><span class='comma'>,</span> <span class='id identifier rubyid_env'>env</span><span class='rparen'>)</span>
 
   <span class='lbracket'>[</span><span class='id identifier rubyid_status'>status</span><span class='comma'>,</span> <span class='id identifier rubyid_headers'>headers</span><span class='comma'>,</span> <span class='id identifier rubyid_body'>body</span><span class='rbracket'>]</span>
 <span class='kw'>end</span></pre>
@@ -367,7 +354,7 @@ Params: {&quot;id&quot;=&gt;&quot;123&quot;, &quot;password&quot;=&gt;&quot;[FIL
       <div class="method_details ">
   <h3 class="signature " id="logger-instance_method">
   
-    #<strong>logger</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>logger</strong>(env = nil)  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -375,14 +362,51 @@ Params: {&quot;id&quot;=&gt;&quot;123&quot;, &quot;password&quot;=&gt;&quot;[FIL
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Get logger from application configuration</p>
-
+    <p>Get the logger for this request.</p>
+<p>Resolved from the app handling the request, which App#call publishes in
+the Rack env, so an app's configured logger is actually used. Falls back
+to the class-level default when there is no app in the env.</p>
 
   </div>
 </div>
 <div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>env</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>, <tt>nil</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>Rack environment</p></div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The logger</p></div>
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -390,12 +414,16 @@ Params: {&quot;id&quot;=&gt;&quot;123&quot;, &quot;password&quot;=&gt;&quot;[FIL
       <pre class="lines">
 
 
-17</pre>
+24
+25
+26</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/lennarb/middleware/request_logger.rb', line 17</span>
+      <pre class="code"><span class="info file"># File 'lib/lennarb/middleware/request_logger.rb', line 24</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_logger'>logger</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../../Lennarb.html" title="Lennarb (module)">Lennarb</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../App.html" title="Lennarb::App (class)">App</a></span></span><span class='period'>.</span><span class='id identifier rubyid_app'><span class='object_link'><a href="../App.html#app-class_method" title="Lennarb::App.app (method)">app</a></span></span><span class='period'>.</span><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_logger'>logger</span></pre>
+<span class='kw'>def</span> <span class='id identifier rubyid_logger'>logger</span><span class='lparen'>(</span><span class='id identifier rubyid_env'>env</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_env'>env</span><span class='op'>&amp;.</span><span class='op'>[]</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../../Lennarb.html#RACK_LENNA_APP-constant" title="Lennarb::RACK_LENNA_APP (constant)">RACK_LENNA_APP</a></span></span><span class='rparen'>)</span><span class='op'>&amp;.</span><span class='id identifier rubyid_config'>config</span><span class='op'>&amp;.</span><span class='id identifier rubyid_logger'>logger</span> <span class='op'>||</span> <span class='const'><span class='object_link'><a href="../../Lennarb.html" title="Lennarb (module)">Lennarb</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../App.html" title="Lennarb::App (class)">App</a></span></span><span class='period'>.</span><span class='id identifier rubyid_app'><span class='object_link'><a href="../App.html#app-class_method" title="Lennarb::App.app (method)">app</a></span></span><span class='period'>.</span><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_logger'>logger</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -406,9 +434,9 @@ Params: {&quot;id&quot;=&gt;&quot;123&quot;, &quot;password&quot;=&gt;&quot;[FIL
 </div>
 
       <div id="footer">
-  Generated on Sat Apr 19 20:08:46 2025 by
+  Generated on Wed Sep  9 22:34:08 2026 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.37 (ruby-3.4.3).
+  0.9.45 (ruby-3.4.10).
 </div>
 
     </div>

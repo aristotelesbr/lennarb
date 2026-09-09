@@ -6,13 +6,13 @@
 <title>
   File: CONTRIBUTING
   
-    &mdash; Documentation by YARD 0.9.37
+    &mdash; Documentation by YARD 0.9.45
   
 </title>
 
-  <link rel="stylesheet" href="css/style.css" type="text/css" />
+  <link rel="stylesheet" href="css/style.css" type="text/css">
 
-  <link rel="stylesheet" href="css/common.css" type="text/css" />
+  <link rel="stylesheet" href="css/common.css" type="text/css">
 
 <script type="text/javascript">
   pathId = "CONTRIBUTING";
@@ -27,6 +27,8 @@
 
   </head>
   <body>
+    <div id="main_progress" aria-hidden="true"></div>
+
     <div class="nav_wrap">
       <iframe id="nav" src="file_list.html?1"></iframe>
       <div id="resizer"></div>
@@ -57,205 +59,159 @@
         <div class="clear"></div>
       </div>
 
-      <div id="content"><div id='filecontents'>
-<h1 id="label-Contributing+to+Lennarb">Contributing to Lennarb</h1>
-
-<p>We love your input! We want to make contributing to Lennarb as easy and transparent as possible, whether it’s:</p>
-<ul><li>
-<p>Reporting a bug</p>
-</li><li>
-<p>Discussing the current state of the code</p>
-</li><li>
-<p>Submitting a fix</p>
-</li><li>
-<p>Proposing new features</p>
-</li><li>
-<p>Becoming a maintainer</p>
-</li></ul>
-
-<h2 id="label-Development+Process">Development Process</h2>
-
+      <div id="content"><div id='filecontents'><h1 id="Contributing_to_Lennarb">Contributing to Lennarb</h1>
+<p>We love your input! We want to make contributing to Lennarb as easy and
+transparent as possible, whether it's:</p>
+<ul>
+<li>Reporting a bug</li>
+<li>Discussing the current state of the code</li>
+<li>Submitting a fix</li>
+<li>Proposing new features</li>
+<li>Becoming a maintainer</li>
+</ul>
+<h2 id="Development_Process">Development Process</h2>
 <p>We use GitHub to host code, to track issues and feature requests, as well as accept pull requests.</p>
-
-<h3 id="label-Pull+Requests">Pull Requests</h3>
-<ol><li>
-<p>Fork the repository</p>
-</li><li>
-<p>Create your feature branch (<code>git checkout -b feature/amazing-feature</code>)</p>
-</li><li>
-<p>Commit your changes (<code>git commit -am &#39;Add amazing feature&#39;</code>)</p>
-</li><li>
-<p>Push to the branch (<code>git push origin feature/amazing-feature</code>)</p>
-</li><li>
-<p>Open a Pull Request</p>
-</li></ol>
-
-<h3 id="label-Pull+Request+Process">Pull Request Process</h3>
-<ol><li>
-<p>Ensure any install or build dependencies are removed before the end of the layer when doing a build.</p>
-</li><li>
-<p>Update the <code>README.md</code> with details of changes to the interface, this includes new environment variables, exposed ports, useful file locations, and container parameters.</p>
-</li><li>
-<p>Increase the version numbers in any examples files and the <code>README.md</code> to the new version that this Pull Request would represent. The versioning scheme we use is <a href="http://semver.org/">SemVer</a>.</p>
-</li><li>
-<p>You may merge the Pull Request once you have the sign-off of at least one other developer, or if you do not have permission to do that, you may request the reviewer to merge it for you.</p>
-</li></ol>
-
-<h2 id="label-Reporting+Bugs">Reporting Bugs</h2>
-
-<p>We use GitHub issues to track public bugs. Report a bug by opening a new issue; it’s that easy!</p>
-
-<h3 id="label-Bug+Report+Template">Bug Report Template</h3>
-
+<h3 id="Pull_Requests">Pull Requests</h3>
+<ol>
+<li>Fork the repository</li>
+<li>Create your feature branch (<code>git checkout -b feature/amazing-feature</code>)</li>
+<li>Commit your changes (<code>git commit -am 'Add amazing feature'</code>)</li>
+<li>Push to the branch (<code>git push origin feature/amazing-feature</code>)</li>
+<li>Open a Pull Request</li>
+</ol>
+<h3 id="Pull_Request_Process">Pull Request Process</h3>
+<ol>
+<li>Ensure any install or build dependencies are removed before the end of
+the layer when doing a build.</li>
+<li>Update the <code>README.md</code> with details of changes to the interface, this
+includes new environment variables, exposed ports, useful file locations,
+and container parameters.</li>
+<li>Increase the version numbers in any examples files and the <code>README.md</code>
+to the new version that this Pull Request would represent. The versioning
+scheme we use is <a href="http://semver.org/">SemVer</a>.</li>
+<li>You may merge the Pull Request once you have the sign-off of at least one
+other developer, or if you do not have permission to do that, you may request
+the reviewer to merge it for you.</li>
+</ol>
+<h2 id="Reporting_Bugs">Reporting Bugs</h2>
+<p>We use GitHub issues to track public bugs. Report a bug by opening a new issue;
+it's that easy!</p>
+<h3 id="Bug_Report_Template">Bug Report Template</h3>
 <p><strong>Title</strong>: Short description of the bug</p>
-
 <p><strong>Description</strong>:</p>
-<ul><li>
-<p><strong>Current Behavior</strong>: A clear and concise description of what the bug is.</p>
-</li><li>
-<p><strong>Expected Behavior</strong>: A clear and concise description of what you expected to happen.</p>
-</li><li>
-<p><strong>Steps To Reproduce</strong>: Steps to reproduce the behavior:</p>
-<ol><li>
-<p>Go to ‘…’</p>
-</li><li>
-<p>Click on ‘.…’</p>
-</li><li>
-<p>Scroll down to ‘.…’</p>
-</li><li>
-<p>See error</p>
-</li></ol>
-</li><li>
-<p><strong>Environment</strong>:</p>
-</li><li>
-<p>Ruby version:</p>
-</li><li>
-<p>OS:</p>
-</li><li>
-<p>Lennarb version:</p>
-</li><li>
-<p><strong>Additional Context</strong>: Add any other context about the problem here.</p>
-</li></ul>
-
-<h2 id="label-Code+Style">Code Style</h2>
-
+<ul>
+<li><strong>Current Behavior</strong>: A clear and concise description of what the bug is.</li>
+<li><strong>Expected Behavior</strong>: A clear and concise description of what you
+expected to happen.</li>
+<li>
+<strong>Steps To Reproduce</strong>: Steps to reproduce the behavior:
+<pre class="code ruby"><code class="ruby"><span class='int'>1</span><span class='period'>.</span> <span class='const'>Go</span> <span class='id identifier rubyid_to'>to</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>...</span><span class='tstring_end'>&#39;</span></span>
+<span class='int'>2</span><span class='period'>.</span> <span class='const'>Click</span> <span class='id identifier rubyid_on'>on</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>....</span><span class='tstring_end'>&#39;</span></span>
+<span class='int'>3</span><span class='period'>.</span> <span class='const'>Scroll</span> <span class='id identifier rubyid_down'>down</span> <span class='id identifier rubyid_to'>to</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>....</span><span class='tstring_end'>&#39;</span></span>
+<span class='int'>4</span><span class='period'>.</span> <span class='const'>See</span> <span class='id identifier rubyid_error'>error</span>
+</code></pre>
+</li>
+<li>
+<strong>Environment</strong>:
+<ul>
+<li>Ruby version:</li>
+<li>OS:</li>
+<li>Lennarb version:</li>
+</ul>
+</li>
+<li><strong>Additional Context</strong>: Add any other context about the problem here.</li>
+</ul>
+<h2 id="Code_Style">Code Style</h2>
 <p>Maintain the code style used throughout the project:</p>
-<ul><li>
-<p>Follow Ruby style guidelines</p>
-</li><li>
-<p>Use meaningful variable and function names</p>
-</li><li>
-<p>Comment your code when necessary</p>
-</li><li>
-<p>Keep your code clean and maintainable</p>
-</li></ul>
-
-<h2 id="label-License">License</h2>
-
-<p>By contributing, you agree that your contributions will be licensed under the project’s MIT License.</p>
-<hr>
-
-<h2 id="label-Contribuindo+para+o+Lennarb+-+Portugu-C3-AAs">Contribuindo para o Lennarb - Português</h2>
-
-<p>Adoramos seu input! Queremos tornar a contribuição para o Lennarb o mais fácil e transparente possível, seja:</p>
-<ul><li>
-<p>Reportando um bug</p>
-</li><li>
-<p>Discutindo o estado atual do código</p>
-</li><li>
-<p>Enviando uma correção</p>
-</li><li>
-<p>Propondo novos recursos</p>
-</li><li>
-<p>Tornando-se um mantenedor</p>
-</li></ul>
-
-<h2 id="label-Processo+de+Desenvolvimento">Processo de Desenvolvimento</h2>
-
-<p>Usamos o GitHub para hospedar código, rastrear problemas e solicitações de recursos, bem como aceitar pull requests.</p>
-
-<h3 id="label-Solicita-C3-A7-C3-B5es+de+Pull+Request">Solicitações de Pull Request</h3>
-<ol><li>
-<p>Faça um fork do repositório</p>
-</li><li>
-<p>Crie sua branch de recurso (<code>git checkout -b feature/recurso-incrivel</code>)</p>
-</li><li>
-<p>Faça commit de suas alterações (<code>git commit -am &#39;Adicionar recurso incrível&#39;</code>)</p>
-</li><li>
-<p>Envie para a branch (<code>git push origin feature/recurso-incrivel</code>)</p>
-</li><li>
-<p>Abra um Pull Request</p>
-</li></ol>
-
-<h3 id="label-Processo+de+Pull+Request">Processo de Pull Request</h3>
-<ol><li>
-<p>Certifique-se de que todas as dependências de instalação ou compilação sejam removidas antes do fim da camada ao fazer uma compilação.</p>
-</li><li>
-<p>Atualize o README.md com detalhes das alterações na interface, incluindo novas variáveis de ambiente, portas expostas, localizações úteis de arquivos e parâmetros de contêiner.</p>
-</li><li>
-<p>Aumente os números de versão em quaisquer arquivos de exemplos e o <code>README.md</code> para a nova versão que este Pull Request representaria. O esquema de versionamento que usamos é <a href="http://semver.org/">SemVer</a>.</p>
-</li><li>
-<p>Você pode mesclar o Pull Request depois de ter a aprovação de pelo menos um outro desenvolvedor, ou se não tiver permissão para isso, poderá solicitar ao revisor que o mescle para você.</p>
-</li></ol>
-
-<h2 id="label-Reportando+Bugs">Reportando Bugs</h2>
-
-<p>Usamos issues do GitHub para rastrear bugs públicos. Reporte um bug abrindo uma nova issue; é simples assim!</p>
-
-<h3 id="label-Modelo+de+Relat-C3-B3rio+de+Bug">Modelo de Relatório de Bug</h3>
-
+<ul>
+<li>Follow Ruby style guidelines</li>
+<li>Use meaningful variable and function names</li>
+<li>Comment your code when necessary</li>
+<li>Keep your code clean and maintainable</li>
+</ul>
+<h2 id="License">License</h2>
+<p>By contributing, you agree that your contributions will be licensed under
+the project's MIT License.</p>
+<hr />
+<h2 id="Contribuindo_para_o_Lennarb___Portugu_s">Contribuindo para o Lennarb - Português</h2>
+<p>Adoramos seu input! Queremos tornar a contribuição para o Lennarb o
+mais fácil e transparente possível, seja:</p>
+<ul>
+<li>Reportando um bug</li>
+<li>Discutindo o estado atual do código</li>
+<li>Enviando uma correção</li>
+<li>Propondo novos recursos</li>
+<li>Tornando-se um mantenedor</li>
+</ul>
+<h2 id="Processo_de_Desenvolvimento">Processo de Desenvolvimento</h2>
+<p>Usamos o GitHub para hospedar código, rastrear problemas e solicitações de
+recursos, bem como aceitar pull requests.</p>
+<h3 id="Solicita__es_de_Pull_Request">Solicitações de Pull Request</h3>
+<ol>
+<li>Faça um fork do repositório</li>
+<li>Crie sua branch de recurso (<code>git checkout -b feature/recurso-incrivel</code>)</li>
+<li>Faça commit de suas alterações (<code>git commit -am 'Adicionar recurso incrível'</code>)</li>
+<li>Envie para a branch (<code>git push origin feature/recurso-incrivel</code>)</li>
+<li>Abra um Pull Request</li>
+</ol>
+<h3 id="Processo_de_Pull_Request">Processo de Pull Request</h3>
+<ol>
+<li>Certifique-se de que todas as dependências de instalação ou compilação
+sejam removidas antes do fim da camada ao fazer uma compilação.</li>
+<li>Atualize o README.md com detalhes das alterações na interface, incluindo
+novas variáveis de ambiente, portas expostas, localizações úteis de arquivos
+e parâmetros de contêiner.</li>
+<li>Aumente os números de versão em quaisquer arquivos de exemplos e o
+<code>README.md</code> para a nova versão que este Pull Request representaria. O esquema
+de versionamento que usamos é <a href="http://semver.org/">SemVer</a>.</li>
+<li>Você pode mesclar o Pull Request depois de ter a aprovação de pelo menos um
+outro desenvolvedor, ou se não tiver permissão para isso, poderá solicitar ao
+revisor que o mescle para você.</li>
+</ol>
+<h2 id="Reportando_Bugs">Reportando Bugs</h2>
+<p>Usamos issues do GitHub para rastrear bugs públicos. Reporte um bug abrindo
+uma nova issue; é simples assim!</p>
+<h3 id="Modelo_de_Relat_rio_de_Bug">Modelo de Relatório de Bug</h3>
 <p><strong>Título</strong>: Breve descrição do bug</p>
-
 <p><strong>Descrição</strong>:</p>
-<ul><li>
-<p><strong>Comportamento Atual</strong>: Uma descrição clara e concisa do bug.</p>
-</li><li>
-<p><strong>Comportamento Esperado</strong>: Uma descrição clara e concisa do que você esperava que acontecesse.</p>
-</li><li>
-<p><strong>Passos Para Reproduzir</strong>: Passos para reproduzir o comportamento:</p>
-<ol><li>
-<p>Vá para ‘…’</p>
-</li><li>
-<p>Clique em ‘.…’</p>
-</li><li>
-<p>Role para baixo até ‘.…’</p>
-</li><li>
-<p>Veja o erro</p>
-</li></ol>
-</li><li>
-<p><strong>Ambiente</strong>:</p>
-</li><li>
-<p>Versão do Ruby:</p>
-</li><li>
-<p>Sistema Operacional:</p>
-</li><li>
-<p>Versão do Lennarb:</p>
-</li><li>
-<p><strong>Contexto Adicional</strong>: Adicione qualquer outro contexto sobre o problema aqui.</p>
-</li></ul>
-
-<h2 id="label-Estilo+de+C-C3-B3digo">Estilo de Código</h2>
-
+<ul>
+<li><strong>Comportamento Atual</strong>: Uma descrição clara e concisa do bug.</li>
+<li><strong>Comportamento Esperado</strong>: Uma descrição clara e concisa do que você
+esperava que acontecesse.</li>
+<li>
+<strong>Passos Para Reproduzir</strong>: Passos para reproduzir o comportamento:
+<pre class="code ruby"><code class="ruby"><span class='int'>1</span><span class='period'>.</span> <span class='const'>Vá</span> <span class='id identifier rubyid_para'>para</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>...</span><span class='tstring_end'>&#39;</span></span>
+<span class='int'>2</span><span class='period'>.</span> <span class='const'>Clique</span> <span class='id identifier rubyid_em'>em</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>....</span><span class='tstring_end'>&#39;</span></span>
+<span class='int'>3</span><span class='period'>.</span> <span class='const'>Role</span> <span class='id identifier rubyid_para'>para</span> <span class='id identifier rubyid_baixo'>baixo</span> <span class='id identifier rubyid_até'>até</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>....</span><span class='tstring_end'>&#39;</span></span>
+<span class='int'>4</span><span class='period'>.</span> <span class='const'>Veja</span> <span class='id identifier rubyid_o'>o</span> <span class='id identifier rubyid_erro'>erro</span>
+</code></pre>
+</li>
+<li>
+<strong>Ambiente</strong>:
+<ul>
+<li>Versão do Ruby:</li>
+<li>Sistema Operacional:</li>
+<li>Versão do Lennarb:</li>
+</ul>
+</li>
+<li><strong>Contexto Adicional</strong>: Adicione qualquer outro contexto sobre o problema aqui.</li>
+</ul>
+<h2 id="Estilo_de_C_digo">Estilo de Código</h2>
 <p>Mantenha o estilo de código usado em todo o projeto:</p>
-<ul><li>
-<p>Siga as diretrizes de estilo Ruby</p>
-</li><li>
-<p>Use nomes significativos para variáveis e funções</p>
-</li><li>
-<p>Comente seu código quando necessário</p>
-</li><li>
-<p>Mantenha seu código limpo e de fácil manutenção</p>
-</li></ul>
-
-<h2 id="label-Licen-C3-A7a">Licença</h2>
-
-<p>Ao contribuir, você concorda que suas contribuições serão licenciadas sob a Licença MIT do projeto.</p>
-</div></div>
+<ul>
+<li>Siga as diretrizes de estilo Ruby</li>
+<li>Use nomes significativos para variáveis e funções</li>
+<li>Comente seu código quando necessário</li>
+<li>Mantenha seu código limpo e de fácil manutenção</li>
+</ul>
+<h2 id="Licen_a">Licença</h2>
+<p>Ao contribuir, você concorda que suas contribuições serão licenciadas sob a
+Licença MIT do projeto.</p></div></div>
 
       <div id="footer">
-  Generated on Sat Apr 19 20:08:45 2025 by
+  Generated on Wed Sep  9 22:34:07 2026 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.37 (ruby-3.4.3).
+  0.9.45 (ruby-3.4.10).
 </div>
 
     </div>

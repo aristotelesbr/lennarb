@@ -6,13 +6,13 @@
 <title>
   Module: Lennarb::Hooks
   
-    &mdash; Documentation by YARD 0.9.37
+    &mdash; Documentation by YARD 0.9.45
   
 </title>
 
-  <link rel="stylesheet" href="../css/style.css" type="text/css" />
+  <link rel="stylesheet" href="../css/style.css" type="text/css">
 
-  <link rel="stylesheet" href="../css/common.css" type="text/css" />
+  <link rel="stylesheet" href="../css/common.css" type="text/css">
 
 <script type="text/javascript">
   pathId = "Lennarb::Hooks";
@@ -27,6 +27,8 @@
 
   </head>
   <body>
+    <div id="main_progress" aria-hidden="true"></div>
+
     <div class="nav_wrap">
       <iframe id="nav" src="../class_list.html?1"></iframe>
       <div id="resizer"></div>
@@ -78,7 +80,8 @@
   
   <dl>
     <dt>Defined in:</dt>
-    <dd>lib/lennarb/hooks.rb</dd>
+    <dd>lib/lennarb/hooks.rb
+</dd>
   </dl>
   
 </div>
@@ -88,23 +91,17 @@
     
   <div class="note notetag">
     <strong>Note:</strong>
-    <div class='inline'><ul><li>
-<p>Hooks are executed in the order they are added.</p>
-</li><li>
-<p>The context of the hook is the object that calls the route handler.</p>
-</li><li>
-<p>Hooks can modify the request and response objects.</p>
-</li><li>
-<p>Hooks can be used to implement middleware-like functionality.</p>
-</li><li>
-<p>Hooks are not thread-safe. Use with caution in multi-threaded environments.</p>
-</li></ul>
-</div>
+    <div class='inline'><ul>
+<li>Hooks are executed in the order they are added.</li>
+<li>The context of the hook is the object that calls the route handler.</li>
+<li>Hooks can modify the request and response objects.</li>
+<li>Hooks can be used to implement middleware-like functionality.</li>
+<li>Hooks are not thread-safe. Use with caution in multi-threaded environments.</li>
+</ul></div>
   </div>
 
-
-<p>Provides hook functionality for Lennarb applications. Hooks execute code before and after route handlers.</p>
-
+<p>Provides hook functionality for Lennarb applications.
+Hooks execute code before and after route handlers.</p>
 
   </div>
 </div>
@@ -136,9 +133,7 @@
         <dt id="TYPES-constant" class="">TYPES =
           <div class="docstring">
   <div class="discussion">
-    
-<p>Valid hook types</p>
-
+    <p>Valid hook types</p>
 
   </div>
 </div>
@@ -180,9 +175,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Get the hooks hash.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Get the hooks hash.</p></div></span>
   
 </li>
 
@@ -217,9 +210,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Add a hook for an app class.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Add a hook for an app class.</p></div></span>
   
 </li>
 
@@ -241,9 +232,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Execute hooks of a given type.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Execute hooks of a given type.</p></div></span>
   
 </li>
 
@@ -265,14 +254,13 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Get the hooks for an app class.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Get the hooks for an app class.</p></div></span>
   
 </li>
 
       
     </ul>
+    
   
 
 
@@ -292,9 +280,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Get the hooks hash</p>
-
+    <p>Get the hooks hash</p>
 
   </div>
 </div>
@@ -311,9 +297,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The hooks hash with app classes as keys</p>
-</div>
+        <div class='inline'><p>The hooks hash with app classes as keys</p></div>
       
     </li>
   
@@ -358,9 +342,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Add a hook for an app class</p>
-
+    <p>Add a hook for an app class</p>
 
   </div>
 </div>
@@ -378,9 +360,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The application class</p>
-</div>
+        <div class='inline'><p>The application class</p></div>
       
     </li>
   
@@ -394,9 +374,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The hook type (:before or :after)</p>
-</div>
+        <div class='inline'><p>The hook type (:before or :after)</p></div>
       
     </li>
   
@@ -410,9 +388,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The hook block</p>
-</div>
+        <div class='inline'><p>The hook block</p></div>
       
     </li>
   
@@ -429,9 +405,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The hooks array for the given type</p>
-</div>
+        <div class='inline'><p>The hooks array for the given type</p></div>
       
     </li>
   
@@ -490,9 +464,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    <p class="note returns_void">This method returns an undefined value.</p>
-<p>Execute hooks of a given type</p>
-
+    <p class="note returns_void">This method returns an undefined value.</p><p>Execute hooks of a given type</p>
 
   </div>
 </div>
@@ -510,9 +482,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The execution context</p>
-</div>
+        <div class='inline'><p>The execution context</p></div>
       
     </li>
   
@@ -526,9 +496,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The application class</p>
-</div>
+        <div class='inline'><p>The application class</p></div>
       
     </li>
   
@@ -542,9 +510,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The hook type to execute</p>
-</div>
+        <div class='inline'><p>The hook type to execute</p></div>
       
     </li>
   
@@ -558,9 +524,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The request object</p>
-</div>
+        <div class='inline'><p>The request object</p></div>
       
     </li>
   
@@ -574,9 +538,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The response object</p>
-</div>
+        <div class='inline'><p>The response object</p></div>
       
     </li>
   
@@ -623,9 +585,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Get the hooks for an app class</p>
-
+    <p>Get the hooks for an app class</p>
 
   </div>
 </div>
@@ -643,9 +603,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The application class</p>
-</div>
+        <div class='inline'><p>The application class</p></div>
       
     </li>
   
@@ -662,9 +620,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The hooks hash with :before and :after keys</p>
-</div>
+        <div class='inline'><p>The hooks hash with :before and :after keys</p></div>
       
     </li>
   
@@ -696,9 +652,9 @@
 </div>
 
       <div id="footer">
-  Generated on Sat Apr 19 20:08:45 2025 by
+  Generated on Wed Sep  9 22:34:07 2026 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.37 (ruby-3.4.3).
+  0.9.45 (ruby-3.4.10).
 </div>
 
     </div>

@@ -6,13 +6,13 @@
 <title>
   Class: Lennarb::Routes
   
-    &mdash; Documentation by YARD 0.9.37
+    &mdash; Documentation by YARD 0.9.45
   
 </title>
 
-  <link rel="stylesheet" href="../css/style.css" type="text/css" />
+  <link rel="stylesheet" href="../css/style.css" type="text/css">
 
-  <link rel="stylesheet" href="../css/common.css" type="text/css" />
+  <link rel="stylesheet" href="../css/common.css" type="text/css">
 
 <script type="text/javascript">
   pathId = "Lennarb::Routes";
@@ -27,6 +27,8 @@
 
   </head>
   <body>
+    <div id="main_progress" aria-hidden="true"></div>
+
     <div class="nav_wrap">
       <iframe id="nav" src="../class_list.html?1"></iframe>
       <div id="resizer"></div>
@@ -94,16 +96,15 @@
   
   <dl>
     <dt>Defined in:</dt>
-    <dd>lib/lennarb/routes.rb</dd>
+    <dd>lib/lennarb/routes.rb
+</dd>
   </dl>
   
 </div>
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    
-<p>Routes class for managing application routes</p>
-
+    <p>Routes class for managing application routes</p>
 
   </div>
 </div>
@@ -142,9 +143,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Freeze the routes to prevent further modification.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Freeze the routes to prevent further modification.</p></div></span>
   
 </li>
 
@@ -166,9 +165,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Check if the routes are frozen.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Check if the routes are frozen.</p></div></span>
   
 </li>
 
@@ -192,9 +189,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Initialize a new Routes instance.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Initialize a new Routes instance.</p></div></span>
   
 </li>
 
@@ -216,9 +211,29 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Match a route with the given path parts and HTTP method.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Match a route with the given path parts and HTTP method.</p></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#merge!-instance_method" title="#merge! (instance method)">#<strong>merge!</strong>(other)  &#x21d2; self </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'><p>Copy the routes from another Routes instance into this one.</p></div></span>
   
 </li>
 
@@ -240,14 +255,13 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Define the root route (GET /).</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Define the root route (GET /).</p></div></span>
   
 </li>
 
       
     </ul>
+    
   
 
 <div id="constructor_details" class="method_details_list">
@@ -264,9 +278,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Initialize a new Routes instance</p>
-
+    <p>Initialize a new Routes instance</p>
 
   </div>
 </div>
@@ -314,9 +326,9 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Freeze the routes to prevent further modification</p>
-
+    <p>Freeze the routes to prevent further modification.</p>
+<p>Freezes the whole tree, not only the root, so a frozen copy really is
+immutable.</p>
 
   </div>
 </div>
@@ -333,9 +345,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>The frozen routes</p>
-</div>
+        <div class='inline'><p>The frozen routes</p></div>
       
     </li>
   
@@ -347,18 +357,18 @@
       <pre class="lines">
 
 
-41
-42
-43
-44
-45</pre>
+57
+58
+59
+60
+61</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/lennarb/routes.rb', line 41</span>
+      <pre class="code"><span class="info file"># File 'lib/lennarb/routes.rb', line 57</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_freeze'>freeze</span>
   <span class='ivar'>@frozen</span> <span class='op'>=</span> <span class='kw'>true</span>
-  <span class='ivar'>@store</span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span>
+  <span class='id identifier rubyid_deep_freeze'>deep_freeze</span><span class='lparen'>(</span><span class='ivar'>@store</span><span class='rparen'>)</span>
   <span class='kw'>self</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -377,9 +387,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Check if the routes are frozen</p>
-
+    <p>Check if the routes are frozen</p>
 
   </div>
 </div>
@@ -396,9 +404,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>True if frozen</p>
-</div>
+        <div class='inline'><p>True if frozen</p></div>
       
     </li>
   
@@ -410,12 +416,12 @@
       <pre class="lines">
 
 
-50
-51
-52</pre>
+66
+67
+68</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/lennarb/routes.rb', line 50</span>
+      <pre class="code"><span class="info file"># File 'lib/lennarb/routes.rb', line 66</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_frozen?'>frozen?</span>
   <span class='ivar'>@frozen</span>
@@ -436,9 +442,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Match a route with the given path parts and HTTP method</p>
-
+    <p>Match a route with the given path parts and HTTP method</p>
 
   </div>
 </div>
@@ -456,9 +460,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>Path parts</p>
-</div>
+        <div class='inline'><p>Path parts</p></div>
       
     </li>
   
@@ -472,9 +474,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>HTTP method</p>
-</div>
+        <div class='inline'><p>HTTP method</p></div>
       
     </li>
   
@@ -491,9 +491,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>Route handler and params, or nil if no match</p>
-</div>
+        <div class='inline'><p>Route handler and params, or nil if no match</p></div>
       
     </li>
   
@@ -521,6 +519,84 @@
 </div>
     
       <div class="method_details ">
+  <h3 class="signature " id="merge!-instance_method">
+  
+    #<strong>merge!</strong>(other)  &#x21d2; <tt>self</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+<p>Copy the routes from another Routes instance into this one.</p>
+<p>The copy is deep: node objects are rebuilt rather than shared, so routes
+registered on the source afterwards cannot leak into this instance.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>other</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="" title="Lennarb::Routes (class)">Routes</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The routes to copy from</p></div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>self</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+46
+47
+48
+49</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/lennarb/routes.rb', line 46</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_merge!'>merge!</span><span class='lparen'>(</span><span class='id identifier rubyid_other'>other</span><span class='rparen'>)</span>
+  <span class='ivar'>@store</span><span class='period'>.</span><span class='id identifier rubyid_merge!'>merge!</span><span class='lparen'>(</span><span class='id identifier rubyid_deep_copy'>deep_copy</span><span class='lparen'>(</span><span class='id identifier rubyid_other'>other</span><span class='period'>.</span><span class='id identifier rubyid_store'>store</span><span class='rparen'>)</span><span class='rparen'>)</span>
+  <span class='kw'>self</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
   <h3 class="signature " id="root-instance_method">
   
     #<strong>root</strong>(&amp;block)  &#x21d2; <tt>void</tt> 
@@ -531,9 +607,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    <p class="note returns_void">This method returns an undefined value.</p>
-<p>Define the root route (GET /)</p>
-
+    <p class="note returns_void">This method returns an undefined value.</p><p>Define the root route (GET /)</p>
 
   </div>
 </div>
@@ -551,9 +625,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>Block to execute when route matches</p>
-</div>
+        <div class='inline'><p>Block to execute when route matches</p></div>
       
     </li>
   
@@ -586,9 +658,9 @@
 </div>
 
       <div id="footer">
-  Generated on Sat Apr 19 20:08:46 2025 by
+  Generated on Wed Sep  9 22:34:08 2026 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.37 (ruby-3.4.3).
+  0.9.45 (ruby-3.4.10).
 </div>
 
     </div>

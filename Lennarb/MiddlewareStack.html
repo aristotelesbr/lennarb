@@ -6,13 +6,13 @@
 <title>
   Class: Lennarb::MiddlewareStack
   
-    &mdash; Documentation by YARD 0.9.37
+    &mdash; Documentation by YARD 0.9.45
   
 </title>
 
-  <link rel="stylesheet" href="../css/style.css" type="text/css" />
+  <link rel="stylesheet" href="../css/style.css" type="text/css">
 
-  <link rel="stylesheet" href="../css/common.css" type="text/css" />
+  <link rel="stylesheet" href="../css/common.css" type="text/css">
 
 <script type="text/javascript">
   pathId = "Lennarb::MiddlewareStack";
@@ -27,6 +27,8 @@
 
   </head>
   <body>
+    <div id="main_progress" aria-hidden="true"></div>
+
     <div class="nav_wrap">
       <iframe id="nav" src="../class_list.html?1"></iframe>
       <div id="resizer"></div>
@@ -94,16 +96,15 @@
   
   <dl>
     <dt>Defined in:</dt>
-    <dd>lib/lennarb/middleware_stack.rb</dd>
+    <dd>lib/lennarb/middleware_stack.rb
+</dd>
   </dl>
   
 </div>
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    
-<p>Basic middleware stack implementation.</p>
-
+    <p>Basic middleware stack implementation.</p>
 
   </div>
 </div>
@@ -139,9 +140,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute app.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Returns the value of attribute app.</p></div></span>
   
 </li>
 
@@ -162,7 +161,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#clear-instance_method" title="#clear (instance method)">#<strong>clear</strong>  &#x21d2; Object </a>
+      <a href="#clear-instance_method" title="#clear (instance method)">#<strong>clear</strong>  &#x21d2; void </a>
     
 
     
@@ -176,9 +175,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Clear the middleware stack.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Clear the middleware stack.</p></div></span>
   
 </li>
 
@@ -202,9 +199,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>The app’s middleware stack.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>The app's middleware stack.</p></div></span>
   
 </li>
 
@@ -212,7 +207,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#to_a-instance_method" title="#to_a (instance method)">#<strong>to_a</strong>  &#x21d2; Object </a>
+      <a href="#to_a-instance_method" title="#to_a (instance method)">#<strong>to_a</strong>  &#x21d2; Array </a>
     
 
     
@@ -226,9 +221,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Convert the middleware stack to an array.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Convert the middleware stack to an array.</p></div></span>
   
 </li>
 
@@ -236,7 +229,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#unshift-instance_method" title="#unshift (instance method)">#<strong>unshift</strong>(middleware, *args, &amp;block)  &#x21d2; Object </a>
+      <a href="#unshift-instance_method" title="#unshift (instance method)">#<strong>unshift</strong>(middleware, *args, &amp;block)  &#x21d2; void </a>
     
 
     
@@ -250,9 +243,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Add a middleware to the beginning of the stack.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Add a middleware to the beginning of the stack.</p></div></span>
   
 </li>
 
@@ -260,7 +251,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#use-instance_method" title="#use (instance method)">#<strong>use</strong>(middleware, *args, &amp;block)  &#x21d2; Object </a>
+      <a href="#use-instance_method" title="#use (instance method)">#<strong>use</strong>(middleware, *args, &amp;block)  &#x21d2; void </a>
     
 
     
@@ -274,14 +265,13 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Insert a middleware in the stack.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Insert a middleware in the stack.</p></div></span>
   
 </li>
 
       
     </ul>
+    
   
 
 <div id="constructor_details" class="method_details_list">
@@ -298,9 +288,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>The app’s middleware stack.</p>
-
+    <p>The app's middleware stack.</p>
 
   </div>
 </div>
@@ -365,9 +353,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Returns the value of attribute app.</p>
-
+    <p>Returns the value of attribute app.</p>
 
   </div>
 </div>
@@ -405,7 +391,7 @@
       <div class="method_details first">
   <h3 class="signature first" id="clear-instance_method">
   
-    #<strong>clear</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>clear</strong>  &#x21d2; <tt>void</tt> 
   
 
   
@@ -413,9 +399,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Clear the middleware stack.</p>
-
+    <p class="note returns_void">This method returns an undefined value.</p><p>Clear the middleware stack.</p>
 
   </div>
 </div>
@@ -446,7 +430,7 @@
       <div class="method_details ">
   <h3 class="signature " id="to_a-instance_method">
   
-    #<strong>to_a</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>to_a</strong>  &#x21d2; <tt>Array</tt> 
   
 
   
@@ -454,14 +438,25 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Convert the middleware stack to an array.</p>
-
+    <p>Convert the middleware stack to an array.</p>
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -487,7 +482,7 @@
       <div class="method_details ">
   <h3 class="signature " id="unshift-instance_method">
   
-    #<strong>unshift</strong>(middleware, *args, &amp;block)  &#x21d2; <tt>Object</tt> 
+    #<strong>unshift</strong>(middleware, *args, &amp;block)  &#x21d2; <tt>void</tt> 
   
 
   
@@ -495,9 +490,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Add a middleware to the beginning of the stack.</p>
-
+    <p class="note returns_void">This method returns an undefined value.</p><p>Add a middleware to the beginning of the stack.</p>
 
   </div>
 </div>
@@ -565,7 +558,7 @@
       <div class="method_details ">
   <h3 class="signature " id="use-instance_method">
   
-    #<strong>use</strong>(middleware, *args, &amp;block)  &#x21d2; <tt>Object</tt> 
+    #<strong>use</strong>(middleware, *args, &amp;block)  &#x21d2; <tt>void</tt> 
   
 
   
@@ -573,9 +566,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Insert a middleware in the stack.</p>
-
+    <p class="note returns_void">This method returns an undefined value.</p><p>Insert a middleware in the stack.</p>
 
   </div>
 </div>
@@ -645,9 +636,9 @@
 </div>
 
       <div id="footer">
-  Generated on Sat Apr 19 20:08:46 2025 by
+  Generated on Wed Sep  9 22:34:08 2026 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.37 (ruby-3.4.3).
+  0.9.45 (ruby-3.4.10).
 </div>
 
     </div>
