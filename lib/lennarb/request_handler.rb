@@ -35,10 +35,14 @@ module Lennarb
         Hooks.execute(context, app.class, :after, req, res)
 
         res.finish
-      rescue Lennarb::Error => e
+      rescue => e
+        # In development, let the exception through so Rack::ShowExceptions --
+        # already in App#default_middleware_stack -- can render the backtrace.
+        raise if app.env.development?
+
         app.class.config.logger.error("Error: #{e.message}")
         app.class.config.logger.error(e.backtrace.first)
-        [500, {"content-type" => "text/plain"}, ["Internal Server Error"]]
+        [500, {"content-type" => CONTENT_TYPE[:TEXT]}, ["Internal Server Error"]]
       end
     end
 
