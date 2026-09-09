@@ -17,6 +17,16 @@ module Lennarb
   # - `cvv`
   # - `cvc`
   # - `signature`
+  # - `auth`
+  # - `credit`
+  # - `card_number`
+  # - `cvn`
+  # - `iban`
+  # - `api`
+  # - `pin`
+  # - `session_id`
+  #
+  # Matching is case-insensitive, so `Password` and `API_KEY` are filtered too.
   #
   # @example
   #   filter = Lennarb::ParameterFilter.new
@@ -30,14 +40,18 @@ module Lennarb
     # @api private
     DEFAULT_FILTERS = %w[
       passw email secret token _key crypt salt certificate otp ssn cvv cvc
-      signature
+      signature auth credit card_number cvn iban api pin session_id
     ].freeze
 
     # Initialize a new parameter filter
     #
-    # @param [Array<String, Regexp>] filters List of patterns to filter
+    # Regexp filters are used as given. Anything else is matched as a literal
+    # substring of the key, case-insensitively.
+    #
+    # @param [Array<String, Symbol, Regexp>] filters List of patterns to filter
     def initialize(filters = DEFAULT_FILTERS)
-      @filter = Regexp.union(filters.map(&:to_s))
+      union = Regexp.union(filters.map { |pattern| pattern.is_a?(Regexp) ? pattern : pattern.to_s })
+      @filter = Regexp.new(union.source, Regexp::IGNORECASE)
     end
 
     # Filter parameters according to the configured filter
@@ -46,12 +60,15 @@ module Lennarb
     # @param [String] mask Value that will replace filtered parameters
     # @return [Hash, Array] Filtered parameters
     def filter(params, mask: DEFAULT_MASK)
-      filter_object(params.dup, mask)
+      filter_object(params, mask)
     end
 
     private
 
-    # Recursively filter an object (hash or array)
+    # Recursively filter an object (hash or array).
+    #
+    # Builds new containers rather than writing into the ones it was given, so
+    # the caller's parameters are never modified.
     #
     # @param [Object] object Object to be filtered
     # @param [String] mask Value that will replace filtered parameters
@@ -59,18 +76,14 @@ module Lennarb
     def filter_object(object, mask)
       case object
       when Hash
-        object.each do |key, value|
-          object[key] = if key.to_s.match?(@filter)
-            mask
-          else
-            filter_object(value, mask)
-          end
+        object.each_with_object({}) do |(key, value), result|
+          result[key] = key.to_s.match?(@filter) ? mask : filter_object(value, mask)
         end
       when Array
-        object = object.map { filter_object(it, mask) }
+        object.map { filter_object(it, mask) }
+      else
+        object
       end
-
-      object
     end
   end
 end

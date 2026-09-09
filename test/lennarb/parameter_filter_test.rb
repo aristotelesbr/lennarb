@@ -125,4 +125,51 @@ class ParameterFilterTest < Minitest::Test
     assert_equal "[FILTERED]", filtered["password"]
     refute_equal params.object_id, filtered.object_id
   end
+
+  test "filtering is case-insensitive" do
+    filter = Lennarb::ParameterFilter.new
+
+    result = filter.filter({
+      "Password" => "hunter2",
+      "PASSWORD" => "hunter2",
+      "Token" => "t",
+      "API_KEY" => "k",
+      "SECRET_KEY_BASE" => "s"
+    })
+
+    assert_equal ["[FILTERED]"] * 5, result.values
+  end
+
+  test "a Regexp filter is honoured, not stringified" do
+    filter = Lennarb::ParameterFilter.new([/\Apin\z/])
+
+    result = filter.filter({"pin" => "1234", "pineapple" => "fruit"})
+
+    assert_equal "[FILTERED]", result["pin"]
+    assert_equal "fruit", result["pineapple"]
+  end
+
+  test "default filters cover authorization, cards and api keys" do
+    filter = Lennarb::ParameterFilter.new
+
+    result = filter.filter({
+      "authorization" => "Bearer x",
+      "card_number" => "4111111111111111",
+      "credit_card" => "4111111111111111",
+      "apikey" => "k",
+      "pin" => "1234"
+    })
+
+    assert_equal ["[FILTERED]"] * 5, result.values
+  end
+
+  test "filtering does not mutate the caller's params" do
+    filter = Lennarb::ParameterFilter.new
+    original = {"user" => {"password" => "hunter2", "name" => "ada"}, "items" => [{"token" => "t"}]}
+
+    filter.filter(original)
+
+    assert_equal "hunter2", original["user"]["password"]
+    assert_equal "t", original["items"].first["token"]
+  end
 end
