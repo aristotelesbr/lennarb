@@ -179,7 +179,9 @@ module Lennarb
         self.class.instance_exec(&block)
       end
 
-      self.class.routes
+      # Before boot, route definitions go to the class. After boot, this
+      # instance serves from its own frozen snapshot.
+      @routes || self.class.routes
     end
 
     # Get/define configuration
@@ -205,8 +207,13 @@ module Lennarb
     def initialize!
       raise AlreadyInitializedError if @initialized
 
+      # Snapshot the class routes into this instance and freeze only the copy,
+      # so booting an app never freezes process-global class state.
+      @routes = Routes.new
+      @routes.merge!(self.class.routes)
+      @routes.freeze
+
       @initialized = true
-      routes.freeze
       self
     end
 

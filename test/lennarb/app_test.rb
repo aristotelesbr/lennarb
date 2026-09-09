@@ -125,4 +125,64 @@ class AppTest < Minitest::Test
 
     assert_includes app_class.helpers, test_helpers
   end
+
+  test "initialize! does not freeze the class routes" do
+    app_class = Class.new(Lennarb::App) do
+      get("/a") { |req, res| res.text("a") }
+    end
+
+    app_class.new.initialize!
+
+    refute app_class.routes.frozen?
+  end
+
+  test "routes can still be registered after the first boot" do
+    app_class = Class.new(Lennarb::App) do
+      get("/a") { |req, res| res.text("a") }
+    end
+    app_class.new.initialize!
+
+    app_class.get("/b") { |req, res| res.text("b") }
+
+    block, _ = app_class.routes.match_route(["b"], :GET)
+    refute_nil block
+  end
+
+  test "each booted instance holds its own frozen snapshot" do
+    app_class = Class.new(Lennarb::App) do
+      get("/a") { |req, res| res.text("a") }
+    end
+
+    first = app_class.new.initialize!
+    app_class.get("/b") { |req, res| res.text("b") }
+    second = app_class.new.initialize!
+
+    refute first.routes.equal?(app_class.routes)
+    assert first.routes.frozen?
+    assert_nil first.routes.match_route(["b"], :GET).first
+    refute_nil second.routes.match_route(["b"], :GET).first
+  end
+
+  test "a nested route added after boot does not leak into the snapshot" do
+    app_class = Class.new(Lennarb::App) do
+      get("/posts") { |req, res| res.text("posts") }
+    end
+    booted = app_class.new.initialize!
+
+    app_class.get("/posts/:id") { |req, res| res.text("show") }
+
+    assert_nil booted.routes.match_route(["posts", "1"], :GET).first
+    refute_nil booted.routes.match_route(["posts"], :GET).first
+  end
+
+  test "two instances of the same app class boot without colliding" do
+    app_class = Class.new(Lennarb::App) do
+      get("/a") { |req, res| res.text("a") }
+    end
+
+    app_class.new.initialize!
+
+    app_class.new.initialize! # must not raise
+  end
+
 end
