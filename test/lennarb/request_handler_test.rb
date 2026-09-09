@@ -132,5 +132,32 @@ module Lennarb
       assert_equal 200, status
       assert_equal ["production"], body
     end
+
+    test "route params are URL-decoded" do
+      app_class = Class.new(Lennarb::App) do
+        get("/u/:name") { |req, res| res.text(req.params[:name]) }
+      end
+      app = app_class.new
+      app.env = :production
+      app.initialize!
+
+      _, _, body = Lennarb::RequestHandler.new(app).call(rack_env("/u/John%20Doe"))
+
+      assert_equal ["John Doe"], body
+    end
+
+    test "a percent-encoded slash does not split a route segment" do
+      app_class = Class.new(Lennarb::App) do
+        get("/f/:name") { |req, res| res.text(req.params[:name]) }
+      end
+      app = app_class.new
+      app.env = :production
+      app.initialize!
+
+      _, _, body = Lennarb::RequestHandler.new(app).call(rack_env("/f/a%2Fb"))
+
+      assert_equal ["a/b"], body
+    end
+
   end
 end

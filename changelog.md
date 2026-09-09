@@ -56,6 +56,12 @@ A patch release. No public API was added; everything here is a defect fix.
 - The comments on `DuplicateRouteError`, `MissingEnvironmentVariable`,
   `MissingCallable` and `RoutesFrozenError` all claimed the error was raised
   when the app is initialized more than once. Each now describes what it is.
+- **Route parameters are now URL-decoded.** `/u/John%20Doe` used to yield
+  `"John%20Doe"`; it now yields `"John Doe"`, and a percent-encoded slash stays
+  inside its segment instead of splitting the path. **If your application worked
+  around this by decoding route parameters itself, remove that workaround or you
+  will decode twice.** Segments are decoded with `Rack::Utils.unescape_path`, so
+  `+` is left alone, as it should be in a path.
 - `.gitignore` now matches `.minitestfailures`.
 
 ### Changed
@@ -63,8 +69,10 @@ A patch release. No public API was added; everything here is a defect fix.
 - `RequestHandler` compiles the route execution context once per application
   class instead of building an object with a fresh singleton class on every
   request. On ruby 3.4.1 (arm64-darwin23): static route 424,302 to 753,914
-  req/s, dynamic route 175,364 to 217,466 req/s, `create_context` 1.37us to
-  0.15us (24% to 3.3% of a request), 48 to 39 objects allocated per request.
+  req/s, dynamic route 175,364 to 221,795 req/s, `create_context` 1.37us to
+  0.15us (24% to 3.3% of a request), 48 to 40 objects allocated per request.
+  The extra object over the 39 measured mid-release is the cost of decoding
+  route parameters, below.
 - `App#routes` returns the instance's frozen snapshot after `initialize!`, so
   `app.routes.equal?(App.routes)` is no longer true once the app is booted.
 - Documentation now teaches subclassing `Lennarb::App` as the canonical form.
