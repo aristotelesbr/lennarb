@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2025-04-19
+
 ### Added
 
 - Add `Lennarb::Base` class to be the base class of the "standard" implementation of the Lennarb framework, for mounting several applications behind one middleware stack.
