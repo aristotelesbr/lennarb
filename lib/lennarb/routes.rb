@@ -35,12 +35,28 @@ module Lennarb
       @store.match_route(parts, http_method)
     end
 
-    # Freeze the routes to prevent further modification
+    # Copy the routes from another Routes instance into this one.
+    #
+    # The copy is deep: node objects are rebuilt rather than shared, so routes
+    # registered on the source afterwards cannot leak into this instance.
+    #
+    # @param other [Routes] The routes to copy from
+    # @return [self]
+    # @api private
+    def merge!(other)
+      @store.merge!(deep_copy(other.store))
+      self
+    end
+
+    # Freeze the routes to prevent further modification.
+    #
+    # Freezes the whole tree, not only the root, so a frozen copy really is
+    # immutable.
     #
     # @return [self] The frozen routes
     def freeze
       @frozen = true
-      @store.freeze
+      deep_freeze(@store)
       self
     end
 
@@ -62,6 +78,42 @@ module Lennarb
     def register_route(http_method, path, &block)
       parts = path.split("/").reject(&:empty?)
       @store.add_route(parts, http_method, block)
+    end
+
+    # The underlying route tree.
+    #
+    # Protected so that merge! can reach a sibling instance's store without
+    # exposing the tree publicly.
+    #
+    # @return [RouteNode]
+    # @api private
+    protected def store
+      @store
+    end
+
+    # Rebuild a route tree, sharing no node objects with the original.
+    #
+    # @param node [RouteNode] The node to copy
+    # @return [RouteNode] The copy
+    def deep_copy(node)
+      copy = RouteNode.new
+      copy.param_key = node.param_key
+      copy.blocks = node.blocks.dup
+
+      node.static_children.each { |part, child| copy.static_children[part] = deep_copy(child) }
+      node.dynamic_children.each { |param, child| copy.dynamic_children[param] = deep_copy(child) }
+
+      copy
+    end
+
+    # Freeze a route tree from the leaves up.
+    #
+    # @param node [RouteNode] The node to freeze
+    # @return [RouteNode] The frozen node
+    def deep_freeze(node)
+      node.static_children.each_value { deep_freeze(it) }
+      node.dynamic_children.each_value { deep_freeze(it) }
+      node.freeze
     end
   end
 end
