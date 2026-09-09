@@ -37,6 +37,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "simplecov"
   spec.add_development_dependency "simplecov-json"
   spec.add_development_dependency "minitest"
+  # minitest 6 extracted Minitest::Mock and Object#stub into their own gem.
+  spec.add_development_dependency "minitest-mock"
   spec.add_development_dependency "minitest-utils"
   spec.add_development_dependency "rack-test"
   spec.add_development_dependency "rake"
