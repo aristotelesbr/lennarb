@@ -27,17 +27,14 @@ Create a new file named `config.ru`:
 ```ruby
 require 'lennarb'
 
-MyApp = Lennarb::App.new do
-  routes do
-    get '/' do |req, res|
-      res.status = 200
-      res.html('<h1>Welcome to Lennarb!</h1>')
-    end
+class MyApp < Lennarb::App
+  get '/' do |req, res|
+    res.status = 200
+    res.html('<h1>Welcome to Lennarb!</h1>')
   end
 end
 
-MyApp.initialize!
-run MyApp
+run MyApp.new.initialize!
 ```
 
 Start the server:
@@ -86,16 +83,13 @@ end
 Routes are defined using HTTP method helpers:
 
 ```ruby
-Lennarb::App.new do
-  routes do
-    get '/' do |req, res|
-      res.html('Home page')
-    end
+class MyApp < Lennarb::App
+  get '/' do |req, res|
+    res.html('Home page')
+  end
 
-    get '/users/:id' do |req, res|
-      user_id = req.params[:id]
-      res.json({ id: user_id })
-    end
+  get '/users/:id' do |req, res|
+    res.json({id: req.params[:id]})
   end
 end
 ```
@@ -124,18 +118,19 @@ Lennarb is thread-safe by design:
 ### Initialization
 
 ```ruby
-MyApp = Lennarb::App.new do
-  # Define routes
-  routes do
+class MyApp < Lennarb::App
+  # Define configuration
+  config do
   end
 
-  # Define Configurations
-  config do
+  # Define routes
+  get '/' do |req, res|
+    res.text('ok')
   end
 end
 
-# Initialize and freeze the application
-MyApp.initialize!
+# Boot the application: it snapshots and freezes its routes
+MyApp.new.initialize!
 ```
 
 The `initialize!` method:
