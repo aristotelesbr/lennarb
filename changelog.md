@@ -9,9 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add `Lennarb::Application` class to be the base class of the "standard" implementation of the Lennarb framework.
+- Add `Lennarb::Base` class to be the base class of the "standard" implementation of the Lennarb framework, for mounting several applications behind one middleware stack.
 - Add middleware support to Lennarb::App class.
-- Add `middleware` support to the `Lennarb::Application` with default middlewares.
+- Add `middleware` support to `Lennarb::Base` with default middlewares.
 - Add files to centralize the errors of the project.
 - Add CODE_OF_CONDUCT.md in English and Portuguese
 - Add CONTRIBUTING.md in English and Portuguese
@@ -52,20 +52,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add support to mount routes. Now, you can centralize the routes in a single file and mount them in the main application. Ex.
 
 ```rb
-class PostsController
-  extend Lennarb::Routes::Mixin
-
+class Posts < Lennarb::App
   get '/posts' do |req, res|
     res.html('Posts')
   end
 end
 
-SampleApp = Lennarb.new do |router|
-  mount PostsController
+class Application < Lennarb::Base
+  mount Posts, at: '/'
 end
 ```
 
-The `mount` method will add the routes from the `PostsController` class to the main application. You can use the `mount` method with multiple classes, ex. `mount PostsController, CommentsController`.
+`Lennarb::Base.mount` registers a `Lennarb::App` subclass at a path, behind the
+base application's middleware stack. Call it once per application you want to
+mount.
 
 - Add `Lennarb::Environment` module to manage the environment variables in the project. Now, the `Lennarb` class is the main class of the project.
 - Add `Lennarb::Config` module to manage the configuration in the project. Now, the `Lennarb` class is the main class of the project.
