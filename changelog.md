@@ -7,6 +7,64 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.1] - 2026-09-09
+
+A patch release. No public API was added; everything here is a defect fix.
+
+### Fixed
+
+- `Lennarb::Request#content_type` and `#content_length` now read the Rack
+  `CONTENT_TYPE` and `CONTENT_LENGTH` headers instead of the `HTTP_`-prefixed
+  names. `Request#json?` was never true and `#json_body` never parsed on a real
+  HTTP request.
+- Exceptions raised inside a route handler no longer escape to Rack. They are
+  logged and answered with a 500, except in development, where they are
+  re-raised so `Rack::ShowExceptions` can render the backtrace.
+- `app` inside a route handler no longer raises `SystemStackError`. The context
+  object defined `app` with a block whose `self` was rebound to the context, so
+  the call recursed into itself. Nothing had exercised it.
+- `App#initialize!` no longer freezes the class-level routes. Each booted
+  instance holds its own deep, frozen snapshot, so registering a route after the
+  first boot works again -- it previously raised `RoutesFrozenError` and broke
+  test suites and development reload.
+- `Routes#freeze` now freezes the whole route tree rather than only its root.
+- The test suite runs green again. minitest 6 extracted `Minitest::Mock` and
+  `Object#stub` into the separate `minitest-mock` gem, which is now a
+  development dependency.
+- Tests no longer leak `LENNA_ENV`/`APP_ENV`/`RACK_ENV` between each other,
+  which made results depend on minitest's random seed.
+- `.gitignore` now matches `.minitestfailures`.
+
+### Changed
+
+- `RequestHandler` compiles the route execution context once per application
+  class instead of building an object with a fresh singleton class on every
+  request. On ruby 3.4.1 (arm64-darwin23): static route 424,302 to 753,914
+  req/s, dynamic route 175,364 to 217,466 req/s, `create_context` 1.37us to
+  0.15us (24% to 3.3% of a request), 48 to 39 objects allocated per request.
+- `App#routes` returns the instance's frozen snapshot after `initialize!`, so
+  `app.routes.equal?(App.routes)` is no longer true once the app is booted.
+- Documentation now teaches subclassing `Lennarb::App` as the canonical form.
+  The previous quick start raised `NoMethodError`, and subclassing is the only
+  form isolated per application. The pt-BR quick start also called `configure`
+  (the method is `config`) and `mandary` (a typo for `mandatory`).
+- Changelog no longer references `Lennarb::Application` or
+  `Lennarb::Routes::Mixin`, neither of which exists. The real APIs are
+  `Lennarb::Base` and `Lennarb::Base.mount`.
+
+### Added
+
+- `benchmark/hot_path.rb`, so the performance claims can be reproduced.
+
+### Known limitations
+
+- Two applications created with `Lennarb::App.new` without subclassing still
+  share the class's route definitions. Subclass to isolate them.
+- Hooks and helpers are still stored per app class and are shared the same way.
+  Tracked in [#87](https://github.com/aristotelesbr/lennarb/issues/87); they are
+  meant to become an opt-in mechanism rather than machinery every application
+  carries.
+
 ## [1.5.0] - 2025-04-19
 
 ### Added
